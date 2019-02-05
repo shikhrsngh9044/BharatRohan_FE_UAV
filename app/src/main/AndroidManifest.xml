@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".Activities.Farmers" />
         <activity android:name=".Activities.MyVisits" />
-        <activity android:name=".Activities.MainActivity"></activity>
+        <activity android:name=".Activities.MainActivity" />
         <activity android:name=".Activities.FarmerInfo" />
         <activity android:name=".Activities.MyFarms" />
         <activity android:name=".Activities.CreateVisit" />
@@ -25,7 +25,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.UploadImage"></activity>
+        <activity android:name=".Activities.UploadImage" />
+        <activity android:name=".Activities.UAVHome"></activity>
     </application>
 
 </manifest>
