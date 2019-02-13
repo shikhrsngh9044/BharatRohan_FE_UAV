@@ -2,12 +2,12 @@ package in.bharatrohan.br_fe_uav.Models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class LoginFE {
+public class LoginUAV {
     @SerializedName("user_name")
     private String email;
     @SerializedName("password")
     private String pass;
-    @SerializedName("fe_id")
+    @SerializedName("uavId")
     private String id;
     @SerializedName("token")
     private String token;
@@ -16,7 +16,7 @@ public class LoginFE {
     @SerializedName("userType")
     private String userType;
 
-    public LoginFE(String email, String pass) {
+    public LoginUAV(String email, String pass) {
         this.email = email;
         this.pass = pass;
     }

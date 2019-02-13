@@ -16,7 +16,7 @@ public class PrefManager {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("Email", email);
         editor.putString("Password", password);
-        editor.putString("FeId", feId);
+        editor.putString("userId", feId);
         editor.apply();
     }
 
@@ -26,18 +26,17 @@ public class PrefManager {
     }
 
 
-    public String getFeId() {
+    public String getUserId() {
         SharedPreferences sharedPreferences = context.getSharedPreferences("LoginDetails", Context.MODE_PRIVATE);
-        return sharedPreferences.getString("FeId", "");
+        return sharedPreferences.getString("userId", "");
     }
 
-    public void saveFEDetails(String name, String contact, String email, String avatar, String alt_contact, Boolean acc_status, String address, String job_state, String job_district, String job_tehsil, String job_block, String job_village) {
+    public void saveUserDetails(String name, String contact, String email, String alt_contact, Boolean acc_status, String address, String job_state, String job_district, String job_tehsil, String job_block, String job_village) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("UserDetails", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("Name", name);
         editor.putString("Contact", contact);
         editor.putString("Email", email);
-        editor.putString("Avatar", avatar);
         editor.putString("Alt_Contact", alt_contact);
         editor.putBoolean("Acc_Status", true);
         editor.putString("Address", address);
@@ -94,9 +93,15 @@ public class PrefManager {
         return sharedPreferences.getString("Alt_Contact", "");
     }
 
+    public void saveFeAvatar(String avatar) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("FeAvatar", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("Avatar", avatar);
+        editor.apply();
+    }
 
-    public String getAvatar(String token) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("UserDetails", Context.MODE_PRIVATE);
+    public String getFeAvatar(String token) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("FeAvatar", Context.MODE_PRIVATE);
         return sharedPreferences.getString("Avatar", "");
     }
 
@@ -150,19 +155,6 @@ public class PrefManager {
     }
 
 
-    public void saveFarmNo(int farm_no) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("FarmNo", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt("farmNo", farm_no);
-        editor.apply();
-    }
-
-
-    public int getFarmNo() {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("FarmNo", Context.MODE_PRIVATE);
-        return sharedPreferences.getInt("farmNo", 0);
-    }
-
     public void saveFarmId(String id) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("FarmId", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -184,6 +176,18 @@ public class PrefManager {
 
     public String getCropId() {
         SharedPreferences sharedPreferences = context.getSharedPreferences("CropId", Context.MODE_PRIVATE);
+        return sharedPreferences.getString("Id", "");
+    }
+
+    public void saveUavId(String id) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("UavId", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("Id", id);
+        editor.apply();
+    }
+
+    public String getUavId() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("UavId", Context.MODE_PRIVATE);
         return sharedPreferences.getString("Id", "");
     }
 
@@ -215,5 +219,31 @@ public class PrefManager {
     public String getCropName() {
         SharedPreferences sharedPreferences = context.getSharedPreferences("FarmDetails", Context.MODE_PRIVATE);
         return sharedPreferences.getString("CropName", "");
+    }
+
+    public void saveFarmNo(int farm_count) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("FarmNo", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("No", farm_count);
+        editor.apply();
+    }
+
+
+    public int getFarmerFarmNo() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("FarmNo", Context.MODE_PRIVATE);
+        return sharedPreferences.getInt("No", 0);
+    }
+
+
+    public void saveUserType(String type) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("UserType", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("Type", type);
+        editor.apply();
+    }
+
+    public String getUserType() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("UserType", Context.MODE_PRIVATE);
+        return sharedPreferences.getString("Type", "");
     }
 }

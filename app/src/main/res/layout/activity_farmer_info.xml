@@ -40,7 +40,7 @@
         app:layout_constraintStart_toStartOf="@+id/profileImage" />
 
     <TextView
-        android:id="@+id/tvName"
+        android:id="@+id/tvUavName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
@@ -81,7 +81,7 @@
         android:text="Contact"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/textView47"
-        app:layout_constraintStart_toStartOf="@+id/tvName"
+        app:layout_constraintStart_toStartOf="@+id/tvUavName"
         app:layout_constraintTop_toTopOf="@+id/textView47" />
 
     <TextView
@@ -96,7 +96,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView47" />
 
     <TextView
-        android:id="@+id/tvEmail"
+        android:id="@+id/tvUavEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="-"
@@ -117,13 +117,13 @@
         app:layout_constraintTop_toBottomOf="@+id/textView49" />
 
     <TextView
-        android:id="@+id/tvAddress"
+        android:id="@+id/tvUavAddress"
         android:layout_width="wrap_content"
         android:layout_height="26dp"
         android:text="Address"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/textView51"
-        app:layout_constraintStart_toStartOf="@+id/tvEmail"
+        app:layout_constraintStart_toStartOf="@+id/tvUavEmail"
         app:layout_constraintTop_toTopOf="@+id/textView51"
         app:layout_constraintVertical_bias="0.0" />
 
@@ -145,7 +145,7 @@
         android:text="DOB"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/textView53"
-        app:layout_constraintStart_toStartOf="@+id/tvAddress"
+        app:layout_constraintStart_toStartOf="@+id/tvUavAddress"
         app:layout_constraintTop_toTopOf="@+id/textView53"
         app:layout_constraintVertical_bias="0.0" />
 
@@ -162,5 +162,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView53" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

@@ -29,7 +29,7 @@ public class CreateVisit extends AppCompatActivity {
     private int etId = 0;
     private int count = 1;
     private LinearLayout ll;
-    private Button add, remove, create,skip;
+    private Button add, remove, create, skip;
     private List<EditText> quesEds = new ArrayList<>();
     private List<EditText> ansEds = new ArrayList<>();
     private List<CreatesVisit.Questions> questionsList;
@@ -60,8 +60,8 @@ public class CreateVisit extends AppCompatActivity {
             upload();
         });
 
-        skip.setOnClickListener(v->{
-          this.finish();
+        skip.setOnClickListener(v -> {
+            this.finish();
         });
 
     }
@@ -72,7 +72,7 @@ public class CreateVisit extends AppCompatActivity {
             questionsList.add(i, new CreatesVisit.Questions(quesEds.get(i).getText().toString(), ansEds.get(i).getText().toString()));
         }
 
-        CreatesVisit createsVisit = new CreatesVisit(new PrefManager(this).getFarmerId(), new PrefManager(this).getFarmId(), new PrefManager(this).getCropId(), new PrefManager(this).getFeId(), questionsList);
+        CreatesVisit createsVisit = new CreatesVisit(new PrefManager(this).getFarmerId(), new PrefManager(this).getFarmId(), new PrefManager(this).getUavId(), new PrefManager(this).getCropId(), new PrefManager(this).getUserId(), questionsList);
 
         Call<CreatesVisit> call = RetrofitClient.getInstance().getApi().createVisit(createsVisit);
 

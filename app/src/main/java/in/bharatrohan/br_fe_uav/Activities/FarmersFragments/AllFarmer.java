@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -32,6 +33,8 @@ public class AllFarmer extends Fragment {
 
     private AllRecyclerAdapter adapter;
     private RecyclerView recyclerView;
+    private ProgressBar progressBar;
+    private List<FarmerList.FarmersList> verifiedFarmersArrayList;
 
     public AllFarmer() {
         // Required empty public constructor
@@ -42,23 +45,32 @@ public class AllFarmer extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_all_farmer, container, false);
+        View view = inflater.inflate(R.layout.fragment_all_farmer, container, false);
+        init(view);
+        return view;
+    }
+
+
+    private void init(View view) {
+
+        verifiedFarmersArrayList = new ArrayList<>();
+        recyclerView = view.findViewById(R.id.recycler);
+        progressBar = view.findViewById(R.id.progressBar);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        recyclerView = view.findViewById(R.id.recycler);
-
+        showProgress();
         Call<FarmerList> call = RetrofitClient
                 .getInstance()
                 .getApi()
-                .getFarmerList(new PrefManager(getActivity()).getToken(), new PrefManager(getActivity()).getFeId());
+                .getFarmerList(new PrefManager(getActivity()).getToken(), new PrefManager(getActivity()).getUserId());
 
         call.enqueue(new Callback<FarmerList>() {
             @Override
             public void onResponse(Call<FarmerList> call, Response<FarmerList> response) {
-
+                hideProgress();
                 if (response.body() != null) {
                     generateFarmerList(response.body().getFarmersLists());
                 } else {
@@ -68,19 +80,32 @@ public class AllFarmer extends Fragment {
 
             @Override
             public void onFailure(Call<FarmerList> call, Throwable t) {
-
+                hideProgress();
+                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
-
-        ;
     }
 
     private void generateFarmerList(List<FarmerList.FarmersList> allFarmersArrayList) {
-        adapter = new AllRecyclerAdapter(getActivity(), allFarmersArrayList);
+        for (int i = 0; i < allFarmersArrayList.size(); i++) {
+            if (allFarmersArrayList.get(i).getVerified()) {
+
+                verifiedFarmersArrayList.add(allFarmersArrayList.get(i));
+            }
+        }
+        adapter = new AllRecyclerAdapter(getActivity(), verifiedFarmersArrayList);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+    }
+
+    private void showProgress() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void hideProgress() {
+        progressBar.setVisibility(View.GONE);
     }
 }

@@ -10,6 +10,8 @@ public class CreatesVisit {
     private String farmerId;
     @SerializedName("farm_id")
     private String farmId;
+    @SerializedName("uav_id")
+    private String uavId;
     @SerializedName("crop_id")
     private String cropId;
     @SerializedName("fe_id")
@@ -44,9 +46,10 @@ public class CreatesVisit {
 
     }
 
-    public CreatesVisit(String farmerId, String farmId, String cropId, String feId, List<Questions> questionsList) {
+    public CreatesVisit(String farmerId, String farmId, String uavId, String cropId, String feId, List<Questions> questionsList) {
         this.farmerId = farmerId;
         this.farmId = farmId;
+        this.uavId = uavId;
         this.cropId = cropId;
         this.feId = feId;
         this.questionsList = questionsList;
@@ -59,6 +62,10 @@ public class CreatesVisit {
 
     public String getFarmerId() {
         return farmerId;
+    }
+
+    public String getUavId() {
+        return uavId;
     }
 
     public String getFarmId() {
@@ -81,7 +88,7 @@ public class CreatesVisit {
         return data;
     }
 
-    public class Data{
+    public class Data {
 
         @SerializedName("problem")
         private Problem problem;
@@ -94,7 +101,7 @@ public class CreatesVisit {
             return problem;
         }
 
-        public class Problem{
+        public class Problem {
             @SerializedName("_id")
             private String id;
 

@@ -26,12 +26,19 @@ public class FarmerList {
         private String contact;
         @SerializedName("_id")
         private String id;
+        @SerializedName("isVerified")
+        private Boolean isVerified;
 
-        public FarmersList(String farmer_name, String email, String contact, String id) {
+        public FarmersList(String farmer_name, String email, String contact, String id, Boolean isVerified) {
             this.farmer_name = farmer_name;
             this.email = email;
             this.contact = contact;
             this.id = id;
+            this.isVerified = isVerified;
+        }
+
+        public Boolean getVerified() {
+            return isVerified;
         }
 
         public String getFarmer_name() {

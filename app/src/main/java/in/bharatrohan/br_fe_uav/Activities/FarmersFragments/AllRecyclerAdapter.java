@@ -16,7 +16,6 @@ import com.feedingtrends.vocally.Interfaces.ItemClickListener;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import in.bharatrohan.br_fe_uav.Activities.FarmerInfo;
@@ -49,7 +48,6 @@ public class AllRecyclerAdapter extends RecyclerView.Adapter<AllRecyclerAdapter.
 
         holder.farmerName.setText(dataList.get(position).getFarmer_name());
         holder.email.setText(dataList.get(position).getEmail());
-        new PrefManager(mCtx).saveFarmerId(dataList.get(position).getId());
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onPhoneClick(@NotNull View view, int position) {
@@ -61,6 +59,7 @@ public class AllRecyclerAdapter extends RecyclerView.Adapter<AllRecyclerAdapter.
             @Override
             public void onSelectClick(@NotNull View view, int positions) {
                 mCtx.startActivity(new Intent(mCtx, FarmerInfo.class));
+                new PrefManager(mCtx).saveFarmerId(dataList.get(position).getId());
 
             }
         });

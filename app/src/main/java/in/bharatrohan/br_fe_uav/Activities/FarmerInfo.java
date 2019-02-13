@@ -3,8 +3,10 @@ package in.bharatrohan.br_fe_uav.Activities;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +25,7 @@ public class FarmerInfo extends AppCompatActivity {
     private TextView landInfo;
     private TextView name, contact, email, address, dob;
     public ArrayList<String> farmList;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,17 +47,26 @@ public class FarmerInfo extends AppCompatActivity {
 
         landInfo = findViewById(R.id.landDetails);
 
-        name = findViewById(R.id.tvName);
+        name = findViewById(R.id.tvUavName);
         contact = findViewById(R.id.tvContact);
-        email = findViewById(R.id.tvEmail);
-        address = findViewById(R.id.tvAddress);
+        email = findViewById(R.id.tvUavEmail);
+        address = findViewById(R.id.tvUavAddress);
         dob = findViewById(R.id.tvDob);
+        progressBar = findViewById(R.id.progressBar);
 
+        getDetail();
+
+
+    }
+
+    private void getDetail(){
+        showProgress();
         Call<Farmer> call = RetrofitClient.getInstance().getApi().getFarmerDetail(new PrefManager(this).getToken(), new PrefManager(this).getFarmerId());
 
         call.enqueue(new Callback<Farmer>() {
             @Override
             public void onResponse(Call<Farmer> call, Response<Farmer> response) {
+                hideProgress();
                 Farmer farmer = response.body();
 
                 if (farmer != null) {
@@ -74,9 +86,21 @@ public class FarmerInfo extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Farmer> call, Throwable t) {
+                hideProgress();
                 Toast.makeText(FarmerInfo.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
     }
+
+    private void showProgress() {
+        progressBar.setVisibility(View.VISIBLE);
+        landInfo.setEnabled(false);
+    }
+
+    private void hideProgress() {
+        progressBar.setVisibility(View.GONE);
+        landInfo.setEnabled(true);
+    }
+
+
 }

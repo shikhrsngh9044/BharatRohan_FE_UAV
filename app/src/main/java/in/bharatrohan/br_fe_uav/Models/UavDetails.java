@@ -4,13 +4,13 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class FeDetails {
+public class UavDetails {
 
     @SerializedName("email")
     private String email;
     @SerializedName("user_type")
     private String userType;
-    @SerializedName("fe_name")
+    @SerializedName("uav_name")
     private String name;
     @SerializedName("contact")
     private String contact;
@@ -25,7 +25,7 @@ public class FeDetails {
     @SerializedName("job_location")
     private JobLocation jobLocation;
 
-    public FeDetails(String email, String userType, String name, String contact, String alt_contact, String avatar, Boolean accStatus, String address, JobLocation jobLocation) {
+    public UavDetails(String email, String userType, String name, String contact, String alt_contact, String avatar, Boolean accStatus, String address, JobLocation jobLocation) {
         this.email = email;
         this.userType = userType;
         this.name = name;

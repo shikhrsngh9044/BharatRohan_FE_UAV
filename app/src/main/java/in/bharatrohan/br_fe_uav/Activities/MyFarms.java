@@ -39,6 +39,7 @@ public class MyFarms extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_my_farms);
+        getFarmCount();
         initViews();
     }
 
@@ -59,13 +60,19 @@ public class MyFarms extends AppCompatActivity {
         viewPager = findViewById(R.id.viewpager);
 
         mTabLayout = findViewById(R.id.tabs);
-        viewPager.setOffscreenPageLimit(5);
+        viewPager.setOffscreenPageLimit(1);
+
+        setDynamicFragmentToTabLayout();
+
+        if (mFragmentAdapter != null) {
+            mFragmentAdapter.notifyDataSetChanged();
+        }
+
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
         mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                saveFarmId(tab.getPosition());
-                showFarmInfo();
+                new PrefManager(MyFarms.this).saveFarmNo(tab.getPosition());
                 viewPager.setCurrentItem(tab.getPosition());
             }
 
@@ -80,22 +87,28 @@ public class MyFarms extends AppCompatActivity {
             }
         });
 
-        setDynamicFragmentToTabLayout();
     }
 
 
     private void setDynamicFragmentToTabLayout() {
-        for (int i = 1; i <= farm_count; i++) {
+        if ((new PrefManager(this).getFarmerFarmCount()) > 0) {
+            for (int i = 1; i <= new PrefManager(this).getFarmerFarmCount(); i++) {
 
-            mTabLayout.addTab(mTabLayout.newTab().setText("Land: " + i));
+                mTabLayout.addTab(mTabLayout.newTab().setText("Land: " + i));
+            }
+            mFragmentAdapter = new FragmentAdapter(getSupportFragmentManager(), mTabLayout.getTabCount());
+            viewPager.setAdapter(mFragmentAdapter);
+            viewPager.setCurrentItem(0);
+        } else if ((new PrefManager(this).getFarmerFarmCount()) == 1) {
+            new PrefManager(MyFarms.this).saveFarmNo(0);
+        } else {
+            Toast.makeText(MyFarms.this, "No Farms Registered yet!!", Toast.LENGTH_SHORT).show();
         }
-        mFragmentAdapter = new FragmentAdapter(getSupportFragmentManager(), mTabLayout.getTabCount());
-        viewPager.setAdapter(mFragmentAdapter);
-        viewPager.setCurrentItem(0);
     }
 
-    private void saveFarmId(int farmNo) {
-        Call<Farmer> call = RetrofitClient.getInstance().getApi().getFarmerDetail(new PrefManager(MyFarms.this).getToken(), new PrefManager(MyFarms.this).getFarmerId());
+
+    private void getFarmCount() {
+        Call<Farmer> call = RetrofitClient.getInstance().getApi().getFarmerDetail(new PrefManager(MyFarms.this).getToken(), new PrefManager(this).getFarmerId());
 
         call.enqueue(new Callback<Farmer>() {
             @Override
@@ -103,10 +116,7 @@ public class MyFarms extends AppCompatActivity {
                 Farmer farmer = response.body();
 
                 if (farmer != null) {
-                    farmList = farmer.getFarms();
-                    farmId = farmList.get(farmNo);
-                    //Toast.makeText(getActivity(), farmId, Toast.LENGTH_SHORT).show();
-                    new PrefManager(MyFarms.this).saveFarmId(farmId);
+                    new PrefManager(MyFarms.this).saveFarmCount(farmer.getFarms().size());
                 } else {
                     Toast.makeText(MyFarms.this, "Some error occurred.Please try again!!", Toast.LENGTH_SHORT).show();
                 }
@@ -117,31 +127,6 @@ public class MyFarms extends AppCompatActivity {
                 Toast.makeText(MyFarms.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private void showFarmInfo() {
-        Call<Farm> call = RetrofitClient.getInstance().getApi().getFarmDetail(new PrefManager(this).getToken(), new PrefManager(MyFarms.this).getFarmId());
-
-        call.enqueue(new Callback<Farm>() {
-            @Override
-            public void onResponse(Call<Farm> call, Response<Farm> response) {
-                Farm farm = response.body();
-                if (farm != null) {
-                    //Toast.makeText(getActivity(), farmId, Toast.LENGTH_SHORT).show();
-                    new PrefManager(MyFarms.this).saveFarmDeatils(farm.getData().getFarm_name(), farm.getData().getCrop().getCrop_name());
-
-                    new PrefManager(MyFarms.this).saveCropId(farm.getData().getCrop().getCrop_id());
-                } else {
-                    Toast.makeText(MyFarms.this, "Some error occurred.Please try again!!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Farm> call, Throwable t) {
-
-            }
-        });
-
 
     }
 

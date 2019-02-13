@@ -1,6 +1,8 @@
 package in.bharatrohan.br_fe_uav.Activities.FarmersFragments;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,18 +11,26 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import com.feedingtrends.vocally.Interfaces.ItemClickListener;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import in.bharatrohan.br_fe_uav.Activities.FarmerInfo;
+import in.bharatrohan.br_fe_uav.Models.FarmerList;
 import in.bharatrohan.br_fe_uav.Models.UnFarmers;
+import in.bharatrohan.br_fe_uav.PrefManager;
 import in.bharatrohan.br_fe_uav.R;
 
 public class UnRecyclerAdapter extends RecyclerView.Adapter<UnRecyclerAdapter.UnViewHolder> {
 
     private Context mCtx;
     private final LayoutInflater layoutInflater;
-    private ArrayList<UnFarmers> dataList;
+    private List<FarmerList.FarmersList> dataList;
 
-    public UnRecyclerAdapter(Context context, ArrayList<UnFarmers> dataList) {
+    public UnRecyclerAdapter(Context context, List<FarmerList.FarmersList> dataList) {
         mCtx = context;
         layoutInflater = LayoutInflater.from(context);
         this.dataList = dataList;
@@ -29,19 +39,30 @@ public class UnRecyclerAdapter extends RecyclerView.Adapter<UnRecyclerAdapter.Un
     @NonNull
     @Override
     public UnViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = layoutInflater.inflate(R.layout.un_farmers_row, parent, false);
+        View itemView = layoutInflater.inflate(R.layout.farmers_row, parent, false);
         UnViewHolder unViewHolder = new UnViewHolder(itemView);
         return unViewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull UnViewHolder holder, int position) {
-        holder.phone.setOnClickListener(v -> {
 
-        });
+        holder.farmerName.setText(dataList.get(position).getFarmer_name());
+        holder.email.setText(dataList.get(position).getEmail());
 
-        holder.select.setOnClickListener(v->{
+        holder.setItemClickListener(new ItemClickListener() {
+            @Override
+            public void onPhoneClick(@NotNull View view, int position) {
+                Intent dialIntent = new Intent(Intent.ACTION_DIAL);
+                dialIntent.setData(Uri.parse("tel:" + dataList.get(position).getContact()));
+                mCtx.startActivity(dialIntent);
+            }
 
+            @Override
+            public void onSelectClick(@NotNull View view, int position) {
+                new PrefManager(mCtx).saveFarmerId(dataList.get(position).getId());
+                mCtx.startActivity(new Intent(mCtx, FarmerInfo.class));
+            }
         });
     }
 
@@ -53,17 +74,25 @@ public class UnRecyclerAdapter extends RecyclerView.Adapter<UnRecyclerAdapter.Un
 
     public class UnViewHolder extends RecyclerView.ViewHolder {
 
-        TextView farmerName, upVisit;
+        TextView farmerName, email;
         ImageView phone, select;
+        private ItemClickListener mClickListener;
 
         public UnViewHolder(View itemView) {
             super(itemView);
 
             farmerName = itemView.findViewById(R.id.tvFname);
-            upVisit = itemView.findViewById(R.id.tvUpVisit);
+            email = itemView.findViewById(R.id.tvEmail);
 
             phone = itemView.findViewById(R.id.imgPhone);
             select = itemView.findViewById(R.id.imgSelect);
+
+            phone.setOnClickListener(v -> mClickListener.onPhoneClick(v, getAdapterPosition()));
+            select.setOnClickListener(v -> mClickListener.onSelectClick(v, getAdapterPosition()));
+        }
+
+        public void setItemClickListener(ItemClickListener itemClickListener) {
+            this.mClickListener = itemClickListener;
         }
     }
 }

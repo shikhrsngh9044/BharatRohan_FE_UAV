@@ -1,9 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".Activities.UAVHome">
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:id="@+id/action_profile"
+        android:orderInCategory="1"
+        android:title="Profile"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_pass"
+        android:orderInCategory="2"
+        android:title="Change Password"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_drone_issue"
+        android:orderInCategory="3"
+        android:title="Report Drone Issue"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_imp_contacts"
+        android:orderInCategory="4"
+        android:title="Important Contacts"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_complain"
+        android:orderInCategory="5"
+        android:title="Complain"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_logout"
+        android:orderInCategory="6"
+        android:title="Logout"
         app:showAsAction="never" />
 </menu>

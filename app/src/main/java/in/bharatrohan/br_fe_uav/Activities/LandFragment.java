@@ -1,5 +1,6 @@
 package in.bharatrohan.br_fe_uav.Activities;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +36,11 @@ public class LandFragment extends Fragment {
     private TextView tvCVisit;
     private TextView tvLandName, tvCropName;
     private String farmId;
+    private TextView landName, cropName;
+    private ProgressBar progressBar;
+    private BroadcastReceiver br;
+    //String farmId;
+    private ArrayList<String> farmList = new ArrayList<>();
 
     public static LandFragment newInstance() {
         return new LandFragment();
@@ -53,11 +60,11 @@ public class LandFragment extends Fragment {
         View view = inflater.inflate(R.layout.land_fragment_layout, container, false);
 
         initViews(view);
-
+/*
         tvLandName.setText(new PrefManager(getActivity()).getLandName());
         tvCropName.setText(new PrefManager(getActivity()).getCropName());
 
-        farmId = new PrefManager(getActivity()).getFarmId();
+        farmId = new PrefManager(getActivity()).getFarmId();*/
 
         tvCVisit.setOnClickListener(v -> {
             startActivity(new Intent(getActivity(), CreateVisit.class));
@@ -72,14 +79,24 @@ public class LandFragment extends Fragment {
 
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (new PrefManager(getActivity()).getFarmerFarmCount() == 1) {
+            new PrefManager(getActivity()).saveFarmNo(0);
+        }
+        getFarmId(new PrefManager(getActivity()).getFarmerFarmNo());
+    }
 
-        /*if (!farmId.equals(new PrefManager(getActivity()).getFarmId())){
-            showFarmInfo(new PrefManager(getActivity()).getFarmId());
-        }else {
-            showFarmInfo(farmId);
-        }*/
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (isVisibleToUser && isResumed()) {
+            if (new PrefManager(getActivity()).getFarmerFarmCount() == 1) {
+                new PrefManager(getActivity()).saveFarmNo(0);
+            }
+            getFarmId(new PrefManager(getActivity()).getFarmerFarmNo());
+        }
     }
 
     private void initViews(View view) {
@@ -89,9 +106,11 @@ public class LandFragment extends Fragment {
 
         adapter = new SolutionRecyclerAdapter(getActivity(), solutionArrayList);
         recyclerView = view.findViewById(R.id.recycler);
+
         tvCVisit = view.findViewById(R.id.tvCvisit);
-        tvLandName = view.findViewById(R.id.landName);
-        tvCropName = view.findViewById(R.id.cropName);
+        landName = view.findViewById(R.id.tvLandName);
+        cropName = view.findViewById(R.id.tvCropName);
+        progressBar = view.findViewById(R.id.progressBar);
 
 
     }
@@ -102,20 +121,18 @@ public class LandFragment extends Fragment {
         solutionArrayList.add(new FarmSolution(2, "Pesticide"));
     }
 
-
-    /*private void showFarmInfo(String farmId) {
+    private void showFarmInfo(String farmId) {
+        //showProgress();
         Call<Farm> call = RetrofitClient.getInstance().getApi().getFarmDetail(new PrefManager(getActivity()).getToken(), farmId);
 
         call.enqueue(new Callback<Farm>() {
             @Override
             public void onResponse(Call<Farm> call, Response<Farm> response) {
+                hideProgress();
                 Farm farm = response.body();
                 if (farm != null) {
-                    //Toast.makeText(getActivity(), farmId, Toast.LENGTH_SHORT).show();
-                    tvLandName.setText(farm.getData().getFarm_name());
-                    tvCropName.setText(farm.getData().getCrop().getCrop_name());
-
-                    new PrefManager(getActivity()).saveCropId(farm.getData().getCrop().getCrop_id());
+                    landName.setText(farm.getData().getFarm_name());
+                    cropName.setText(farm.getData().getCrop().getCrop_name());
                 } else {
                     Toast.makeText(getActivity(), "Some error occurred.Please try again!!", Toast.LENGTH_SHORT).show();
                 }
@@ -123,18 +140,53 @@ public class LandFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Farm> call, Throwable t) {
-
+                hideProgress();
+                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
 
-        tvCVisit.setOnClickListener(v -> {
-            startActivity(new Intent(getActivity(), CreateVisit.class));
+    }
+
+    private void getFarmId(int farmNo) {
+
+        showProgress();
+        Call<Farmer> call = RetrofitClient.getInstance().getApi().getFarmerDetail(new PrefManager(getActivity()).getToken(), new PrefManager(getActivity()).getFarmerId());
+
+        call.enqueue(new Callback<Farmer>() {
+            @Override
+            public void onResponse(Call<Farmer> call, Response<Farmer> response) {
+                Farmer farmer = response.body();
+
+                if (farmer != null) {
+                    farmList = farmer.getFarms();
+                    if (farmList.size() != 0) {
+                        showFarmInfo(farmList.get(farmNo));
+                    } else {
+                        new PrefManager(getActivity()).saveFarmNo(0);
+                        Toast.makeText(getActivity(), "No Farm is Registered yet!!", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getActivity(), "Some error occurred.Please try again!!", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Farmer> call, Throwable t) {
+                hideProgress();
+                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         });
-    }*/
+    }
+
+    private void showProgress() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void hideProgress() {
+        progressBar.setVisibility(View.GONE);
+    }
 
     @Override
     public void onAttach(Context context) {

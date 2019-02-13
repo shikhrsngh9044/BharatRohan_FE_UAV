@@ -29,4 +29,13 @@ public class FragmentAdapter extends FragmentStatePagerAdapter {
         return mNumOfTabs;
     }
 
+    @Override
+    public Parcelable saveState() {
+        return null;
+    }
+
+    @Override
+    public void restoreState(Parcelable state, ClassLoader loader) {
+        super.restoreState(state, loader);
+    }
 }
