@@ -17,6 +17,10 @@ public class Farmer {
     private Boolean acc_status;
     @SerializedName("dob")
     private String dob;
+    @SerializedName("avatar")
+    private String avatar;
+    @SerializedName("uav_id")
+    private String uav_id;
     @SerializedName("farms")
     private ArrayList<String> farms;
     @SerializedName("address")
@@ -31,6 +35,14 @@ public class Farmer {
         this.dob = dob;
         this.farms = farms;
         this.address = address;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public String getUav_id() {
+        return uav_id;
     }
 
     public String getName() {
@@ -105,7 +117,7 @@ public class Farmer {
             return village;
         }
 
-        public class State{
+        public class State {
             @SerializedName("state_name")
             private String state_name;
 
@@ -118,7 +130,7 @@ public class Farmer {
             }
         }
 
-        public class District{
+        public class District {
             @SerializedName("district_name")
             private String district_name;
 
@@ -131,7 +143,7 @@ public class Farmer {
             }
         }
 
-        public class Tehsil{
+        public class Tehsil {
             @SerializedName("tehsil_name")
             private String tehsil_name;
 
@@ -144,7 +156,7 @@ public class Farmer {
             }
         }
 
-        public class Block{
+        public class Block {
             @SerializedName("block_name")
             private String block_name;
 
@@ -157,7 +169,7 @@ public class Farmer {
             }
         }
 
-        public class Village{
+        public class Village {
             @SerializedName("village_name")
             private String village_name;
 

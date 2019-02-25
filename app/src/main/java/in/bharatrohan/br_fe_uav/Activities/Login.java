@@ -189,6 +189,7 @@ public class Login extends AppCompatActivity {
                     String villages = sb.toString();
                     //Toast.makeText(Login.this, villages, Toast.LENGTH_SHORT).show();
                     new PrefManager(Login.this).saveUserDetails(detailResponse.getName(), detailResponse.getContact(), detailResponse.getEmail(), detailResponse.getAlt_contact(), detailResponse.getAccStatus(), detailResponse.getAddress(), detailResponse.getJobLocation().getState().getState_name(), detailResponse.getJobLocation().getDistrict().getDistrict_name(), detailResponse.getJobLocation().getTehsil().getTehsil_name(), detailResponse.getJobLocation().getBlock().getBlock_name(), villages);
+                    new PrefManager(Login.this).saveAvatar(detailResponse.getAvatar());
 
                 } else {
                     Toast.makeText(Login.this, "Details not Saved Successfully", Toast.LENGTH_SHORT).show();
@@ -250,6 +251,7 @@ public class Login extends AppCompatActivity {
                     String villages = sb.toString();
                     //Toast.makeText(Login.this, villages, Toast.LENGTH_SHORT).show();
                     new PrefManager(Login.this).saveUserDetails(detailResponse.getName(), detailResponse.getContact(), detailResponse.getEmail(), detailResponse.getAlt_contact(), detailResponse.getAccStatus(), detailResponse.getAddress(), detailResponse.getJobLocation().getState().getState_name(), detailResponse.getJobLocation().getDistrict().getDistrict_name(), detailResponse.getJobLocation().getTehsil().getTehsil_name(), detailResponse.getJobLocation().getBlock().getBlock_name(), villages);
+                    new PrefManager(Login.this).saveAvatar(detailResponse.getAvatar());
 
                 } else {
                     Toast.makeText(Login.this, "Details not Saved Successfully", Toast.LENGTH_SHORT).show();

@@ -1,17 +1,28 @@
 package in.bharatrohan.br_fe_uav.Api;
 
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
 
-    private static final String BASE_URL = "http://2271493d.ngrok.io/api/br/";
+    private static final String BASE_URL = "http://89b9d956.ngrok.io/api/br/";
     private static RetrofitClient mInstance;
     private Retrofit retrofit;
 
     private RetrofitClient() {
+
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(1, TimeUnit.MINUTES)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
+                .build();
+
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
+                .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }
@@ -26,6 +37,4 @@ public class RetrofitClient {
     public Api getApi() {
         return retrofit.create(Api.class);
     }
-
-    /*fe/5c4594ad3167f72730b01d90*/
 }

@@ -93,15 +93,15 @@ public class PrefManager {
         return sharedPreferences.getString("Alt_Contact", "");
     }
 
-    public void saveFeAvatar(String avatar) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("FeAvatar", Context.MODE_PRIVATE);
+    public void saveFarmerAvatar(String avatar) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("FarmerAvatar", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("Avatar", avatar);
         editor.apply();
     }
 
-    public String getFeAvatar(String token) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("FeAvatar", Context.MODE_PRIVATE);
+    public String getFarmerAvatar() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("FarmerAvatar", Context.MODE_PRIVATE);
         return sharedPreferences.getString("Avatar", "");
     }
 
@@ -203,23 +203,72 @@ public class PrefManager {
         return sharedPreferences.getString("Id", "");
     }
 
-    public void saveFarmDeatils(String landName, String cropName) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("FarmDetails", Context.MODE_PRIVATE);
+    public void saveFarmerDetails(String problemId, String email, String name, String contact, String address, String avatar, String farm_name, String farm_location, String farm_area, String kml_url) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("UavFarmerDetails", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("LandName", landName);
-        editor.putString("CropName", cropName);
+        editor.putString("ProblemId", problemId);
+        editor.putString("Email", email);
+        editor.putString("Name", name);
+        editor.putString("Contact", contact);
+        editor.putString("Address", address);
+        editor.putString("Avatar", avatar);
+        editor.putString("FarmName", farm_name);
+        editor.putString("FarmLocation", farm_location);
+        editor.putString("FarmArea", farm_area);
+        editor.putString("KmlUrl", kml_url);
         editor.apply();
     }
 
-    public String getLandName() {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("FarmDetails", Context.MODE_PRIVATE);
-        return sharedPreferences.getString("LandName", "");
+    public String getFProblemId() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("UavFarmerDetails", Context.MODE_PRIVATE);
+        return sharedPreferences.getString("ProblemId", "");
     }
 
-    public String getCropName() {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("FarmDetails", Context.MODE_PRIVATE);
-        return sharedPreferences.getString("CropName", "");
+    public String getFEmail() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("UavFarmerDetails", Context.MODE_PRIVATE);
+        return sharedPreferences.getString("Email", "");
     }
+
+    public String getFName() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("UavFarmerDetails", Context.MODE_PRIVATE);
+        return sharedPreferences.getString("Name", "");
+    }
+
+    public String getFContact() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("UavFarmerDetails", Context.MODE_PRIVATE);
+        return sharedPreferences.getString("Contact", "");
+    }
+
+    public String getFAddress() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("UavFarmerDetails", Context.MODE_PRIVATE);
+        return sharedPreferences.getString("Address", "");
+    }
+
+    public String getFAvatar() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("UavFarmerDetails", Context.MODE_PRIVATE);
+        return sharedPreferences.getString("Avatar", "");
+    }
+
+    public String getFFarmName() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("UavFarmerDetails", Context.MODE_PRIVATE);
+        return sharedPreferences.getString("FarmName", "");
+    }
+
+    public String getFFarmLocation() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("UavFarmerDetails", Context.MODE_PRIVATE);
+        return sharedPreferences.getString("FarmLocation", "");
+    }
+
+    public String getFFarmArea() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("UavFarmerDetails", Context.MODE_PRIVATE);
+        return sharedPreferences.getString("FarmArea", "");
+    }
+
+    public String getFKmlUrl() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("UavFarmerDetails", Context.MODE_PRIVATE);
+        return sharedPreferences.getString("KmlUrl", "");
+    }
+
 
     public void saveFarmNo(int farm_count) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("FarmNo", Context.MODE_PRIVATE);
@@ -245,5 +294,54 @@ public class PrefManager {
     public String getUserType() {
         SharedPreferences sharedPreferences = context.getSharedPreferences("UserType", Context.MODE_PRIVATE);
         return sharedPreferences.getString("Type", "");
+    }
+
+
+    public void saveFarmStatus(Boolean status) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("FarmStatus", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("Status", status);
+        editor.apply();
+    }
+
+    public Boolean getFarmStatus() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("FarmStatus", Context.MODE_PRIVATE);
+        return sharedPreferences.getBoolean("Status", false);
+    }
+
+    public void saveFarmerStatus(Boolean status) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("FarmerStatus", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("Status", status);
+        editor.apply();
+    }
+
+    public Boolean getFarmerStatus() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("FarmerStatus", Context.MODE_PRIVATE);
+        return sharedPreferences.getBoolean("Status", false);
+    }
+
+    public void saveFarmImage(String image) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("FarmImage", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("Image", image);
+        editor.apply();
+    }
+
+    public String getFarmImage() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("FarmImage", Context.MODE_PRIVATE);
+        return sharedPreferences.getString("Image", "");
+    }
+
+    public void saveAvatar(String avatar) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("UserAvatar", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("Avatar", avatar);
+        editor.apply();
+    }
+
+    public String getAvatar() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("UserAvatar", Context.MODE_PRIVATE);
+        return sharedPreferences.getString("Avatar", "");
     }
 }

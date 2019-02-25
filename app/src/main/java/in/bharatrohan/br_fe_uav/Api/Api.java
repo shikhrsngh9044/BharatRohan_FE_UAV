@@ -9,18 +9,24 @@ import in.bharatrohan.br_fe_uav.Models.FarmerList;
 import in.bharatrohan.br_fe_uav.Models.FeDetails;
 import in.bharatrohan.br_fe_uav.Models.LoginFE;
 import in.bharatrohan.br_fe_uav.Models.LoginUAV;
+import in.bharatrohan.br_fe_uav.Models.Responses;
 import in.bharatrohan.br_fe_uav.Models.UavDetails;
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.Streaming;
+import retrofit2.http.Url;
 
 public interface Api {
 
@@ -39,14 +45,21 @@ public interface Api {
     Call<UavDetails> getUavDetail(@Header("Authorization") String token,
                                   @Path("id") String feId);
 
+    @GET()
+    @Streaming
+    Call<ResponseBody> downloadKml(@Url String fileUrl);
+
+    @GET("uav/{id}")
+    Call<UavDetails> getUavFarmerDetail(@Header("Authorization") String token,
+                                        @Path("id") String feId);
+
     @GET("fe/{id}")
     Call<FarmerList> getFarmerList(@Header("Authorization") String token,
                                    @Path("id") String feId);
 
     @GET("fe/{id}")
     Call<FarmerList> getUnFarmerList(@Header("Authorization") String token,
-                                     @Path("id") String feId,
-                                     @Query("isVerified") Boolean isVerified);
+                                     @Path("id") String feId);
 
     @GET("farmer/{id}")
     Call<Farmer> getFarmerDetail(@Header("Authorization") String token,
@@ -57,15 +70,67 @@ public interface Api {
                              @Path("id") String feId);
 
     @POST("crop-problem")
-    Call<CreatesVisit> createVisit(@Body CreatesVisit createVisit);
+    Call<CreatesVisit> createVisit(@Header("Authorization") String token,
+                                   @Body CreatesVisit createVisit);
 
     @Multipart
     @POST("problem-img/{id}")
-    Call<ResponseBody> uploadProblemImage(
-            @Path("id") String id,
-            @Part List<MultipartBody.Part> files);
+    Call<ResponseBody> uploadProblemImage(@Header("Authorization") String token,
+                                          @Path("id") String id,
+                                          @Part List<MultipartBody.Part> files);
 
-    //get()
+    @FormUrlEncoded
+    @POST("uav/submit-data-to-rse/{id}")
+    Call<ResponseBody> submitToRse(@Header("Authorization") String token,
+                                   @Path("id") String id,
+                                   @Field("rseId") String rseId,
+                                   @Field("problemId") String problemId);
 
-//uav login- g
+    @FormUrlEncoded
+    @PATCH("fe/verify-farm")
+    Call<ResponseBody> verifyFarm(@Header("Authorization") String token,
+                                  @Field("farmId") String farmId);
+
+    @FormUrlEncoded
+    @PATCH("fe/verify-farmer")
+    Call<ResponseBody> verifyFarmer(@Header("Authorization") String token,
+                                    @Field("farmerId") String farmerId);
+
+    @FormUrlEncoded
+    @POST("uav/otp")
+    Call<ResponseBody> getOtpUav(@Header("Authorization") String token,
+                                 @Field("email") String email);
+
+    @FormUrlEncoded
+    @POST("uav/change-password")
+    Call<ResponseBody> changePassUav(@Header("Authorization") String token,
+                                     @Field("email") String email,
+                                     @Field("otp") String otp,
+                                     @Field("Password") String password);
+
+    @FormUrlEncoded
+    @POST("fe/otp")
+    Call<ResponseBody> getOtpFe(@Header("Authorization") String token,
+                                @Field("email") String email);
+
+    @FormUrlEncoded
+    @POST("fe/change-password")
+    Call<ResponseBody> changePassFe(@Header("Authorization") String token,
+                                    @Field("email") String email,
+                                    @Field("otp") String otp,
+                                    @Field("Password") String password);
+
+
+    @Multipart
+    @PATCH("fe/change-avatar/{id}")
+    Call<Responses.AvatarResponse> updateFeAvatar(@Header("Authorization") String token,
+                                                  @Path("id") String id,
+                                                  @Part MultipartBody.Part avatar);
+
+    @Multipart
+    @PATCH("uav/change-avatar/{id}")
+    Call<Responses.AvatarResponse> updateUavAvatar(@Header("Authorization") String token,
+                                                   @Path("id") String id,
+                                                   @Part MultipartBody.Part avatar);
+
 }

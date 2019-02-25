@@ -50,29 +50,37 @@ public class SolutionRecyclerAdapter extends RecyclerView.Adapter<SolutionRecycl
         holder.solNo.setText(String.valueOf(dataList.get(position).getSolNo()));
         holder.sol.setText(dataList.get(position).getSol());
 
-        holder.setItemsClickListener((view, position1) -> {
-            PopupMenu popupMenu = new PopupMenu(mCtx, holder.option);
-            popupMenu.inflate(R.menu.solution_option_menu);
-            popupMenu.setOnMenuItemClickListener(item -> {
-                switch (item.getItemId()) {
-                    case R.id.apply: {
-                        return true;
+        holder.setItemsClickListener(new Item_ClickListener() {
+            @Override
+            public void onOptionClick(@NotNull View view, int position) {
+                PopupMenu popupMenu = new PopupMenu(mCtx, holder.option);
+                popupMenu.inflate(R.menu.solution_option_menu);
+                popupMenu.setOnMenuItemClickListener(item -> {
+                    switch (item.getItemId()) {
+                        case R.id.apply: {
+                            return true;
+                        }
+
+                        case R.id.comment: {
+                            return true;
+                        }
+
+                        case R.id.fe_comment: {
+                            return true;
+                        }
+
+                        default:
+                            return false;
                     }
 
-                    case R.id.comment: {
-                        return true;
-                    }
+                });
+                popupMenu.show();
+            }
 
-                    case R.id.fe_comment: {
-                        return true;
-                    }
+            @Override
+            public void onSelectClick(@NotNull View view, int position) {
 
-                    default:
-                        return false;
-                }
-
-            });
-            popupMenu.show();
+            }
         });
     }
 

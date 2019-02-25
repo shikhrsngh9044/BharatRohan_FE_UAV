@@ -19,14 +19,27 @@ public class Farm {
 
     public class Data {
 
+        @SerializedName("isVerified")
+        private Boolean isVerified;
         @SerializedName("farm_name")
         private String farm_name;
+        @SerializedName("map_image")
+        private String map_image;
         @SerializedName("crop_id")
         private Crop crop;
 
-        public Data(String farm_name, Crop crop) {
+        public Data(Boolean isVerified, String farm_name, Crop crop) {
+            this.isVerified = isVerified;
             this.farm_name = farm_name;
             this.crop = crop;
+        }
+
+        public String getMap_image() {
+            return map_image;
+        }
+
+        public Boolean getVerified() {
+            return isVerified;
         }
 
         public String getFarm_name() {

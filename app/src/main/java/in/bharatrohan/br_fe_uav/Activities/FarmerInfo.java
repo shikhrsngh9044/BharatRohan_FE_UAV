@@ -6,9 +6,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -16,6 +21,7 @@ import in.bharatrohan.br_fe_uav.Api.RetrofitClient;
 import in.bharatrohan.br_fe_uav.Models.Farmer;
 import in.bharatrohan.br_fe_uav.PrefManager;
 import in.bharatrohan.br_fe_uav.R;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -26,6 +32,8 @@ public class FarmerInfo extends AppCompatActivity {
     private TextView name, contact, email, address, dob;
     public ArrayList<String> farmList;
     private ProgressBar progressBar;
+    private Button btnVerify;
+    private ImageView profilePic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +46,25 @@ public class FarmerInfo extends AppCompatActivity {
 
         landInfo.setOnClickListener(v -> {
             startActivity(new Intent(FarmerInfo.this, MyFarms.class));
+        });
+
+        btnVerify.setOnClickListener(v -> {
+            Call<ResponseBody> call = RetrofitClient.getInstance().getApi().verifyFarmer(new PrefManager(FarmerInfo.this).getToken(), new PrefManager(FarmerInfo.this).getFarmerId());
+
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.code() == 200) {
+                        btnVerify.setVisibility(View.GONE);
+                        Toast.makeText(FarmerInfo.this, "Farmer Verified Successfully!!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                }
+            });
         });
     }
 
@@ -53,13 +80,20 @@ public class FarmerInfo extends AppCompatActivity {
         address = findViewById(R.id.tvUavAddress);
         dob = findViewById(R.id.tvDob);
         progressBar = findViewById(R.id.progressBar);
+        btnVerify = findViewById(R.id.btnVerify);
+        profilePic = findViewById(R.id.profileImage);
 
         getDetail();
 
+        if (new PrefManager(FarmerInfo.this).getFarmerStatus()) {
+            btnVerify.setVisibility(View.VISIBLE);
+        }
 
+
+        //Picasso.get().load(new PrefManager(this).getFAvatar()).into(profilePic);
     }
 
-    private void getDetail(){
+    private void getDetail() {
         showProgress();
         Call<Farmer> call = RetrofitClient.getInstance().getApi().getFarmerDetail(new PrefManager(this).getToken(), new PrefManager(this).getFarmerId());
 
@@ -70,14 +104,14 @@ public class FarmerInfo extends AppCompatActivity {
                 Farmer farmer = response.body();
 
                 if (farmer != null) {
+                    Picasso.get().load(farmer.getAvatar()).into(profilePic);
                     name.setText(farmer.getName());
                     contact.setText(farmer.getContact());
                     email.setText(farmer.getEmail());
                     address.setText(farmer.getFull_address());
                     dob.setText(farmer.getDob());
-
-                    //farmList = farmer.getFarms();
-
+                    new PrefManager(FarmerInfo.this).saveFarmerStatus(farmer.getAcc_status());
+                    new PrefManager(FarmerInfo.this).saveUavId(farmer.getUav_id());
                     new PrefManager(FarmerInfo.this).saveFarmCount(farmer.getFarms().size());
                 } else {
                     Toast.makeText(FarmerInfo.this, "Some error occurred.Please try again!!", Toast.LENGTH_SHORT).show();

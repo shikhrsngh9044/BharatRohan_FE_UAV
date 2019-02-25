@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <meta-data
         android:name="com.google.android.gms.vision.DEPENDENCIES"
         android:value="barcode" />
@@ -11,7 +12,7 @@
     <uses-feature android:name="android.hardware.camera2" />
 
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -40,7 +41,11 @@
         <activity android:name=".Activities.UAV_FarmerInfo" />
         <activity android:name=".Activities.UAVProfile" />
         <activity android:name=".Activities.ChangePassword" />
-        <activity android:name=".Activities.BarcodeReaderActivity"></activity>
+        <activity android:name=".Activities.BarcodeReaderActivity" />
+
+        <service android:name=".Services.DownloadService" />
+
+        <activity android:name=".Activities.VerifyFarm"></activity>
     </application>
 
 </manifest>

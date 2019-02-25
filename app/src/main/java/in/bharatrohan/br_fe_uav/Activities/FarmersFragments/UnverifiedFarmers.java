@@ -63,7 +63,7 @@ public class UnverifiedFarmers extends Fragment {
         Call<FarmerList> call = RetrofitClient
                 .getInstance()
                 .getApi()
-                .getUnFarmerList(new PrefManager(getActivity()).getToken(), new PrefManager(getActivity()).getUserId(), false);
+                .getUnFarmerList(new PrefManager(getActivity()).getToken(), new PrefManager(getActivity()).getUserId());
 
         call.enqueue(new Callback<FarmerList>() {
             @Override

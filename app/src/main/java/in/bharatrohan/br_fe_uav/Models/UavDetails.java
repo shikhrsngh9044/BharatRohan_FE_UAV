@@ -24,8 +24,10 @@ public class UavDetails {
     private String address;
     @SerializedName("job_location")
     private JobLocation jobLocation;
+    @SerializedName("crop_problems")
+    private List<CropProblem> cropProblem;
 
-    public UavDetails(String email, String userType, String name, String contact, String alt_contact, String avatar, Boolean accStatus, String address, JobLocation jobLocation) {
+    public UavDetails(String email, String userType, String name, String contact, String alt_contact, String avatar, Boolean accStatus, String address, JobLocation jobLocation, List<CropProblem> cropProblem) {
         this.email = email;
         this.userType = userType;
         this.name = name;
@@ -35,6 +37,7 @@ public class UavDetails {
         this.accStatus = accStatus;
         this.address = address;
         this.jobLocation = jobLocation;
+        this.cropProblem = cropProblem;
     }
 
     public String getUserType() {
@@ -71,6 +74,10 @@ public class UavDetails {
 
     public JobLocation getJobLocation() {
         return jobLocation;
+    }
+
+    public List<CropProblem> getCropProblem() {
+        return cropProblem;
     }
 
     public class JobLocation {
@@ -175,6 +182,116 @@ public class UavDetails {
 
             public String getVillage_name() {
                 return village_name;
+            }
+        }
+    }
+
+    public class CropProblem {
+
+        @SerializedName("_id")
+        private String problemId;
+        @SerializedName("farmer_id")
+        private FarmerDetail farmer;
+        @SerializedName("farm_id")
+        private FarmDetail farm;
+
+        public CropProblem(String problemId, FarmerDetail farmer, FarmDetail farm) {
+            this.problemId = problemId;
+            this.farmer = farmer;
+            this.farm = farm;
+        }
+        public String getProblemId() {
+            return problemId;
+        }
+
+        public FarmerDetail getFarmer() {
+            return farmer;
+        }
+
+        public FarmDetail getFarm() {
+            return farm;
+        }
+
+        public class FarmerDetail {
+            @SerializedName("email")
+            private String email;
+            @SerializedName("farmer_name")
+            private String farmerName;
+            @SerializedName("contact")
+            private String contact;
+            @SerializedName("full_address")
+            private String full_address;
+            @SerializedName("avatar")
+            private String avatar;
+
+            public FarmerDetail(String email, String farmerName, String contact, String full_address, String avatar) {
+                this.email = email;
+                this.farmerName = farmerName;
+                this.contact = contact;
+                this.full_address = full_address;
+                this.avatar = avatar;
+            }
+
+            public String getEmail() {
+                return email;
+            }
+
+            public String getFarmerName() {
+                return farmerName;
+            }
+
+            public String getContact() {
+                return contact;
+            }
+
+            public String getFull_address() {
+                return full_address;
+            }
+
+            public String getAvatar() {
+                return avatar;
+            }
+        }
+
+        public class FarmDetail {
+            @SerializedName("farm_name")
+            private String farmName;
+            @SerializedName("location")
+            private String location;
+            @SerializedName("farm_area")
+            private String farmArea;
+            @SerializedName("kml_file")
+            private String kml;
+            @SerializedName("map_image")
+            private String image;
+
+            public FarmDetail(String farmName, String location, String farmArea, String kml, String image) {
+                this.farmName = farmName;
+                this.location = location;
+                this.farmArea = farmArea;
+                this.kml = kml;
+                this.image = image;
+            }
+
+
+            public String getFarmName() {
+                return farmName;
+            }
+
+            public String getLocation() {
+                return location;
+            }
+
+            public String getFarmArea() {
+                return farmArea;
+            }
+
+            public String getKml() {
+                return kml;
+            }
+
+            public String getImage() {
+                return image;
             }
         }
     }

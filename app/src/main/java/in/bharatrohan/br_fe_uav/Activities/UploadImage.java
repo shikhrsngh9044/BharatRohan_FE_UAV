@@ -179,7 +179,7 @@ public class UploadImage extends AppCompatActivity {
             RequestBody size = createPartFromString("" + parts.size());
 
             // finally, execute the request
-            Call<ResponseBody> call = RetrofitClient.getInstance().getApi().uploadProblemImage(new PrefManager(UploadImage.this).getProblemId(), parts);
+            Call<ResponseBody> call = RetrofitClient.getInstance().getApi().uploadProblemImage(new PrefManager(UploadImage.this).getToken(), new PrefManager(UploadImage.this).getProblemId(), parts);
 
             call.enqueue(new Callback<ResponseBody>() {
                 @Override

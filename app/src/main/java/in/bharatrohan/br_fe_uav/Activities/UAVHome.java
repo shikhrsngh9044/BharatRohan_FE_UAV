@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Patterns;
 import android.view.Menu;
@@ -11,18 +13,81 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import java.util.List;
+
+import in.bharatrohan.br_fe_uav.Activities.FarmersFragments.AllRecyclerAdapter;
+import in.bharatrohan.br_fe_uav.Adapters.UAVProblemRecyclerAdapter;
+import in.bharatrohan.br_fe_uav.Api.RetrofitClient;
+import in.bharatrohan.br_fe_uav.Models.FarmerList;
+import in.bharatrohan.br_fe_uav.Models.UavDetails;
 import in.bharatrohan.br_fe_uav.PrefManager;
 import in.bharatrohan.br_fe_uav.R;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class UAVHome extends AppCompatActivity {
+
+    private RecyclerView recyclerView;
+    private UAVProblemRecyclerAdapter adapter;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_uavhome);
-        Toolbar toolbar2 = (Toolbar) findViewById(R.id.toolbar1);
+        Toolbar toolbar2 = findViewById(R.id.toolbar1);
         setSupportActionBar(toolbar2);
+
+        progressBar = findViewById(R.id.progressBar);
+        recyclerView = findViewById(R.id.farmerrecycler);
+
+        getFarmers();
+    }
+
+    private void getFarmers() {
+        showProgress();
+        Call<UavDetails> call =
+                RetrofitClient.getInstance().getApi().getUavFarmerDetail(new PrefManager(UAVHome.this).getToken(), new PrefManager(UAVHome.this).getUserId());
+
+        call.enqueue(new Callback<UavDetails>() {
+            @Override
+            public void onResponse(Call<UavDetails> call, Response<UavDetails> response) {
+                hideProgress();
+                UavDetails detailsResponse = response.body();
+
+                if (response.code() == 200) {
+
+                    if (detailsResponse != null) {
+                        generateFarmerList(detailsResponse.getCropProblem());
+                    } else {
+                        Toast.makeText(UAVHome.this, "Some error occurred.Please try again!!", Toast.LENGTH_SHORT).show();
+                    }
+
+                } else {
+                    Toast.makeText(UAVHome.this, "Server Error", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UavDetails> call, Throwable t) {
+                hideProgress();
+                Toast.makeText(UAVHome.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    private void generateFarmerList(List<UavDetails.CropProblem> allFarmersArrayList) {
+
+        adapter = new UAVProblemRecyclerAdapter(this, allFarmersArrayList);
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -55,7 +120,7 @@ public class UAVHome extends AppCompatActivity {
         } else if (id == R.id.action_complain) {
             showDialogComplain();
             return true;
-        }else if (id==R.id.action_logout){
+        } else if (id == R.id.action_logout) {
             new PrefManager(UAVHome.this).saveLoginDetails("", "", "");
             new PrefManager(UAVHome.this).saveToken("");
             new PrefManager(UAVHome.this).saveUserDetails("", "", "", "", false, "", "", "", "", "", "");
@@ -140,5 +205,13 @@ public class UAVHome extends AppCompatActivity {
 
             alertDialog.dismiss();
         });
+    }
+
+    private void showProgress() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void hideProgress() {
+        progressBar.setVisibility(View.GONE);
     }
 }

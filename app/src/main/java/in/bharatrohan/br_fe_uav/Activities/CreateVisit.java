@@ -46,7 +46,7 @@ public class CreateVisit extends AppCompatActivity {
         create = findViewById(R.id.create);
         skip = findViewById(R.id.skip);
 
-        questionsList = new ArrayList<CreatesVisit.Questions>();
+        questionsList = new ArrayList<>();
 
         add.setOnClickListener(v -> {
             addEdits();
@@ -74,7 +74,7 @@ public class CreateVisit extends AppCompatActivity {
 
         CreatesVisit createsVisit = new CreatesVisit(new PrefManager(this).getFarmerId(), new PrefManager(this).getFarmId(), new PrefManager(this).getUavId(), new PrefManager(this).getCropId(), new PrefManager(this).getUserId(), questionsList);
 
-        Call<CreatesVisit> call = RetrofitClient.getInstance().getApi().createVisit(createsVisit);
+        Call<CreatesVisit> call = RetrofitClient.getInstance().getApi().createVisit(new PrefManager(CreateVisit.this).getToken(), createsVisit);
 
         call.enqueue(new Callback<CreatesVisit>() {
             @Override
@@ -111,6 +111,7 @@ public class CreateVisit extends AppCompatActivity {
         et1.setLayoutParams(lp);
         et1.setHint("Enter Question " + count);
         et1.setGravity(Gravity.CENTER);
+        et1.setHintTextColor(666666);
         et1.setId(etId + 1);
         ll.addView(et1);
         etId++;
@@ -120,6 +121,7 @@ public class CreateVisit extends AppCompatActivity {
         et2.setLayoutParams(lp);
         et2.setHint("Enter Answer " + count);
         et2.setGravity(Gravity.CENTER);
+        et2.setHintTextColor(666666);
         et2.setId(etId + 1);
         ll.addView(et2);
         etId++;

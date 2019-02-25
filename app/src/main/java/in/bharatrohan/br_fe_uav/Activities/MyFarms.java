@@ -9,7 +9,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -32,6 +35,7 @@ public class MyFarms extends AppCompatActivity {
     String farmId;
     private ArrayList<String> farmList = new ArrayList<>();
     private FragmentAdapter mFragmentAdapter;
+    private ImageView headImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +60,8 @@ public class MyFarms extends AppCompatActivity {
     private void initViews() {
 
         farm_count = new PrefManager(this).getFarmerFarmCount();
+        headImage = findViewById(R.id.head_img);
+        Picasso.get().load(R.drawable.my_farm_header).fit().centerCrop().into(headImage);
 
         viewPager = findViewById(R.id.viewpager);
 

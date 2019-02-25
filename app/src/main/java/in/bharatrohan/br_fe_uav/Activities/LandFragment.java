@@ -1,12 +1,12 @@
 package in.bharatrohan.br_fe_uav.Activities;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -25,6 +25,7 @@ import in.bharatrohan.br_fe_uav.Models.FarmSolution;
 import in.bharatrohan.br_fe_uav.Models.Farmer;
 import in.bharatrohan.br_fe_uav.PrefManager;
 import in.bharatrohan.br_fe_uav.R;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,13 +34,9 @@ public class LandFragment extends Fragment {
     private SolutionRecyclerAdapter adapter;
     private ArrayList<FarmSolution> solutionArrayList;
     private RecyclerView recyclerView;
-    private TextView tvCVisit;
-    private TextView tvLandName, tvCropName;
-    private String farmId;
+    private TextView tvCVisit, verifyFarm, farmStatus;
     private TextView landName, cropName;
     private ProgressBar progressBar;
-    private BroadcastReceiver br;
-    //String farmId;
     private ArrayList<String> farmList = new ArrayList<>();
 
     public static LandFragment newInstance() {
@@ -60,15 +57,10 @@ public class LandFragment extends Fragment {
         View view = inflater.inflate(R.layout.land_fragment_layout, container, false);
 
         initViews(view);
-/*
-        tvLandName.setText(new PrefManager(getActivity()).getLandName());
-        tvCropName.setText(new PrefManager(getActivity()).getCropName());
 
-        farmId = new PrefManager(getActivity()).getFarmId();*/
+        tvCVisit.setOnClickListener(v -> startActivity(new Intent(getActivity(), CreateVisit.class)));
 
-        tvCVisit.setOnClickListener(v -> {
-            startActivity(new Intent(getActivity(), CreateVisit.class));
-        });
+        verifyFarm.setOnClickListener(v -> startActivity(new Intent(getActivity(), VerifyFarm.class)));
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
@@ -108,11 +100,20 @@ public class LandFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recycler);
 
         tvCVisit = view.findViewById(R.id.tvCvisit);
+        farmStatus = view.findViewById(R.id.tvFarmStatus);
+        verifyFarm = view.findViewById(R.id.tvVerifyFarm);
         landName = view.findViewById(R.id.tvLandName);
         cropName = view.findViewById(R.id.tvCropName);
         progressBar = view.findViewById(R.id.progressBar);
 
 
+        if (new PrefManager(getContext()).getFarmStatus()) {
+            farmStatus.setText("Verified");
+            farmStatus.setBackgroundResource(android.R.color.holo_green_dark);
+        } else {
+            farmStatus.setText("Not Verified");
+            farmStatus.setBackgroundResource(android.R.color.holo_red_dark);
+        }
     }
 
 
@@ -123,6 +124,8 @@ public class LandFragment extends Fragment {
 
     private void showFarmInfo(String farmId) {
         //showProgress();
+
+        new PrefManager(getContext()).saveFarmId(farmId);
         Call<Farm> call = RetrofitClient.getInstance().getApi().getFarmDetail(new PrefManager(getActivity()).getToken(), farmId);
 
         call.enqueue(new Callback<Farm>() {
@@ -131,6 +134,8 @@ public class LandFragment extends Fragment {
                 hideProgress();
                 Farm farm = response.body();
                 if (farm != null) {
+                    new PrefManager(getContext()).saveFarmStatus(farm.getData().getVerified());
+                    new PrefManager(getContext()).saveFarmImage(farm.getData().getMap_image());
                     landName.setText(farm.getData().getFarm_name());
                     cropName.setText(farm.getData().getCrop().getCrop_name());
                 } else {
@@ -159,6 +164,7 @@ public class LandFragment extends Fragment {
                 Farmer farmer = response.body();
 
                 if (farmer != null) {
+                    new PrefManager(getContext()).saveFarmerAvatar(farmer.getAvatar());
                     farmList = farmer.getFarms();
                     if (farmList.size() != 0) {
                         showFarmInfo(farmList.get(farmNo));
@@ -188,6 +194,8 @@ public class LandFragment extends Fragment {
         progressBar.setVisibility(View.GONE);
     }
 
+
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -201,7 +209,14 @@ public class LandFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //showFarmInfo();
+
+        if (new PrefManager(getContext()).getFarmStatus()) {
+            farmStatus.setText("Verified");
+            farmStatus.setBackgroundResource(android.R.color.holo_green_dark);
+        } else {
+            farmStatus.setText("Not Verified");
+            farmStatus.setBackgroundResource(android.R.color.holo_red_dark);
+        }
     }
 
     @Override

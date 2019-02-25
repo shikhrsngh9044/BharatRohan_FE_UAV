@@ -10,8 +10,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.jaredrummler.materialspinner.MaterialSpinner;
+
+import java.util.ArrayList;
 
 import in.bharatrohan.br_fe_uav.PrefManager;
 import in.bharatrohan.br_fe_uav.R;
@@ -20,15 +26,23 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private ImageView farmers, visits, repo, money;
+    private MaterialSpinner navHelpSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         init();
+
+        navHelpSpinner.setOnItemSelectedListener((view1, position, id, item) -> {
+            if (position == 1) {
+                Toast.makeText(this, "Selected : Feedback", Toast.LENGTH_SHORT).show();
+            } else if (position == 2) {
+                Toast.makeText(this, "Selected : Imp Contact", Toast.LENGTH_SHORT).show();
+            }
+
+        });
 
         farmers.setOnClickListener(v -> {
             startActivity(new Intent(MainActivity.this, Farmers.class));
@@ -46,28 +60,49 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(MainActivity.this, "This feature is coming soon!!", Toast.LENGTH_SHORT).show();
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+    }
+
+
+    private void init() {
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-    }
-
-
-    private void init() {
         //Toast.makeText(MainActivity.this, new PrefManager(MainActivity.this).getName(), Toast.LENGTH_SHORT).show();
         farmers = findViewById(R.id.farmers);
         visits = findViewById(R.id.myVisits);
         repo = findViewById(R.id.repo);
         money = findViewById(R.id.money);
+
+        TextView userName = navigationView.getHeaderView(0).findViewById(R.id.tvUserName);
+        TextView userEmail = navigationView.getHeaderView(0).findViewById(R.id.tvUserEmail);
+
+        userName.setText(new PrefManager(MainActivity.this).getName());
+        userEmail.setText(new PrefManager(MainActivity.this).getEmail());
+
+        navHelpSpinner = (MaterialSpinner) navigationView.getMenu().findItem(R.id.nav_help).getActionView();
+
+        ArrayList<String> helpList = new ArrayList<>();
+        helpList.add("-Help and Support-");
+        helpList.add("Feedback and Complaints");
+        helpList.add("Imp Contacts");
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, helpList);
+        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        navHelpSpinner.setAdapter(adapter1);
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -82,15 +117,15 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_profile) {
+            startActivity(new Intent(this, UAVProfile.class));
+        } else if (id == R.id.nav_pass) {
+            startActivity(new Intent(this, ChangePassword.class));
+        } else if (id == R.id.nav_help) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_privacy) {
 
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_tc) {
 
         } else if (id == R.id.logout) {
             new PrefManager(MainActivity.this).saveLoginDetails("", "", "");
@@ -99,9 +134,11 @@ public class MainActivity extends AppCompatActivity
             new PrefManager(MainActivity.this).saveUserType("");
             startActivity(new Intent(MainActivity.this, Login.class));
             finish();
+        } else if (id == R.id.stop_service) {
+
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
