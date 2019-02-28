@@ -3,13 +3,17 @@ package in.bharatrohan.br_fe_uav.Activities;
 import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -39,10 +43,11 @@ public class UAV_FarmerInfo extends AppCompatActivity {
 
 
     private Button btnDownKml, btnScanRse;
-    private TextView Name, Phone, Email, Address, farmName, farmLocation, farmArea;
+    private TextView Name, Phone, Email, Address, farmName, farmLocation, farmArea, Call, Mail, FeName, FeMail, FeCall;
     private ImageView avatar;
     public static final String MESSAGE_PROGRESS = "message_progress";
     private static final int PERMISSION_REQUEST_CODE = 1;
+    private Boolean toggle;
 
     //@BindView(R.id.progress)
     private ProgressBar mProgressBar;
@@ -59,10 +64,14 @@ public class UAV_FarmerInfo extends AppCompatActivity {
         registerReceiver();
 
         btnScanRse.setOnClickListener(v -> {
-            scanBarcode();
+            toggle = false;
+            if (askForPermission()) {
+                scanBarcode();
+            }
         });
 
         btnDownKml.setOnClickListener(v -> {
+            toggle = true;
             mProgressBar.setVisibility(View.VISIBLE);
             mProgressText.setVisibility(View.VISIBLE);
             if (checkPermission()) {
@@ -70,6 +79,35 @@ public class UAV_FarmerInfo extends AppCompatActivity {
             } else {
                 requestPermission();
             }
+        });
+
+        Call.setOnClickListener(v -> {
+            Intent dialIntent = new Intent(Intent.ACTION_DIAL);
+            dialIntent.setData(Uri.parse("tel:" + Phone.getText().toString().trim()));
+            startActivity(dialIntent);
+        });
+
+        Mail.setOnClickListener(v -> {
+
+            Intent send = new Intent(Intent.ACTION_SENDTO);
+            String uriText = "mailto:" + Uri.encode(Email.getText().toString().trim());
+            Uri uri = Uri.parse(uriText);
+            send.setData(uri);
+            startActivity(Intent.createChooser(send, "Send mail..."));
+        });
+
+        FeCall.setOnClickListener(v -> {
+            Intent dialIntent = new Intent(Intent.ACTION_DIAL);
+            dialIntent.setData(Uri.parse("tel:" + new PrefManager(this).getFFeContact()));
+            startActivity(dialIntent);
+        });
+
+        FeMail.setOnClickListener(v -> {
+            Intent send = new Intent(Intent.ACTION_SENDTO);
+            String uriText = "mailto:" + Uri.encode(new PrefManager(this).getFFeEmail());
+            Uri uri = Uri.parse(uriText);
+            send.setData(uri);
+            startActivity(Intent.createChooser(send, "Send mail..."));
         });
     }
 
@@ -85,7 +123,13 @@ public class UAV_FarmerInfo extends AppCompatActivity {
         farmName = findViewById(R.id.tvFarmName);
         farmLocation = findViewById(R.id.tvFarmLocation);
         farmArea = findViewById(R.id.tvFarmArea);
+        Call = findViewById(R.id.textView9);
+        Mail = findViewById(R.id.textView10);
+        FeName = findViewById(R.id.tvFeName);
+        FeCall = findViewById(R.id.tvFeCall);
+        FeMail = findViewById(R.id.tvFeMail);
 
+        FeName.setText(new PrefManager(this).getFFeName());
         Name.setText(new PrefManager(this).getFName());
         Email.setText(new PrefManager(this).getFEmail());
         Phone.setText(new PrefManager(this).getFContact());
@@ -175,6 +219,61 @@ public class UAV_FarmerInfo extends AppCompatActivity {
         }
     };
 
+    //for Camera source
+    private boolean askForPermission() {
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if (currentAPIVersion >= Build.VERSION_CODES.M) {
+            int hasCallPermission = ContextCompat.checkSelfPermission(UAV_FarmerInfo.this,
+                    Manifest.permission.CAMERA);
+            if (hasCallPermission != PackageManager.PERMISSION_GRANTED) {
+                // Ask for permission
+                // need to request permission
+                if (ActivityCompat.shouldShowRequestPermissionRationale(UAV_FarmerInfo.this,
+                        Manifest.permission.CAMERA)) {
+                    // explain
+                    showMessageOKCancel(
+                            (dialogInterface, i) -> ActivityCompat.requestPermissions(UAV_FarmerInfo.this,
+                                    new String[]{Manifest.permission.CAMERA},
+                                    PERMISSION_REQUEST_CODE));
+                    // if denied then working here
+                } else {
+                    // Request for permission
+                    ActivityCompat.requestPermissions(UAV_FarmerInfo.this,
+                            new String[]{Manifest.permission.CAMERA},
+                            PERMISSION_REQUEST_CODE);
+                }
+
+                return false;
+            } else {
+                // permission granted and calling function working
+                return true;
+            }
+        } else {
+            return true;
+        }
+    }
+
+
+    private void showMessageOKCancel(DialogInterface.OnClickListener okListener) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(UAV_FarmerInfo.this);
+        final AlertDialog dialog = builder.setMessage("You need to grant access to Read External Storage")
+                .setPositiveButton("OK", okListener)
+                .setNegativeButton("Cancel", null)
+                .create();
+
+        dialog.setOnShowListener(arg0 -> {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(
+                    ContextCompat.getColor(UAV_FarmerInfo.this, android.R.color.holo_blue_light));
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(
+                    ContextCompat.getColor(UAV_FarmerInfo.this, android.R.color.holo_red_light));
+        });
+
+        dialog.show();
+
+    }
+
+
     private boolean checkPermission() {
         int result = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -199,8 +298,11 @@ public class UAV_FarmerInfo extends AppCompatActivity {
         switch (requestCode) {
             case PERMISSION_REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    startDownload();
+                    if (toggle) {
+                        startDownload();
+                    } else {
+                        scanBarcode();
+                    }
                 } else {
 
                     Toast.makeText(UAV_FarmerInfo.this, "Permission Denied, Please allow to proceed !", Toast.LENGTH_SHORT).show();

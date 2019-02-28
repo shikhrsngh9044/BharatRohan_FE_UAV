@@ -133,4 +133,7 @@ public interface Api {
                                                    @Path("id") String id,
                                                    @Part MultipartBody.Part avatar);
 
+
+
+
 }

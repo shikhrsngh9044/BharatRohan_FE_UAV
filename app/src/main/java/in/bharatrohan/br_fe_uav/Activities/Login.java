@@ -3,10 +3,12 @@ package in.bharatrohan.br_fe_uav.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import in.bharatrohan.br_fe_uav.Api.RetrofitClient;
@@ -24,6 +26,7 @@ public class Login extends AppCompatActivity {
 
     private EditText editEmail, editPass;
     private Button loginBtn;
+    private TextView tvForget;
     private ProgressBar progressBar;
 
     @Override
@@ -35,6 +38,7 @@ public class Login extends AppCompatActivity {
         editPass = findViewById(R.id.password);
         loginBtn = findViewById(R.id.login);
         progressBar = findViewById(R.id.progressBar);
+        tvForget = findViewById(R.id.tvForget);
 
 
         if (!new PrefManager(Login.this).getToken().equals("")) {
@@ -59,6 +63,12 @@ public class Login extends AppCompatActivity {
             } else {
                 validateForm();
             }
+        });
+
+        tvForget.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ChangePassword.class);
+            intent.putExtra("activity", "login");
+            startActivity(intent);
         });
 
     }
@@ -209,10 +219,11 @@ public class Login extends AppCompatActivity {
         String pass = editPass.getText().toString().trim();
 
         if (email.isEmpty()) {
-            editEmail.setError("Phone no. is required!");
+            editEmail.setError("Email is required!");
             editEmail.requestFocus();
             return true;
         }
+
 
         if (pass.isEmpty()) {
             editPass.setError("Password is required");

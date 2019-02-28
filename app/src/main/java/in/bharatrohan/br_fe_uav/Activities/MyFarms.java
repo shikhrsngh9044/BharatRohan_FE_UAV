@@ -29,11 +29,6 @@ public class MyFarms extends AppCompatActivity {
 
     private ViewPager viewPager;
     private TabLayout mTabLayout;
-    private int farm_count;
-    private FarmerInfo farmerInfo = new FarmerInfo();
-    private int farmNo;
-    String farmId;
-    private ArrayList<String> farmList = new ArrayList<>();
     private FragmentAdapter mFragmentAdapter;
     private ImageView headImage;
 
@@ -43,23 +38,19 @@ public class MyFarms extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_my_farms);
-        getFarmCount();
+        int farmCount = new PrefManager(this).getFarmerFarmCount();
         initViews();
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+
+        setDynamicFragmentToTabLayout(farmCount);
 
         if (mFragmentAdapter != null) {
             mFragmentAdapter.notifyDataSetChanged();
         }
-
     }
 
     private void initViews() {
 
-        farm_count = new PrefManager(this).getFarmerFarmCount();
         headImage = findViewById(R.id.head_img);
         Picasso.get().load(R.drawable.my_farm_header).fit().centerCrop().into(headImage);
 
@@ -67,12 +58,6 @@ public class MyFarms extends AppCompatActivity {
 
         mTabLayout = findViewById(R.id.tabs);
         viewPager.setOffscreenPageLimit(1);
-
-        setDynamicFragmentToTabLayout();
-
-        if (mFragmentAdapter != null) {
-            mFragmentAdapter.notifyDataSetChanged();
-        }
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
         mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -96,9 +81,9 @@ public class MyFarms extends AppCompatActivity {
     }
 
 
-    private void setDynamicFragmentToTabLayout() {
-        if ((new PrefManager(this).getFarmerFarmCount()) > 0) {
-            for (int i = 1; i <= new PrefManager(this).getFarmerFarmCount(); i++) {
+    private void setDynamicFragmentToTabLayout(int count) {
+        if (count > 0) {
+            for (int i = 1; i <= count; i++) {
 
                 mTabLayout.addTab(mTabLayout.newTab().setText("Land: " + i));
             }
@@ -113,7 +98,7 @@ public class MyFarms extends AppCompatActivity {
     }
 
 
-    private void getFarmCount() {
+   /* private void getFarmCount() {
         Call<Farmer> call = RetrofitClient.getInstance().getApi().getFarmerDetail(new PrefManager(MyFarms.this).getToken(), new PrefManager(this).getFarmerId());
 
         call.enqueue(new Callback<Farmer>() {
@@ -134,6 +119,6 @@ public class MyFarms extends AppCompatActivity {
             }
         });
 
-    }
+    }*/
 
 }

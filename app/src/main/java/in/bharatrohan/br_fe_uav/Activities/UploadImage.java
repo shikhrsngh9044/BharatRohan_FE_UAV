@@ -70,19 +70,14 @@ public class UploadImage extends AppCompatActivity {
         btnUpload = findViewById(R.id.btnUpload);
         btnSkip = findViewById(R.id.skip);
 
-        btnSkip.setOnClickListener(v -> {
-            this.finish();
-        });
+        btnSkip.setOnClickListener(v -> this.finish());
 
         btnChoose.setOnClickListener(v -> {
-            // Display the file chooser dialog
             if (askForPermission())
                 showChooser();
         });
 
-        btnUpload.setOnClickListener(v -> {
-            uploadImagesToServer();
-        });
+        btnUpload.setOnClickListener(v -> uploadImagesToServer());
     }
 
     private void showChooser() {
@@ -188,6 +183,7 @@ public class UploadImage extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         Toast.makeText(UploadImage.this,
                                 "Images successfully uploaded!", Toast.LENGTH_SHORT).show();
+                        UploadImage.this.finish();
                     } else {
                         Toast.makeText(UploadImage.this, "Something went Wrong!!!", Toast.LENGTH_SHORT).show();
                     }
@@ -209,12 +205,14 @@ public class UploadImage extends AppCompatActivity {
 
     private void showProgress() {
         mProgressBar.setVisibility(View.VISIBLE);
+        btnSkip.setEnabled(false);
         btnChoose.setEnabled(false);
         btnUpload.setEnabled(false);
     }
 
     private void hideProgress() {
         mProgressBar.setVisibility(View.GONE);
+        btnSkip.setEnabled(true);
         btnChoose.setEnabled(true);
         btnUpload.setEnabled(true);
     }

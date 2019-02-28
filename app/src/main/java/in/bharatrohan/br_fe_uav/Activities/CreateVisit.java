@@ -109,8 +109,10 @@ public class CreateVisit extends AppCompatActivity {
         EditText et1 = new EditText(this);
         quesEds.add(et1);
         et1.setLayoutParams(lp);
+        et1.setBackgroundResource(R.drawable.rounded_edittext);
         et1.setHint("Enter Question " + count);
         et1.setGravity(Gravity.CENTER);
+        et1.setTextColor(getResources().getColor(R.color.textColor));
         et1.setHintTextColor(666666);
         et1.setId(etId + 1);
         ll.addView(et1);
@@ -119,8 +121,10 @@ public class CreateVisit extends AppCompatActivity {
         EditText et2 = new EditText(this);
         ansEds.add(et2);
         et2.setLayoutParams(lp);
+        et2.setBackgroundResource(R.drawable.rounded_edittext);
         et2.setHint("Enter Answer " + count);
         et2.setGravity(Gravity.CENTER);
+        et2.setTextColor(getResources().getColor(R.color.textColor));
         et2.setHintTextColor(666666);
         et2.setId(etId + 1);
         ll.addView(et2);

@@ -29,7 +29,7 @@ public class VerifyFarm extends AppCompatActivity {
         verify = findViewById(R.id.verifyFarm);
         mapImage = findViewById(R.id.mapImage);
 
-        Picasso.get().load("http://bfe82c68.ngrok.io/" + new PrefManager(this).getFarmImage()).into(mapImage);
+        Picasso.get().load("http://bfe82c68.ngrok.io/" + new PrefManager(this).getFarmImage()).fit().centerCrop().into(mapImage);
 
         verify.setOnClickListener(v -> farmVerify());
     }

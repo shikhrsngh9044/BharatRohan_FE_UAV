@@ -54,6 +54,7 @@ public class ChangePassword extends AppCompatActivity {
                 validateForm();
             }
         });
+
     }
 
     private void init() {
@@ -65,6 +66,7 @@ public class ChangePassword extends AppCompatActivity {
         resendOtp = findViewById(R.id.tvResend);
         progressBar = findViewById(R.id.progressBar);
     }
+
 
     private void showDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ChangePassword.this);
@@ -81,6 +83,8 @@ public class ChangePassword extends AppCompatActivity {
         email.setText(new PrefManager(ChangePassword.this).getEmail());
 
         btnOk.setOnClickListener(view1 -> {
+            getOtp.setVisibility(View.GONE);
+            resendOtp.setVisibility(View.VISIBLE);
             String strEmail = email.getText().toString().trim();
 
             if (strEmail.isEmpty()) {
@@ -143,6 +147,9 @@ public class ChangePassword extends AppCompatActivity {
                 hideProgress();
                 if (response.code() == 200) {
                     Toast.makeText(ChangePassword.this, "Password changed successfully!! ", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(ChangePassword.this, Login.class));
+                    finish();
+
                 } else {
                     Toast.makeText(ChangePassword.this, "Some error occurred. Please try again later!", Toast.LENGTH_SHORT).show();
                 }
@@ -193,6 +200,8 @@ public class ChangePassword extends AppCompatActivity {
                 hideProgress();
                 if (response.code() == 200) {
                     Toast.makeText(ChangePassword.this, "Password changed successfully!! ", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(ChangePassword.this, Login.class));
+                    finish();
                 } else {
                     Toast.makeText(ChangePassword.this, "Some error occurred. Please try again later!", Toast.LENGTH_SHORT).show();
                 }

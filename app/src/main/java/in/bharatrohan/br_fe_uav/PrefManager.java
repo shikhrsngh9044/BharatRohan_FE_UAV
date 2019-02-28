@@ -203,7 +203,7 @@ public class PrefManager {
         return sharedPreferences.getString("Id", "");
     }
 
-    public void saveFarmerDetails(String problemId, String email, String name, String contact, String address, String avatar, String farm_name, String farm_location, String farm_area, String kml_url) {
+    public void saveFarmerDetails(String problemId, String email, String name, String contact, String address, String avatar, String farm_name, String farm_location, String farm_area, String kml_url, String fe_name, String fe_contact, String fe_email) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("UavFarmerDetails", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("ProblemId", problemId);
@@ -216,6 +216,9 @@ public class PrefManager {
         editor.putString("FarmLocation", farm_location);
         editor.putString("FarmArea", farm_area);
         editor.putString("KmlUrl", kml_url);
+        editor.putString("FeName", fe_name);
+        editor.putString("FeContact", fe_contact);
+        editor.putString("FeEmail", fe_email);
         editor.apply();
     }
 
@@ -267,6 +270,21 @@ public class PrefManager {
     public String getFKmlUrl() {
         SharedPreferences sharedPreferences = context.getSharedPreferences("UavFarmerDetails", Context.MODE_PRIVATE);
         return sharedPreferences.getString("KmlUrl", "");
+    }
+
+    public String getFFeName() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("UavFarmerDetails", Context.MODE_PRIVATE);
+        return sharedPreferences.getString("FeName", "");
+    }
+
+    public String getFFeContact() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("UavFarmerDetails", Context.MODE_PRIVATE);
+        return sharedPreferences.getString("FeContact", "");
+    }
+
+    public String getFFeEmail() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("UavFarmerDetails", Context.MODE_PRIVATE);
+        return sharedPreferences.getString("FeEmail", "");
     }
 
 

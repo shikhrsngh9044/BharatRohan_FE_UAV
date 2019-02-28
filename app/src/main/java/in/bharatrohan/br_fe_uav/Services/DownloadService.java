@@ -55,7 +55,7 @@ public class DownloadService extends IntentService {
     private void initDownload() {
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://eb1adaff.ngrok.io/")
+                .baseUrl("http://eaa6fecf.ngrok.io/")
                 .build();
 
         Api retrofitInterface = retrofit.create(Api.class);

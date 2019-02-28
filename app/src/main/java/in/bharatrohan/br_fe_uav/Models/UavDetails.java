@@ -194,12 +194,16 @@ public class UavDetails {
         private FarmerDetail farmer;
         @SerializedName("farm_id")
         private FarmDetail farm;
+        @SerializedName("fe_id")
+        private FeDetail fe;
 
-        public CropProblem(String problemId, FarmerDetail farmer, FarmDetail farm) {
+        public CropProblem(String problemId, FarmerDetail farmer, FarmDetail farm, FeDetail fe) {
             this.problemId = problemId;
             this.farmer = farmer;
             this.farm = farm;
+            this.fe = fe;
         }
+
         public String getProblemId() {
             return problemId;
         }
@@ -210,6 +214,10 @@ public class UavDetails {
 
         public FarmDetail getFarm() {
             return farm;
+        }
+
+        public FeDetail getFe() {
+            return fe;
         }
 
         public class FarmerDetail {
@@ -292,6 +300,33 @@ public class UavDetails {
 
             public String getImage() {
                 return image;
+            }
+        }
+
+        public class FeDetail{
+            @SerializedName("fe_name")
+            private String name;
+            @SerializedName("contact")
+            private String contact;
+            @SerializedName("email")
+            private String email;
+
+            public FeDetail(String name, String contact, String email) {
+                this.name = name;
+                this.contact = contact;
+                this.email = email;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public String getContact() {
+                return contact;
+            }
+
+            public String getEmail() {
+                return email;
             }
         }
     }

@@ -56,6 +56,7 @@ public class FarmerInfo extends AppCompatActivity {
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     if (response.code() == 200) {
                         btnVerify.setVisibility(View.GONE);
+                        init();
                         Toast.makeText(FarmerInfo.this, "Farmer Verified Successfully!!", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -85,12 +86,12 @@ public class FarmerInfo extends AppCompatActivity {
 
         getDetail();
 
-        if (new PrefManager(FarmerInfo.this).getFarmerStatus()) {
+        if (!new PrefManager(FarmerInfo.this).getFarmerStatus()) {
             btnVerify.setVisibility(View.VISIBLE);
         }
 
 
-        //Picasso.get().load(new PrefManager(this).getFAvatar()).into(profilePic);
+        Picasso.get().load(new PrefManager(this).getFAvatar()).into(profilePic);
     }
 
     private void getDetail() {

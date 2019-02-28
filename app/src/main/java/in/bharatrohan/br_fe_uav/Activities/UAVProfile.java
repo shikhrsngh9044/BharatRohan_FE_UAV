@@ -44,7 +44,7 @@ public class UAVProfile extends AppCompatActivity {
     private static final int REQUEST_CODE_ASK_PERMISSIONS = 124;
 
 
-    private TextView name, phone, email, address, updatePic;
+    private TextView name, phone, email, address, updatePic, state, district, tehsil, block, village;
     private ProgressBar progressBar;
     private ImageView userAvatar;
 
@@ -59,6 +59,11 @@ public class UAVProfile extends AppCompatActivity {
         phone.setText(new PrefManager(UAVProfile.this).getContact());
         email.setText(new PrefManager(UAVProfile.this).getEmail());
         address.setText(new PrefManager(UAVProfile.this).getAddress());
+        state.setText(new PrefManager(UAVProfile.this).getState());
+        district.setText(new PrefManager(UAVProfile.this).getDistrict());
+        tehsil.setText(new PrefManager(UAVProfile.this).getTehsil());
+        block.setText(new PrefManager(UAVProfile.this).getBlock());
+        village.setText(new PrefManager(UAVProfile.this).getVillage());
 
         updatePic.setOnClickListener(v -> {
             if (askForPermission()) {
@@ -75,6 +80,11 @@ public class UAVProfile extends AppCompatActivity {
         email = findViewById(R.id.tvUavEmail);
         address = findViewById(R.id.tvUavAddress);
         userAvatar = findViewById(R.id.uavAvatar);
+        state = findViewById(R.id.tvState);
+        district = findViewById(R.id.tvDistrict);
+        tehsil = findViewById(R.id.tvTehsil);
+        block = findViewById(R.id.tvBlock);
+        village = findViewById(R.id.tvVillage);
         updatePic = findViewById(R.id.tvUpdatePic);
     }
 

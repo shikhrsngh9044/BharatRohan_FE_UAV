@@ -45,7 +45,8 @@
 
         <service android:name=".Services.DownloadService" />
 
-        <activity android:name=".Activities.VerifyFarm"></activity>
+        <activity android:name=".Activities.VerifyFarm" />
+        <activity android:name=".Activities.FeedbackComplaints"></activity>
     </application>
 
 </manifest>

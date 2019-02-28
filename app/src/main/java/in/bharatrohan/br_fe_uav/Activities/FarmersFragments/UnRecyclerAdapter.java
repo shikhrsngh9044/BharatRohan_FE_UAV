@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,7 +76,8 @@ public class UnRecyclerAdapter extends RecyclerView.Adapter<UnRecyclerAdapter.Un
     public class UnViewHolder extends RecyclerView.ViewHolder {
 
         TextView farmerName, email;
-        ImageView phone, select;
+        ImageView phone;
+        ConstraintLayout select;
         private ItemClickListener mClickListener;
 
         public UnViewHolder(View itemView) {
@@ -85,7 +87,7 @@ public class UnRecyclerAdapter extends RecyclerView.Adapter<UnRecyclerAdapter.Un
             email = itemView.findViewById(R.id.tvEmail);
 
             phone = itemView.findViewById(R.id.imgPhone);
-            select = itemView.findViewById(R.id.imgSelect);
+            select = itemView.findViewById(R.id.constraintLayout8);
 
             phone.setOnClickListener(v -> mClickListener.onPhoneClick(v, getAdapterPosition()));
             select.setOnClickListener(v -> mClickListener.onSelectClick(v, getAdapterPosition()));
