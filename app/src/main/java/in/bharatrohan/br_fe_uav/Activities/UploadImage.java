@@ -29,6 +29,7 @@ import java.util.Objects;
 
 import in.bharatrohan.br_fe_uav.Adapters.MyAdapter;
 import in.bharatrohan.br_fe_uav.Api.RetrofitClient;
+import in.bharatrohan.br_fe_uav.CheckInternet;
 import in.bharatrohan.br_fe_uav.FileUtils;
 import in.bharatrohan.br_fe_uav.InternetConnection;
 import in.bharatrohan.br_fe_uav.PrefManager;
@@ -60,6 +61,7 @@ public class UploadImage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_image);
+        new CheckInternet(this).checkConnection();
 
         arrayList = new ArrayList<>();
         pathList = new ArrayList<>();
@@ -180,12 +182,16 @@ public class UploadImage extends AppCompatActivity {
                 @Override
                 public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                     hideProgress();
-                    if (response.isSuccessful()) {
+                    if (response.code() == 200) {
                         Toast.makeText(UploadImage.this,
                                 "Images successfully uploaded!", Toast.LENGTH_SHORT).show();
                         UploadImage.this.finish();
-                    } else {
-                        Toast.makeText(UploadImage.this, "Something went Wrong!!!", Toast.LENGTH_SHORT).show();
+                    } else if (response.code() == 401) {
+                        Toast.makeText(UploadImage.this, "Token Expired", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(UploadImage.this, Login.class));
+                        finish();
+                    } else if (response.code() == 500) {
+                        Toast.makeText(UploadImage.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
                     }
                 }
 

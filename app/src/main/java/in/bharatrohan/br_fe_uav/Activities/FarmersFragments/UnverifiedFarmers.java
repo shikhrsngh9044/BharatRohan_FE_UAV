@@ -1,6 +1,7 @@
 package in.bharatrohan.br_fe_uav.Activities.FarmersFragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import in.bharatrohan.br_fe_uav.Activities.Login;
 import in.bharatrohan.br_fe_uav.Api.RetrofitClient;
 import in.bharatrohan.br_fe_uav.Models.FarmerList;
 import in.bharatrohan.br_fe_uav.PrefManager;
@@ -69,10 +71,18 @@ public class UnverifiedFarmers extends Fragment {
             @Override
             public void onResponse(Call<FarmerList> call, Response<FarmerList> response) {
                 hideProgress();
-                if (response.body() != null) {
-                    generateFarmerList(response.body().getFarmersLists());
-                } else {
-                    Toast.makeText(getActivity(), "Some error occurred.Please try again!!", Toast.LENGTH_SHORT).show();
+                if (response.code()==200) {
+                    if (response.body() != null) {
+                        generateFarmerList(response.body().getFarmersLists());
+                    } else {
+                        Toast.makeText(getActivity(), "Some error occurred.Please try again!!", Toast.LENGTH_SHORT).show();
+                    }
+                }else if (response.code() == 401) {
+                    Toast.makeText(getContext(), "Token Expired", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getActivity(), Login.class));
+                  getActivity().finish();
+                } else if (response.code() == 500) {
+                    Toast.makeText(getContext(), "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
                 }
             }
 

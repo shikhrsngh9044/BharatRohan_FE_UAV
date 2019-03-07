@@ -30,6 +30,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import in.bharatrohan.br_fe_uav.Api.RetrofitClient;
+import in.bharatrohan.br_fe_uav.CheckInternet;
 import in.bharatrohan.br_fe_uav.Models.Download;
 import in.bharatrohan.br_fe_uav.PrefManager;
 import in.bharatrohan.br_fe_uav.R;
@@ -50,7 +51,7 @@ public class UAV_FarmerInfo extends AppCompatActivity {
     private Boolean toggle;
 
     //@BindView(R.id.progress)
-    private ProgressBar mProgressBar;
+    private ProgressBar mProgressBar, progressBar;
     //@BindView(R.id.progress_text)
     private TextView mProgressText;
 
@@ -59,6 +60,8 @@ public class UAV_FarmerInfo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_uav__farmer_info);
         init();
+        new CheckInternet(this).checkConnection();
+
         ButterKnife.bind(this);
 
         registerReceiver();
@@ -115,6 +118,7 @@ public class UAV_FarmerInfo extends AppCompatActivity {
         btnDownKml = findViewById(R.id.btnDownKml);
         btnScanRse = findViewById(R.id.btnScanRse);
         mProgressBar = findViewById(R.id.progress);
+        progressBar = findViewById(R.id.progressBar);
         mProgressText = findViewById(R.id.progress_text);
         Name = findViewById(R.id.tvName);
         Phone = findViewById(R.id.tvPhone);
@@ -140,6 +144,26 @@ public class UAV_FarmerInfo extends AppCompatActivity {
     }
 
 
+    private void showProgress() {
+        Call.setEnabled(false);
+        Mail.setEnabled(false);
+        FeMail.setEnabled(false);
+        FeCall.setEnabled(false);
+        btnScanRse.setEnabled(false);
+        btnDownKml.setEnabled(false);
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void hideProgress() {
+        Call.setEnabled(true);
+        Mail.setEnabled(true);
+        FeMail.setEnabled(true);
+        FeCall.setEnabled(true);
+        btnScanRse.setEnabled(true);
+        btnDownKml.setEnabled(true);
+        progressBar.setVisibility(View.GONE);
+    }
+
     public void scanBarcode() {
         Intent intent = new Intent(this, BarcodeReaderActivity.class);
         startActivityForResult(intent, 0);
@@ -153,7 +177,11 @@ public class UAV_FarmerInfo extends AppCompatActivity {
                 if (data != null) {
                     Barcode barcode = data.getParcelableExtra("barcode");
                     //Qr.setText(barcode.displayValue);
-                    submitToRse(barcode.displayValue);
+                    if (barcode.displayValue.length() == 24) {
+                        submitToRse(barcode.displayValue);
+                    } else {
+
+                    }
                     //Toast.makeText(UAV_FarmerInfo.this, barcode.displayValue.toString(), Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(UAV_FarmerInfo.this, "No QR found", Toast.LENGTH_LONG).show();
@@ -165,18 +193,27 @@ public class UAV_FarmerInfo extends AppCompatActivity {
     }
 
     private void submitToRse(String rseId) {
+        showProgress();
         Call<ResponseBody> call = RetrofitClient.getInstance().getApi().submitToRse(new PrefManager(UAV_FarmerInfo.this).getToken(), new PrefManager(UAV_FarmerInfo.this).getUserId(), rseId, new PrefManager(UAV_FarmerInfo.this).getFProblemId());
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                hideProgress();
                 if (response.code() == 200) {
                     Toast.makeText(UAV_FarmerInfo.this, "Request Submitted Successfully", Toast.LENGTH_SHORT).show();
+                }else if (response.code() == 401) {
+                    Toast.makeText(UAV_FarmerInfo.this, "Token Expired", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(UAV_FarmerInfo.this, Login.class));
+                    finish();
+                } else if (response.code() == 500) {
+                    Toast.makeText(UAV_FarmerInfo.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                hideProgress();
                 Toast.makeText(UAV_FarmerInfo.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -199,8 +236,8 @@ public class UAV_FarmerInfo extends AppCompatActivity {
     }
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
+
+        @Override public void onReceive(Context context, Intent intent) {
 
             if (intent.getAction().equals(MESSAGE_PROGRESS)) {
 

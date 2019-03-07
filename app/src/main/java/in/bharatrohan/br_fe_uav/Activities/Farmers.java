@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import in.bharatrohan.br_fe_uav.Adapters.FarmersFragmentAdapter;
+import in.bharatrohan.br_fe_uav.CheckInternet;
 import in.bharatrohan.br_fe_uav.R;
 
 public class Farmers extends AppCompatActivity {
@@ -25,7 +26,7 @@ public class Farmers extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_farmers);
-
+        new CheckInternet(this).checkConnection();
         initViews();
     }
 

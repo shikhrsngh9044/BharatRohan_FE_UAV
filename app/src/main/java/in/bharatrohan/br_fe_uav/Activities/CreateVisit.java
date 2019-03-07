@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.bharatrohan.br_fe_uav.Api.RetrofitClient;
+import in.bharatrohan.br_fe_uav.CheckInternet;
 import in.bharatrohan.br_fe_uav.Models.CreatesVisit;
 import in.bharatrohan.br_fe_uav.PrefManager;
 import in.bharatrohan.br_fe_uav.R;
@@ -40,6 +41,7 @@ public class CreateVisit extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_create_visit);
+        new CheckInternet(this).checkConnection();
         ll = findViewById(R.id.linearLayout);
         add = findViewById(R.id.addQ);
         remove = findViewById(R.id.removeQ);
@@ -68,37 +70,49 @@ public class CreateVisit extends AppCompatActivity {
 
     private void upload() {
 
-        for (int i = 0; i < quesEds.size(); i++) {
-            questionsList.add(i, new CreatesVisit.Questions(quesEds.get(i).getText().toString(), ansEds.get(i).getText().toString()));
-        }
+        if (quesEds.size() != 0) {
 
-        CreatesVisit createsVisit = new CreatesVisit(new PrefManager(this).getFarmerId(), new PrefManager(this).getFarmId(), new PrefManager(this).getUavId(), new PrefManager(this).getCropId(), new PrefManager(this).getUserId(), questionsList);
+            for (int i = 0; i < quesEds.size(); i++) {
+                questionsList.add(i, new CreatesVisit.Questions(quesEds.get(i).getText().toString(), ansEds.get(i).getText().toString()));
+            }
 
-        Call<CreatesVisit> call = RetrofitClient.getInstance().getApi().createVisit(new PrefManager(CreateVisit.this).getToken(), createsVisit);
+            CreatesVisit createsVisit = new CreatesVisit(new PrefManager(this).getFarmerId(), new PrefManager(this).getFarmId(), new PrefManager(this).getUavId(), new PrefManager(this).getCropId(), new PrefManager(this).getUserId(), questionsList);
 
-        call.enqueue(new Callback<CreatesVisit>() {
-            @Override
-            public void onResponse(Call<CreatesVisit> call, Response<CreatesVisit> response) {
-                CreatesVisit createsVisit1 = response.body();
+            Call<CreatesVisit> call = RetrofitClient.getInstance().getApi().createVisit(new PrefManager(CreateVisit.this).getToken(), createsVisit);
 
-                if (response.code() == 201) {
-                    if (createsVisit1 != null) {
-                        new PrefManager(CreateVisit.this).saveProblemId(createsVisit1.getData().getProblem().getId());
-                        Toast.makeText(CreateVisit.this, createsVisit1.getMessage(), Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(CreateVisit.this, UploadImage.class));
+            call.enqueue(new Callback<CreatesVisit>() {
+                @Override
+                public void onResponse(Call<CreatesVisit> call, Response<CreatesVisit> response) {
+                    CreatesVisit createsVisit1 = response.body();
+
+                    if (response.code() == 201) {
+                        if (createsVisit1 != null) {
+                            new PrefManager(CreateVisit.this).saveProblemId(createsVisit1.getData().getProblem().getId());
+                            Toast.makeText(CreateVisit.this, createsVisit1.getMessage(), Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(CreateVisit.this, UploadImage.class));
+                            finish();
+                        } else {
+                            Toast.makeText(CreateVisit.this, "Some error occurred.Please try again!!", Toast.LENGTH_SHORT).show();
+                        }
+                    } else if (response.code() == 401) {
+                        Toast.makeText(CreateVisit.this, "Token Expired", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(CreateVisit.this, Login.class));
                         finish();
-                    } else {
-                        Toast.makeText(CreateVisit.this, "Some error occurred.Please try again!!", Toast.LENGTH_SHORT).show();
+                    } else if (response.code() == 500) {
+                        Toast.makeText(CreateVisit.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
                     }
+
                 }
 
-            }
+                @Override
+                public void onFailure(Call<CreatesVisit> call, Throwable t) {
 
-            @Override
-            public void onFailure(Call<CreatesVisit> call, Throwable t) {
+                }
+            });
+        } else {
+            Toast.makeText(CreateVisit.this, "Enter questions and answers first", Toast.LENGTH_SHORT).show();
+        }
 
-            }
-        });
     }
 
     private void addEdits() {

@@ -1,5 +1,6 @@
 package in.bharatrohan.br_fe_uav.Activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
@@ -9,6 +10,7 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 
 import in.bharatrohan.br_fe_uav.Api.RetrofitClient;
+import in.bharatrohan.br_fe_uav.CheckInternet;
 import in.bharatrohan.br_fe_uav.PrefManager;
 import in.bharatrohan.br_fe_uav.R;
 import okhttp3.ResponseBody;
@@ -25,11 +27,12 @@ public class VerifyFarm extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verify_farm);
+        new CheckInternet(this).checkConnection();
 
         verify = findViewById(R.id.verifyFarm);
         mapImage = findViewById(R.id.mapImage);
 
-        Picasso.get().load("http://bfe82c68.ngrok.io/" + new PrefManager(this).getFarmImage()).fit().centerCrop().into(mapImage);
+        Picasso.get().load(new PrefManager(this).getFarmImage()).fit().centerCrop().into(mapImage);
 
         verify.setOnClickListener(v -> farmVerify());
     }
@@ -44,8 +47,12 @@ public class VerifyFarm extends AppCompatActivity {
                 if (response.code() == 200) {
                     Toast.makeText(VerifyFarm.this, "Farm Verified!", Toast.LENGTH_SHORT).show();
                     VerifyFarm.this.finish();
-                } else {
-                    Toast.makeText(VerifyFarm.this, "Some error occurred.Try after some time!", Toast.LENGTH_SHORT).show();
+                } else if (response.code() == 401) {
+                    Toast.makeText(VerifyFarm.this, "Token Expired", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(VerifyFarm.this, Login.class));
+                    finish();
+                } else if (response.code() == 500) {
+                    Toast.makeText(VerifyFarm.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
                 }
             }
 

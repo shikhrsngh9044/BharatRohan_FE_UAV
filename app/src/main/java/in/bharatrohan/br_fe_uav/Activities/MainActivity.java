@@ -1,6 +1,9 @@
 package in.bharatrohan.br_fe_uav.Activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,6 +22,7 @@ import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import java.util.ArrayList;
 
+import in.bharatrohan.br_fe_uav.CheckInternet;
 import in.bharatrohan.br_fe_uav.PrefManager;
 import in.bharatrohan.br_fe_uav.R;
 
@@ -32,7 +36,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        new CheckInternet(this).checkConnection();
         init();
 
         navHelpSpinner.setOnItemSelectedListener((view1, position, id, item) -> {

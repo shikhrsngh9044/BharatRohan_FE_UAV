@@ -18,6 +18,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import in.bharatrohan.br_fe_uav.Api.RetrofitClient;
+import in.bharatrohan.br_fe_uav.CheckInternet;
 import in.bharatrohan.br_fe_uav.Models.Farmer;
 import in.bharatrohan.br_fe_uav.PrefManager;
 import in.bharatrohan.br_fe_uav.R;
@@ -41,6 +42,7 @@ public class FarmerInfo extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_farmer_info);
+        new CheckInternet(this).checkConnection();
 
         init();
 
@@ -58,6 +60,12 @@ public class FarmerInfo extends AppCompatActivity {
                         btnVerify.setVisibility(View.GONE);
                         init();
                         Toast.makeText(FarmerInfo.this, "Farmer Verified Successfully!!", Toast.LENGTH_SHORT).show();
+                    } else if (response.code() == 401) {
+                        Toast.makeText(FarmerInfo.this, "Token Expired", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(FarmerInfo.this, Login.class));
+                        finish();
+                    } else if (response.code() == 500) {
+                        Toast.makeText(FarmerInfo.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -86,12 +94,12 @@ public class FarmerInfo extends AppCompatActivity {
 
         getDetail();
 
-        if (!new PrefManager(FarmerInfo.this).getFarmerStatus()) {
+        if (new PrefManager(FarmerInfo.this).getFarmerStatus() == false) {
             btnVerify.setVisibility(View.VISIBLE);
         }
 
-
-        Picasso.get().load(new PrefManager(this).getFAvatar()).into(profilePic);
+        if (!new PrefManager(this).getFAvatar().equals(""))
+            Picasso.get().load(new PrefManager(this).getFAvatar()).into(profilePic);
     }
 
     private void getDetail() {
@@ -103,19 +111,26 @@ public class FarmerInfo extends AppCompatActivity {
             public void onResponse(Call<Farmer> call, Response<Farmer> response) {
                 hideProgress();
                 Farmer farmer = response.body();
-
-                if (farmer != null) {
-                    Picasso.get().load(farmer.getAvatar()).into(profilePic);
-                    name.setText(farmer.getName());
-                    contact.setText(farmer.getContact());
-                    email.setText(farmer.getEmail());
-                    address.setText(farmer.getFull_address());
-                    dob.setText(farmer.getDob());
-                    new PrefManager(FarmerInfo.this).saveFarmerStatus(farmer.getAcc_status());
-                    new PrefManager(FarmerInfo.this).saveUavId(farmer.getUav_id());
-                    new PrefManager(FarmerInfo.this).saveFarmCount(farmer.getFarms().size());
-                } else {
-                    Toast.makeText(FarmerInfo.this, "Some error occurred.Please try again!!", Toast.LENGTH_SHORT).show();
+                if (response.code() == 200) {
+                    if (farmer != null) {
+                        Picasso.get().load(farmer.getAvatar()).into(profilePic);
+                        name.setText(farmer.getName());
+                        contact.setText(farmer.getContact());
+                        email.setText(farmer.getEmail());
+                        address.setText(farmer.getFull_address());
+                        dob.setText(farmer.getDob());
+                        new PrefManager(FarmerInfo.this).saveFarmerStatus(farmer.getVerified());
+                        new PrefManager(FarmerInfo.this).saveUavId(farmer.getUav_id());
+                        new PrefManager(FarmerInfo.this).saveFarmCount(farmer.getFarms().size());
+                    } else {
+                        Toast.makeText(FarmerInfo.this, "Some error occurred.Please try again!!", Toast.LENGTH_SHORT).show();
+                    }
+                } else if (response.code() == 401) {
+                    Toast.makeText(FarmerInfo.this, "Token Expired", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(FarmerInfo.this, Login.class));
+                    finish();
+                } else if (response.code() == 500) {
+                    Toast.makeText(FarmerInfo.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
                 }
             }
 

@@ -1,6 +1,9 @@
 package in.bharatrohan.br_fe_uav.Activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import in.bharatrohan.br_fe_uav.Api.RetrofitClient;
+import in.bharatrohan.br_fe_uav.CheckInternet;
 import in.bharatrohan.br_fe_uav.PrefManager;
 import in.bharatrohan.br_fe_uav.R;
 import okhttp3.ResponseBody;
@@ -31,6 +35,7 @@ public class ChangePassword extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
+        new CheckInternet(this).checkConnection();
         init();
 
         getOtp.setOnClickListener(v -> showDialog());
@@ -109,7 +114,17 @@ public class ChangePassword extends AppCompatActivity {
             alertDialog.dismiss();
         });
     }
+    private void checkInternet() {
+        ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            if (activeNetwork != null && activeNetwork.isConnectedOrConnecting()) {
 
+            } else {
+                Toast.makeText(getApplicationContext(), "Please check your Internet Connection", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
     private void getOtpRequestUav(String email) {
         showProgress();
@@ -121,8 +136,12 @@ public class ChangePassword extends AppCompatActivity {
                 hideProgress();
                 if (response.code() == 200) {
                     Toast.makeText(ChangePassword.this, "Otp sent successfully.Check your registered mail", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(ChangePassword.this, "Some error occurred. Please try again later!!", Toast.LENGTH_SHORT).show();
+                } else if (response.code() == 401) {
+                    Toast.makeText(ChangePassword.this, "Token Expired", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(ChangePassword.this, Login.class));
+                    finish();
+                } else if (response.code() == 500) {
+                    Toast.makeText(ChangePassword.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -150,8 +169,12 @@ public class ChangePassword extends AppCompatActivity {
                     startActivity(new Intent(ChangePassword.this, Login.class));
                     finish();
 
-                } else {
-                    Toast.makeText(ChangePassword.this, "Some error occurred. Please try again later!", Toast.LENGTH_SHORT).show();
+                } else if (response.code() == 401) {
+                    Toast.makeText(ChangePassword.this, "Token Expired", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(ChangePassword.this, Login.class));
+                    finish();
+                } else if (response.code() == 500) {
+                    Toast.makeText(ChangePassword.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -174,8 +197,12 @@ public class ChangePassword extends AppCompatActivity {
                 hideProgress();
                 if (response.code() == 200) {
                     Toast.makeText(ChangePassword.this, "Otp sent successfully.Check your registered mail", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(ChangePassword.this, "Some error occurred. Please try again later!!", Toast.LENGTH_SHORT).show();
+                }else if (response.code() == 401) {
+                    Toast.makeText(ChangePassword.this, "Token Expired", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(ChangePassword.this, Login.class));
+                    finish();
+                } else if (response.code() == 500) {
+                    Toast.makeText(ChangePassword.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -202,8 +229,12 @@ public class ChangePassword extends AppCompatActivity {
                     Toast.makeText(ChangePassword.this, "Password changed successfully!! ", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(ChangePassword.this, Login.class));
                     finish();
-                } else {
-                    Toast.makeText(ChangePassword.this, "Some error occurred. Please try again later!", Toast.LENGTH_SHORT).show();
+                } else if (response.code() == 401) {
+                    Toast.makeText(ChangePassword.this, "Token Expired", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(ChangePassword.this, Login.class));
+                    finish();
+                } else if (response.code() == 500) {
+                    Toast.makeText(ChangePassword.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
                 }
             }
 

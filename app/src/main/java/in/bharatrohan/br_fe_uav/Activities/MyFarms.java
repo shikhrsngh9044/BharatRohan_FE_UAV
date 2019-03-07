@@ -17,6 +17,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import in.bharatrohan.br_fe_uav.Api.RetrofitClient;
+import in.bharatrohan.br_fe_uav.CheckInternet;
 import in.bharatrohan.br_fe_uav.Models.Farm;
 import in.bharatrohan.br_fe_uav.Models.Farmer;
 import in.bharatrohan.br_fe_uav.PrefManager;
@@ -38,6 +39,8 @@ public class MyFarms extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_my_farms);
+        new CheckInternet(this).checkConnection();
+
         int farmCount = new PrefManager(this).getFarmerFarmCount();
         initViews();
 

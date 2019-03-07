@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 
 import in.bharatrohan.br_fe_uav.Adapters.SolutionRecyclerAdapter;
 import in.bharatrohan.br_fe_uav.Api.RetrofitClient;
+import in.bharatrohan.br_fe_uav.CheckInternet;
 import in.bharatrohan.br_fe_uav.Models.Farm;
 import in.bharatrohan.br_fe_uav.Models.FarmSolution;
 import in.bharatrohan.br_fe_uav.Models.Farmer;
@@ -39,6 +41,7 @@ public class LandFragment extends Fragment {
     private ProgressBar progressBar;
     private ArrayList<String> farmList = new ArrayList<>();
     private String token, farmerId;
+    private ImageView img;
 
     public static LandFragment newInstance() {
         return new LandFragment();
@@ -47,6 +50,7 @@ public class LandFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        new CheckInternet(getContext()).checkConnection();
         token = new PrefManager(getContext()).getToken();
         farmerId = new PrefManager(getContext()).getFarmerId();
 
@@ -104,6 +108,7 @@ public class LandFragment extends Fragment {
         tvCVisit = view.findViewById(R.id.tvCvisit);
         farmStatus = view.findViewById(R.id.tvFarmStatus);
         verifyFarm = view.findViewById(R.id.tvVerifyFarm);
+        img = view.findViewById(R.id.imageView14);
         landName = view.findViewById(R.id.tvLandName);
         cropName = view.findViewById(R.id.tvCropName);
         progressBar = view.findViewById(R.id.progressBar);
@@ -115,9 +120,13 @@ public class LandFragment extends Fragment {
         if (status) {
             farmStatus.setText("Verified");
             farmStatus.setBackgroundResource(android.R.color.holo_green_dark);
+            img.setVisibility(View.GONE);
+            verifyFarm.setVisibility(View.GONE);
         } else {
             farmStatus.setText("Not Verified");
             farmStatus.setBackgroundResource(android.R.color.holo_red_dark);
+            img.setVisibility(View.GONE);
+            verifyFarm.setVisibility(View.GONE);
         }
     }
 
@@ -137,16 +146,26 @@ public class LandFragment extends Fragment {
             public void onResponse(Call<Farm> call, Response<Farm> response) {
                 hideProgress();
                 Farm farm = response.body();
-                if (farm != null) {
-                    if (farm.getData().getVerified() != null) {
-                       // new PrefManager(getContext()).saveFarmStatus(farm.getData().getVerified());
-                        setVerifyFarmStatus(farm.getData().getVerified());
+
+                if (response.code() == 200) {
+
+                    if (farm != null) {
+                        if (farm.getData().getVerified() != null) {
+                            setVerifyFarmStatus(farm.getData().getVerified());
+                        }
+                        new PrefManager(getContext()).saveFarmImage(farm.getData().getMap_image());
+                        landName.setText(farm.getData().getFarm_name());
+                        cropName.setText(farm.getData().getCrop().getCrop_name());
+                        new PrefManager(getContext()).saveCropId(farm.getData().getCrop().getCrop_id());
+                    } else {
+                        Toast.makeText(getContext(), "Some error occurred.Please try again!!", Toast.LENGTH_SHORT).show();
                     }
-                    new PrefManager(getContext()).saveFarmImage(farm.getData().getMap_image());
-                    landName.setText(farm.getData().getFarm_name());
-                    cropName.setText(farm.getData().getCrop().getCrop_name());
-                } else {
-                    Toast.makeText(getContext(), "Some error occurred.Please try again!!", Toast.LENGTH_SHORT).show();
+                } else if (response.code() == 401) {
+                    Toast.makeText(getContext(), "Token Expired", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getActivity(), Login.class));
+                    getActivity().finish();
+                } else if (response.code() == 500) {
+                    Toast.makeText(getContext(), "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -170,18 +189,27 @@ public class LandFragment extends Fragment {
             public void onResponse(Call<Farmer> call, Response<Farmer> response) {
                 Farmer farmer = response.body();
 
-                if (farmer != null) {
-                    new PrefManager(getContext()).saveFarmerAvatar(farmer.getAvatar());
-                    farmList = farmer.getFarms();
-                    if (farmList.size() != 0) {
-                        showFarmInfo(farmList.get(farmNo));
-                    } else {
-                        new PrefManager(getContext()).saveFarmNo(0);
-                        Toast.makeText(getContext(), "No Farm is Registered yet!!", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(getContext(), "Some error occurred.Please try again!!", Toast.LENGTH_SHORT).show();
+                if (response.code() == 200) {
 
+                    if (farmer != null) {
+                        new PrefManager(getContext()).saveFarmerAvatar(farmer.getAvatar());
+                        farmList = farmer.getFarms();
+                        if (farmList.size() != 0) {
+                            showFarmInfo(farmList.get(farmNo));
+                        } else {
+                            new PrefManager(getContext()).saveFarmNo(0);
+                            Toast.makeText(getContext(), "No Farm is Registered yet!!", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(getContext(), "Some error occurred.Please try again!!", Toast.LENGTH_SHORT).show();
+
+                    }
+                } else if (response.code() == 401) {
+                    Toast.makeText(getContext(), "Token Expired", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getActivity(), Login.class));
+                    getActivity().finish();
+                } else if (response.code() == 500) {
+                    Toast.makeText(getContext(), "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
                 }
             }
 

@@ -15,6 +15,8 @@ public class Farmer {
     private String full_address;
     @SerializedName("account_status")
     private Boolean acc_status;
+    @SerializedName("isVerified")
+    private Boolean isVerified;
     @SerializedName("dob")
     private String dob;
     @SerializedName("avatar")
@@ -71,6 +73,10 @@ public class Farmer {
 
     public ArrayList<String> getFarms() {
         return farms;
+    }
+
+    public Boolean getVerified() {
+        return isVerified;
     }
 
     public Address getAddress() {

@@ -1,8 +1,12 @@
 package in.bharatrohan.br_fe_uav.Activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import in.bharatrohan.br_fe_uav.Api.RetrofitClient;
+import in.bharatrohan.br_fe_uav.CheckInternet;
 import in.bharatrohan.br_fe_uav.Models.FeDetails;
 import in.bharatrohan.br_fe_uav.Models.LoginFE;
 import in.bharatrohan.br_fe_uav.Models.LoginUAV;
@@ -33,7 +38,8 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        //checkInternet();
+        new CheckInternet(this).checkConnection();
         editEmail = findViewById(R.id.email);
         editPass = findViewById(R.id.password);
         loginBtn = findViewById(R.id.login);
@@ -73,7 +79,6 @@ public class Login extends AppCompatActivity {
 
     }
 
-
     private void Fe_Login(String email, String pass) {
         showProgress();
 
@@ -103,19 +108,17 @@ public class Login extends AppCompatActivity {
                             new PrefManager(Login.this).saveUserType("fe");
                             getFeDetails();
                             startActivity(new Intent(Login.this, MainActivity.class));
+                            finish();
                         } else {
                             Toast.makeText(Login.this, "User not Authorized!!", Toast.LENGTH_SHORT).show();
                         }
                     }
 
                 } else if (response.code() == 400) {
-                    Toast.makeText(Login.this, "Validation Failed. Invalid Credentials", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Login.this, "Required values missing", Toast.LENGTH_SHORT).show();
                     //Vaifation failed
-                } else if (response.code() == 401) {
-                    Toast.makeText(Login.this, "User not registered.Please register Yourself", Toast.LENGTH_SHORT).show();
-
                 } else if (response.code() == 500) {
-                    Toast.makeText(Login.this, "Something went wrong.Please try Again!!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Login.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -154,6 +157,7 @@ public class Login extends AppCompatActivity {
                             new PrefManager(Login.this).saveUserType("uav");
                             getUavDetails();
                             startActivity(new Intent(Login.this, UAVHome.class));
+                            finish();
                         } else {
                             Toast.makeText(Login.this, "User not Authorized!!", Toast.LENGTH_SHORT).show();
                         }
@@ -162,11 +166,8 @@ public class Login extends AppCompatActivity {
                 } else if (response.code() == 400) {
                     Toast.makeText(Login.this, "Validation Failed. Invalid Credentials", Toast.LENGTH_SHORT).show();
                     //Vaifation failed
-                } else if (response.code() == 401) {
-                    Toast.makeText(Login.this, "User not registered.Please register Yourself", Toast.LENGTH_SHORT).show();
-
                 } else if (response.code() == 500) {
-                    Toast.makeText(Login.this, "Something went wrong.Please try Again!!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Login.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
                 }
             }
 

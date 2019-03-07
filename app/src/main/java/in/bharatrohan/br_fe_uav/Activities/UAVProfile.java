@@ -26,6 +26,7 @@ import java.io.File;
 import java.util.Objects;
 
 import in.bharatrohan.br_fe_uav.Api.RetrofitClient;
+import in.bharatrohan.br_fe_uav.CheckInternet;
 import in.bharatrohan.br_fe_uav.FileUtils;
 import in.bharatrohan.br_fe_uav.Models.Responses;
 import in.bharatrohan.br_fe_uav.PrefManager;
@@ -52,6 +53,7 @@ public class UAVProfile extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_uavprofile);
+        new CheckInternet(this).checkConnection();
 
         init();
 
@@ -143,8 +145,12 @@ public class UAVProfile extends AppCompatActivity {
                         Toast.makeText(UAVProfile.this, avatarResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     }
 
-                } else {
-                    Toast.makeText(UAVProfile.this, "Some error occurred.Please try again after some time", Toast.LENGTH_SHORT).show();
+                } else if (response.code() == 401) {
+                    Toast.makeText(UAVProfile.this, "Token Expired", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(UAVProfile.this, Login.class));
+                    finish();
+                } else if (response.code() == 500) {
+                    Toast.makeText(UAVProfile.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -201,8 +207,12 @@ public class UAVProfile extends AppCompatActivity {
                         Toast.makeText(UAVProfile.this, avatarResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     }
 
-                } else {
-                    Toast.makeText(UAVProfile.this, "Some error occurred.Please try again after some time", Toast.LENGTH_SHORT).show();
+                } else if (response.code() == 401) {
+                    Toast.makeText(UAVProfile.this, "Token Expired", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(UAVProfile.this, Login.class));
+                    finish();
+                } else if (response.code() == 500) {
+                    Toast.makeText(UAVProfile.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
                 }
             }
 

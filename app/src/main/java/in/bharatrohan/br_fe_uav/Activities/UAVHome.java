@@ -21,6 +21,7 @@ import java.util.List;
 import in.bharatrohan.br_fe_uav.Activities.FarmersFragments.AllRecyclerAdapter;
 import in.bharatrohan.br_fe_uav.Adapters.UAVProblemRecyclerAdapter;
 import in.bharatrohan.br_fe_uav.Api.RetrofitClient;
+import in.bharatrohan.br_fe_uav.CheckInternet;
 import in.bharatrohan.br_fe_uav.Models.FarmerList;
 import in.bharatrohan.br_fe_uav.Models.UavDetails;
 import in.bharatrohan.br_fe_uav.PrefManager;
@@ -39,6 +40,7 @@ public class UAVHome extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_uavhome);
+        new CheckInternet(this).checkConnection();
         Toolbar toolbar2 = findViewById(R.id.toolbar1);
         setSupportActionBar(toolbar2);
 
@@ -67,8 +69,12 @@ public class UAVHome extends AppCompatActivity {
                         Toast.makeText(UAVHome.this, "Some error occurred.Please try again!!", Toast.LENGTH_SHORT).show();
                     }
 
-                } else {
-                    Toast.makeText(UAVHome.this, "Server Error", Toast.LENGTH_SHORT).show();
+                } else if (response.code() == 401) {
+                    Toast.makeText(UAVHome.this, "Token Expired", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(UAVHome.this, Login.class));
+                    finish();
+                } else if (response.code() == 500) {
+                    Toast.makeText(UAVHome.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
                 }
             }
 
