@@ -61,6 +61,10 @@ public class FarmerInfo extends AppCompatActivity {
                         init();
                         Toast.makeText(FarmerInfo.this, "Farmer Verified Successfully!!", Toast.LENGTH_SHORT).show();
                     } else if (response.code() == 401) {
+                        new PrefManager(FarmerInfo.this).saveLoginDetails("", "", "");
+                        new PrefManager(FarmerInfo.this).saveToken("");
+                        new PrefManager(FarmerInfo.this).saveUserDetails("", "", "", "", false, "", "", "", "", "", "");
+                        new PrefManager(FarmerInfo.this).saveUserType("");
                         Toast.makeText(FarmerInfo.this, "Token Expired", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(FarmerInfo.this, Login.class));
                         finish();
@@ -126,6 +130,10 @@ public class FarmerInfo extends AppCompatActivity {
                         Toast.makeText(FarmerInfo.this, "Some error occurred.Please try again!!", Toast.LENGTH_SHORT).show();
                     }
                 } else if (response.code() == 401) {
+                    new PrefManager(FarmerInfo.this).saveLoginDetails("", "", "");
+                    new PrefManager(FarmerInfo.this).saveToken("");
+                    new PrefManager(FarmerInfo.this).saveUserDetails("", "", "", "", false, "", "", "", "", "", "");
+                    new PrefManager(FarmerInfo.this).saveUserType("");
                     Toast.makeText(FarmerInfo.this, "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(FarmerInfo.this, Login.class));
                     finish();

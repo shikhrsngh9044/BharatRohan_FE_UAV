@@ -11,6 +11,21 @@ public class PrefManager {
         this.context = context;
     }
 
+
+    public void saveBaseUrl(String id) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("BaseUrl", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("Id", id);
+        editor.apply();
+    }
+
+    public String getBaseUrl() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("BaseUrl", Context.MODE_PRIVATE);
+        return sharedPreferences.getString("Id", "");
+    }
+
+
+
     public void saveLoginDetails(String email, String password, String feId) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("LoginDetails", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -105,9 +120,9 @@ public class PrefManager {
         return sharedPreferences.getString("Avatar", "");
     }
 
-    public String getAccStatus() {
+    public Boolean getAccStatus() {
         SharedPreferences sharedPreferences = context.getSharedPreferences("UserDetails", Context.MODE_PRIVATE);
-        return sharedPreferences.getString("Acc_Status", "");
+        return sharedPreferences.getBoolean("Acc_Status", true);
     }
 
     public String getAddress() {

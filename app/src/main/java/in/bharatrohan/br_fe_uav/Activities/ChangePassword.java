@@ -137,6 +137,10 @@ public class ChangePassword extends AppCompatActivity {
                 if (response.code() == 200) {
                     Toast.makeText(ChangePassword.this, "Otp sent successfully.Check your registered mail", Toast.LENGTH_SHORT).show();
                 } else if (response.code() == 401) {
+                    new PrefManager(ChangePassword.this).saveLoginDetails("", "", "");
+                    new PrefManager(ChangePassword.this).saveToken("");
+                    new PrefManager(ChangePassword.this).saveUserDetails("", "", "", "", false, "", "", "", "", "", "");
+                    new PrefManager(ChangePassword.this).saveUserType("");
                     Toast.makeText(ChangePassword.this, "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(ChangePassword.this, Login.class));
                     finish();
@@ -170,6 +174,10 @@ public class ChangePassword extends AppCompatActivity {
                     finish();
 
                 } else if (response.code() == 401) {
+                    new PrefManager(ChangePassword.this).saveLoginDetails("", "", "");
+                    new PrefManager(ChangePassword.this).saveToken("");
+                    new PrefManager(ChangePassword.this).saveUserDetails("", "", "", "", false, "", "", "", "", "", "");
+                    new PrefManager(ChangePassword.this).saveUserType("");
                     Toast.makeText(ChangePassword.this, "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(ChangePassword.this, Login.class));
                     finish();
@@ -198,6 +206,10 @@ public class ChangePassword extends AppCompatActivity {
                 if (response.code() == 200) {
                     Toast.makeText(ChangePassword.this, "Otp sent successfully.Check your registered mail", Toast.LENGTH_SHORT).show();
                 }else if (response.code() == 401) {
+                    new PrefManager(ChangePassword.this).saveLoginDetails("", "", "");
+                    new PrefManager(ChangePassword.this).saveToken("");
+                    new PrefManager(ChangePassword.this).saveUserDetails("", "", "", "", false, "", "", "", "", "", "");
+                    new PrefManager(ChangePassword.this).saveUserType("");
                     Toast.makeText(ChangePassword.this, "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(ChangePassword.this, Login.class));
                     finish();
@@ -230,6 +242,10 @@ public class ChangePassword extends AppCompatActivity {
                     startActivity(new Intent(ChangePassword.this, Login.class));
                     finish();
                 } else if (response.code() == 401) {
+                    new PrefManager(ChangePassword.this).saveLoginDetails("", "", "");
+                    new PrefManager(ChangePassword.this).saveToken("");
+                    new PrefManager(ChangePassword.this).saveUserDetails("", "", "", "", false, "", "", "", "", "", "");
+                    new PrefManager(ChangePassword.this).saveUserType("");
                     Toast.makeText(ChangePassword.this, "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(ChangePassword.this, Login.class));
                     finish();

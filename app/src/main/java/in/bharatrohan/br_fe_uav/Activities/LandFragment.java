@@ -161,6 +161,10 @@ public class LandFragment extends Fragment {
                         Toast.makeText(getContext(), "Some error occurred.Please try again!!", Toast.LENGTH_SHORT).show();
                     }
                 } else if (response.code() == 401) {
+                    new PrefManager(getContext()).saveLoginDetails("", "", "");
+                    new PrefManager(getContext()).saveToken("");
+                    new PrefManager(getContext()).saveUserDetails("", "", "", "", false, "", "", "", "", "", "");
+                    new PrefManager(getContext()).saveUserType("");
                     Toast.makeText(getContext(), "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getActivity(), Login.class));
                     getActivity().finish();
@@ -205,6 +209,10 @@ public class LandFragment extends Fragment {
 
                     }
                 } else if (response.code() == 401) {
+                    new PrefManager(getContext()).saveLoginDetails("", "", "");
+                    new PrefManager(getContext()).saveToken("");
+                    new PrefManager(getContext()).saveUserDetails("", "", "", "", false, "", "", "", "", "", "");
+                    new PrefManager(getContext()).saveUserType("");
                     Toast.makeText(getContext(), "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getActivity(), Login.class));
                     getActivity().finish();

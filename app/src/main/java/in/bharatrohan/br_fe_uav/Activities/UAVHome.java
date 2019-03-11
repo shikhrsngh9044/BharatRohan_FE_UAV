@@ -1,6 +1,7 @@
 package in.bharatrohan.br_fe_uav.Activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -70,6 +71,10 @@ public class UAVHome extends AppCompatActivity {
                     }
 
                 } else if (response.code() == 401) {
+                    new PrefManager(UAVHome.this).saveLoginDetails("", "", "");
+                    new PrefManager(UAVHome.this).saveToken("");
+                    new PrefManager(UAVHome.this).saveUserDetails("", "", "", "", false, "", "", "", "", "", "");
+                    new PrefManager(UAVHome.this).saveUserType("");
                     Toast.makeText(UAVHome.this, "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(UAVHome.this, Login.class));
                     finish();
@@ -121,10 +126,10 @@ public class UAVHome extends AppCompatActivity {
             showDialogDrone();
             return true;
         } else if (id == R.id.action_imp_contacts) {
-            startActivity(new Intent(UAVHome.this, UAV_FarmerInfo.class));
+            startActivity(new Intent(UAVHome.this, ImpContacts.class));
             return true;
         } else if (id == R.id.action_complain) {
-            showDialogComplain();
+            startActivity(new Intent(UAVHome.this, FeedbackComplaints.class));
             return true;
         } else if (id == R.id.action_logout) {
             new PrefManager(UAVHome.this).saveLoginDetails("", "", "");
@@ -156,16 +161,28 @@ public class UAVHome extends AppCompatActivity {
             String strTitle = title.getText().toString().trim();
             String strMessage = message.getText().toString().trim();
 
-            if (strTitle.isEmpty()) {
-                title.setError("Title is required!");
-                title.requestFocus();
-                return;
-            }
+            if (!strTitle.isEmpty() || !strMessage.isEmpty()) {
 
-            if (strMessage.isEmpty()) {
-                message.setError("Message is required!");
-                message.requestFocus();
-                return;
+                Intent send = new Intent(Intent.ACTION_SENDTO);
+                send.putExtra(Intent.EXTRA_SUBJECT, strTitle);
+                send.putExtra(Intent.EXTRA_TEXT, strMessage);
+                String uriText = "mailto:" + Uri.encode("rishabh@bharatrohan.in");
+                Uri uri = Uri.parse(uriText);
+                send.setData(uri);
+                startActivity(Intent.createChooser(send, "Send mail..."));
+
+            } else {
+                if (strTitle.isEmpty()) {
+                    title.setError("Title is required!");
+                    title.requestFocus();
+                    return;
+                }
+
+                if (strMessage.isEmpty()) {
+                    message.setError("Message is required!");
+                    message.requestFocus();
+                    return;
+                }
             }
 
 

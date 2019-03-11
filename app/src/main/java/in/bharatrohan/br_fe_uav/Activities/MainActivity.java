@@ -41,9 +41,9 @@ public class MainActivity extends AppCompatActivity
 
         navHelpSpinner.setOnItemSelectedListener((view1, position, id, item) -> {
             if (position == 1) {
-                Toast.makeText(this, "Selected : Feedback", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, FeedbackComplaints.class));
             } else if (position == 2) {
-                Toast.makeText(this, "Selected : Imp Contact", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, ImpContacts.class));
             }
 
         });

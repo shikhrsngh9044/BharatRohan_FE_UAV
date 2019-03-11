@@ -4,70 +4,74 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradient_one"
     tools:context=".Activities.FeedbackComplaints">
 
 
     <com.jaredrummler.materialspinner.MaterialSpinner
-        android:id="@+id/spinnerType"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/editTitle"
+        android:id="@+id/typeSpinner"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="50dp"
         android:layout_marginEnd="20dp"
-        android:background="@drawable/rounded_edittext"
-        android:ems="10"
-        android:hint="Title..."
-        android:inputType="textPersonName"
-        android:padding="5dp"
-        android:textColorHint="#666666"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerType" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:ms_background_color="@color/cardview_light_background"
+        app:ms_dropdown_height="250dp" />
 
-    <EditText
-        android:id="@+id/editMessage"
+    <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="0dp"
-        android:layout_height="200dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="20dp"
-        android:background="@drawable/rounded_edittext"
-        android:ems="10"
-        android:hint="Your Message.."
-        android:inputType="textPersonName"
+        android:layout_height="250dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/rounded_edittext_white"
         android:padding="5dp"
-        android:textColorHint="#666666"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTitle" />
+        app:layout_constraintEnd_toEndOf="@+id/typeSpinner"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/typeSpinner"
+        app:layout_constraintTop_toBottomOf="@+id/typeSpinner">
+
+
+        <EditText
+            android:id="@+id/editMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/rounded_edittext_transparent"
+            android:ems="10"
+            android:hint="Your Feedback and Complaints.."
+            android:inputType="textMultiLine"
+            android:lines="10"
+            android:maxLines="15"
+            android:minLines="1"
+            android:scrollbars="vertical"
+            android:textColor="@color/cardview_light_background"
+            android:textColorHint="@color/gray_very_light"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </ScrollView>
+
 
     <Button
-        android:id="@+id/button2"
-        android:layout_width="150dp"
+        android:id="@+id/btnSubmit"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/rounded_button_dark"
-        android:padding="5dp"
-        android:text="Submit"
-        android:textColor="@color/cardview_light_background"
+        android:layout_marginBottom="20dp"
+        android:background="@color/cardview_light_background"
+        android:text="Send Feedback"
+        android:textColor="@color/colorPrimary"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editMessage" />
+        app:layout_constraintEnd_toEndOf="@+id/scrollView2"
+        app:layout_constraintStart_toStartOf="@+id/scrollView2"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
 
 </android.support.constraint.ConstraintLayout>

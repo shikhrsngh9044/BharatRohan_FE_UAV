@@ -187,6 +187,10 @@ public class UploadImage extends AppCompatActivity {
                                 "Images successfully uploaded!", Toast.LENGTH_SHORT).show();
                         UploadImage.this.finish();
                     } else if (response.code() == 401) {
+                        new PrefManager(UploadImage.this).saveLoginDetails("", "", "");
+                        new PrefManager(UploadImage.this).saveToken("");
+                        new PrefManager(UploadImage.this).saveUserDetails("", "", "", "", false, "", "", "", "", "", "");
+                        new PrefManager(UploadImage.this).saveUserType("");
                         Toast.makeText(UploadImage.this, "Token Expired", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(UploadImage.this, Login.class));
                         finish();

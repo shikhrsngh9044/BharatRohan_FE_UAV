@@ -133,7 +133,20 @@ public interface Api {
                                                    @Path("id") String id,
                                                    @Part MultipartBody.Part avatar);
 
+    @FormUrlEncoded
+    @PATCH("uav/{id}")
+    Call<ResponseBody> updateUavDetail(@Header("Authorization") String token,
+                                       @Path("id") String feId,
+                                       @Field("contact") String contact,
+                                       @Field("alt_contact") String alt_contact,
+                                       @Field("address") String address);
 
-
+    @FormUrlEncoded
+    @PATCH("fe/{id}")
+    Call<ResponseBody> updateFeDetail(@Header("Authorization") String token,
+                                      @Path("id") String feId,
+                                      @Field("contact") String contact,
+                                      @Field("alt_contact") String alt_contact,
+                                      @Field("address") String address);
 
 }

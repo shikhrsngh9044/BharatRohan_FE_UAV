@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -34,6 +35,7 @@ import in.bharatrohan.br_fe_uav.R;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,7 +47,8 @@ public class UAVProfile extends AppCompatActivity {
     private static final int REQUEST_CODE_ASK_PERMISSIONS = 124;
 
 
-    private TextView name, phone, email, address, updatePic, state, district, tehsil, block, village;
+    private TextView name, phone, altContact, email, address, updatePic, state, district, tehsil, block, village;
+    private EditText editContact, editAltContact, editAddress;
     private ProgressBar progressBar;
     private ImageView userAvatar;
 
@@ -59,6 +62,7 @@ public class UAVProfile extends AppCompatActivity {
 
         name.setText(new PrefManager(UAVProfile.this).getName());
         phone.setText(new PrefManager(UAVProfile.this).getContact());
+        altContact.setText(new PrefManager(UAVProfile.this).getAltContact());
         email.setText(new PrefManager(UAVProfile.this).getEmail());
         address.setText(new PrefManager(UAVProfile.this).getAddress());
         state.setText(new PrefManager(UAVProfile.this).getState());
@@ -73,12 +77,109 @@ public class UAVProfile extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.btnUpdateOp).setOnClickListener(v -> {
+
+            String contact1 = phone.getText().toString().trim();
+            String alt_contact1 = altContact.getText().toString().trim();
+            String fulladdress1 = address.getText().toString().trim();
+
+            visibilityGone();
+
+            editContact.setText(contact1);
+            editAltContact.setText(alt_contact1);
+            editAddress.setText(fulladdress1);
+        });
+
+        findViewById(R.id.btnUpdate).setOnClickListener(v -> {
+            String contact1 = editContact.getText().toString().trim();
+            String alt_contact1 = editAltContact.getText().toString().trim();
+            String fulladdress1 = editAddress.getText().toString().trim();
+
+            if (!validateValues()) {
+                if (new PrefManager(UAVProfile.this).getUserType().equals("fe")) {
+                    updateFE(contact1, alt_contact1, fulladdress1);
+                } else if (new PrefManager(UAVProfile.this).getUserType().equals("uav")) {
+                    updateUAV(contact1, alt_contact1, fulladdress1);
+                }
+            } else {
+                validateValues();
+            }
+
+        });
+
+        findViewById(R.id.btnCancel).setOnClickListener(v -> {
+            visibilityVisible();
+        });
+
+    }
+
+
+    private void visibilityGone() {
+        findViewById(R.id.btnUpdateOp).setVisibility(View.GONE);
+        name.setVisibility(View.GONE);
+        phone.setVisibility(View.GONE);
+        altContact.setVisibility(View.GONE);
+        email.setVisibility(View.GONE);
+        address.setVisibility(View.GONE);
+
+
+        editContact.setVisibility(View.VISIBLE);
+        editAltContact.setVisibility(View.VISIBLE);
+        editAddress.setVisibility(View.VISIBLE);
+        findViewById(R.id.constraint).setVisibility(View.VISIBLE);
+        findViewById(R.id.co3).setVisibility(View.VISIBLE);
+    }
+
+    private void visibilityVisible() {
+        findViewById(R.id.btnUpdateOp).setVisibility(View.VISIBLE);
+        name.setVisibility(View.VISIBLE);
+        phone.setVisibility(View.VISIBLE);
+        altContact.setVisibility(View.VISIBLE);
+        email.setVisibility(View.VISIBLE);
+        address.setVisibility(View.VISIBLE);
+
+        editAddress.setVisibility(View.GONE);
+        editContact.setVisibility(View.GONE);
+        findViewById(R.id.constraint).setVisibility(View.GONE);
+        findViewById(R.id.co3).setVisibility(View.GONE);
+    }
+
+
+    private Boolean validateValues() {
+
+
+        String contact = editContact.getText().toString().trim();
+        String altcontact = editAltContact.getText().toString().trim();
+        String fulladdress = editAddress.getText().toString().trim();
+
+
+        if (contact.isEmpty()) {
+            editContact.setError("Contact is required");
+            editContact.requestFocus();
+            return true;
+        }
+
+        if (!altcontact.isEmpty() && altcontact.length() < 10) {
+            editAltContact.setError("Phone must be of at least length 10");
+            editAltContact.requestFocus();
+            return true;
+        }
+
+
+        if (fulladdress.isEmpty()) {
+            editAddress.setError("Address is required");
+            editAddress.requestFocus();
+            return true;
+        }
+
+        return false;
     }
 
     private void init() {
         progressBar = findViewById(R.id.progressBar);
         name = findViewById(R.id.tvUavName);
         phone = findViewById(R.id.tvUavPhone);
+        altContact = findViewById(R.id.tvUavAltPhone);
         email = findViewById(R.id.tvUavEmail);
         address = findViewById(R.id.tvUavAddress);
         userAvatar = findViewById(R.id.uavAvatar);
@@ -88,6 +189,26 @@ public class UAVProfile extends AppCompatActivity {
         block = findViewById(R.id.tvBlock);
         village = findViewById(R.id.tvVillage);
         updatePic = findViewById(R.id.tvUpdatePic);
+
+
+        if (!new PrefManager(UAVProfile.this).getAvatar().equals(""))
+            Picasso.get().load(new PrefManager(UAVProfile.this).getAvatar()).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(userAvatar, new com.squareup.picasso.Callback() {
+                @Override
+                public void onSuccess() {
+
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    //Toast.makeText(UserProfile.this, "Didn't got Pic", Toast.LENGTH_SHORT).show();
+                    Picasso.get().load(R.drawable.profile_pic).into(userAvatar);
+                }
+            });
+
+
+        editContact = findViewById(R.id.editContact);
+        editAddress = findViewById(R.id.editAddress);
+        editAltContact = findViewById(R.id.editAltContact);
     }
 
 
@@ -97,6 +218,80 @@ public class UAVProfile extends AppCompatActivity {
         intent.setAction(Intent.ACTION_GET_CONTENT);
 
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_CODE);
+    }
+
+    private void updateFE(String contact, String alt_contact, String address) {
+        showProgress();
+        Call<ResponseBody> call = RetrofitClient.getInstance().getApi().updateFeDetail(new PrefManager(UAVProfile.this).getToken(), new PrefManager(UAVProfile.this).getUserId(), contact, alt_contact, address);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                hideProgress();
+                if (response.code() == 200) {
+
+                    new PrefManager(UAVProfile.this).saveUserDetails(new PrefManager(UAVProfile.this).getName(), contact, new PrefManager(UAVProfile.this).getEmail(), alt_contact, new PrefManager(UAVProfile.this).getAccStatus(), address, new PrefManager(UAVProfile.this).getState(), new PrefManager(UAVProfile.this).getDistrict(), new PrefManager(UAVProfile.this).getTehsil(), new PrefManager(UAVProfile.this).getBlock(), new PrefManager(UAVProfile.this).getVillage());
+                    updateValues(contact, alt_contact, address);
+                    Toast.makeText(UAVProfile.this, "User Updated", Toast.LENGTH_SHORT).show();
+                } else if (response.code() == 401) {
+                    new PrefManager(UAVProfile.this).saveLoginDetails("", "", "");
+                    new PrefManager(UAVProfile.this).saveToken("");
+                    new PrefManager(UAVProfile.this).saveUserDetails("", "", "", "", false, "", "", "", "", "", "");
+                    new PrefManager(UAVProfile.this).saveUserType("");
+                    Toast.makeText(UAVProfile.this, "Token Expired", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(UAVProfile.this, Login.class));
+                    finish();
+                } else if (response.code() == 500) {
+                    Toast.makeText(UAVProfile.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                hideProgress();
+                Toast.makeText(UAVProfile.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void updateUAV(String contact, String alt_contact, String address) {
+        showProgress();
+        Call<ResponseBody> call = RetrofitClient.getInstance().getApi().updateUavDetail(new PrefManager(UAVProfile.this).getToken(), new PrefManager(UAVProfile.this).getUserId(), contact, alt_contact, address);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                hideProgress();
+                if (response.code() == 200) {
+                    new PrefManager(UAVProfile.this).saveUserDetails(new PrefManager(UAVProfile.this).getName(), contact, new PrefManager(UAVProfile.this).getEmail(), alt_contact, new PrefManager(UAVProfile.this).getAccStatus(), address, new PrefManager(UAVProfile.this).getState(), new PrefManager(UAVProfile.this).getDistrict(), new PrefManager(UAVProfile.this).getTehsil(), new PrefManager(UAVProfile.this).getBlock(), new PrefManager(UAVProfile.this).getVillage());
+                    Toast.makeText(UAVProfile.this, "Update User", Toast.LENGTH_SHORT).show();
+                } else if (response.code() == 401) {
+                    new PrefManager(UAVProfile.this).saveLoginDetails("", "", "");
+                    new PrefManager(UAVProfile.this).saveToken("");
+                    new PrefManager(UAVProfile.this).saveUserDetails("", "", "", "", false, "", "", "", "", "", "");
+                    new PrefManager(UAVProfile.this).saveUserType("");
+                    Toast.makeText(UAVProfile.this, "Token Expired", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(UAVProfile.this, Login.class));
+                    finish();
+                } else if (response.code() == 500) {
+                    Toast.makeText(UAVProfile.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                hideProgress();
+                Toast.makeText(UAVProfile.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    private void updateValues(String contact, String alt_contact, String address1) {
+        phone.setText(contact);
+        altContact.setText(alt_contact);
+        address.setText(address1);
+        visibilityVisible();
     }
 
     private void updateFEProfilePic(Uri imageUri) {
@@ -146,6 +341,10 @@ public class UAVProfile extends AppCompatActivity {
                     }
 
                 } else if (response.code() == 401) {
+                    new PrefManager(UAVProfile.this).saveLoginDetails("", "", "");
+                    new PrefManager(UAVProfile.this).saveToken("");
+                    new PrefManager(UAVProfile.this).saveUserDetails("", "", "", "", false, "", "", "", "", "", "");
+                    new PrefManager(UAVProfile.this).saveUserType("");
                     Toast.makeText(UAVProfile.this, "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(UAVProfile.this, Login.class));
                     finish();
@@ -208,6 +407,10 @@ public class UAVProfile extends AppCompatActivity {
                     }
 
                 } else if (response.code() == 401) {
+                    new PrefManager(UAVProfile.this).saveLoginDetails("", "", "");
+                    new PrefManager(UAVProfile.this).saveToken("");
+                    new PrefManager(UAVProfile.this).saveUserDetails("", "", "", "", false, "", "", "", "", "", "");
+                    new PrefManager(UAVProfile.this).saveUserType("");
                     Toast.makeText(UAVProfile.this, "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(UAVProfile.this, Login.class));
                     finish();

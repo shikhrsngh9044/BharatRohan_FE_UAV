@@ -203,6 +203,10 @@ public class UAV_FarmerInfo extends AppCompatActivity {
                 if (response.code() == 200) {
                     Toast.makeText(UAV_FarmerInfo.this, "Request Submitted Successfully", Toast.LENGTH_SHORT).show();
                 }else if (response.code() == 401) {
+                    new PrefManager(UAV_FarmerInfo.this).saveLoginDetails("", "", "");
+                    new PrefManager(UAV_FarmerInfo.this).saveToken("");
+                    new PrefManager(UAV_FarmerInfo.this).saveUserDetails("", "", "", "", false, "", "", "", "", "", "");
+                    new PrefManager(UAV_FarmerInfo.this).saveUserType("");
                     Toast.makeText(UAV_FarmerInfo.this, "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(UAV_FarmerInfo.this, Login.class));
                     finish();

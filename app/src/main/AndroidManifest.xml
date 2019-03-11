@@ -29,6 +29,7 @@
         <activity android:name=".Activities.FarmerInfo" />
         <activity android:name=".Activities.MyFarms" />
         <activity android:name=".Activities.CreateVisit" />
+        <activity android:name=".Activities.ImpContacts" />
         <activity android:name=".Activities.Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

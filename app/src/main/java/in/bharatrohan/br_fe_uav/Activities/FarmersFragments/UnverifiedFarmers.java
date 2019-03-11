@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.bharatrohan.br_fe_uav.Activities.Login;
+import in.bharatrohan.br_fe_uav.Activities.UAVHome;
 import in.bharatrohan.br_fe_uav.Api.RetrofitClient;
 import in.bharatrohan.br_fe_uav.Models.FarmerList;
 import in.bharatrohan.br_fe_uav.PrefManager;
@@ -78,6 +79,10 @@ public class UnverifiedFarmers extends Fragment {
                         Toast.makeText(getActivity(), "Some error occurred.Please try again!!", Toast.LENGTH_SHORT).show();
                     }
                 }else if (response.code() == 401) {
+                    new PrefManager(getContext()).saveLoginDetails("", "", "");
+                    new PrefManager(getContext()).saveToken("");
+                    new PrefManager(getContext()).saveUserDetails("", "", "", "", false, "", "", "", "", "", "");
+                    new PrefManager(getContext()).saveUserType("");
                     Toast.makeText(getContext(), "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getActivity(), Login.class));
                   getActivity().finish();

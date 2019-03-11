@@ -48,6 +48,10 @@ public class VerifyFarm extends AppCompatActivity {
                     Toast.makeText(VerifyFarm.this, "Farm Verified!", Toast.LENGTH_SHORT).show();
                     VerifyFarm.this.finish();
                 } else if (response.code() == 401) {
+                    new PrefManager(VerifyFarm.this).saveLoginDetails("", "", "");
+                    new PrefManager(VerifyFarm.this).saveToken("");
+                    new PrefManager(VerifyFarm.this).saveUserDetails("", "", "", "", false, "", "", "", "", "", "");
+                    new PrefManager(VerifyFarm.this).saveUserType("");
                     Toast.makeText(VerifyFarm.this, "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(VerifyFarm.this, Login.class));
                     finish();

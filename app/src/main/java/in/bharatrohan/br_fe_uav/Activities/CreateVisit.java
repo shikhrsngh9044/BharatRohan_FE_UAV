@@ -95,6 +95,10 @@ public class CreateVisit extends AppCompatActivity {
                             Toast.makeText(CreateVisit.this, "Some error occurred.Please try again!!", Toast.LENGTH_SHORT).show();
                         }
                     } else if (response.code() == 401) {
+                        new PrefManager(CreateVisit.this).saveLoginDetails("", "", "");
+                        new PrefManager(CreateVisit.this).saveToken("");
+                        new PrefManager(CreateVisit.this).saveUserDetails("", "", "", "", false, "", "", "", "", "", "");
+                        new PrefManager(CreateVisit.this).saveUserType("");
                         Toast.makeText(CreateVisit.this, "Token Expired", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(CreateVisit.this, Login.class));
                         finish();
