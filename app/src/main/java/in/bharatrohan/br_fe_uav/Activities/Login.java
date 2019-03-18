@@ -39,11 +39,16 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         //checkInternet();
+        editEmail = findViewById(R.id.email);
+        editPass = findViewById(R.id.password);
+        loginBtn = findViewById(R.id.login);
+        progressBar = findViewById(R.id.progressBar);
+        tvForget = findViewById(R.id.tvForget);
 
         new PrefManager(Login.this).saveBaseUrl("");
 
         new CheckInternet(this).checkConnection();
-        
+
 
         if (!new PrefManager(Login.this).getToken().equals("")) {
             if (new PrefManager(Login.this).getUserType().equals("fe")) {
@@ -53,12 +58,6 @@ public class Login extends AppCompatActivity {
                 startActivity(new Intent(Login.this, UAVHome.class));
                 finish();
             }
-        } else {
-            editEmail = findViewById(R.id.email);
-            editPass = findViewById(R.id.password);
-            loginBtn = findViewById(R.id.login);
-            progressBar = findViewById(R.id.progressBar);
-            tvForget = findViewById(R.id.tvForget);
         }
 
         loginBtn.setOnClickListener(v -> {

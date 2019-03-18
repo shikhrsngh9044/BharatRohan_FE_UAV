@@ -27,6 +27,7 @@
         <activity android:name=".Activities.MyVisits" />
         <activity android:name=".Activities.MainActivity" />
         <activity android:name=".Activities.FarmerInfo" />
+        ,k
         <activity android:name=".Activities.MyFarms" />
         <activity android:name=".Activities.CreateVisit" />
         <activity android:name=".Activities.ImpContacts" />

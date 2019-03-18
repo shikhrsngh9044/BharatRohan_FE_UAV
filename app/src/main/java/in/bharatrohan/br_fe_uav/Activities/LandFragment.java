@@ -126,7 +126,7 @@ public class LandFragment extends Fragment {
             farmStatus.setText("Not Verified");
             farmStatus.setBackgroundResource(android.R.color.holo_red_dark);
             img.setVisibility(View.GONE);
-            verifyFarm.setVisibility(View.GONE);
+            verifyFarm.setVisibility(View.VISIBLE);
         }
     }
 
