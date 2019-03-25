@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 
 public class Farmer {
+    @SerializedName("_id")
+    private String farmer_id;
     @SerializedName("farmer_name")
     private String name;
     @SerializedName("email")
@@ -28,15 +30,23 @@ public class Farmer {
     @SerializedName("address")
     private Address address;
 
-    public Farmer(String name, String email, String contact, String full_address, Boolean acc_status, String dob, ArrayList<String> farms, Address address) {
+    public Farmer(String farmer_id, String name, String email, String contact, String full_address, Boolean acc_status, Boolean isVerified, String dob, String avatar, String uav_id, ArrayList<String> farms, Address address) {
+        this.farmer_id = farmer_id;
         this.name = name;
         this.email = email;
         this.contact = contact;
         this.full_address = full_address;
         this.acc_status = acc_status;
+        this.isVerified = isVerified;
         this.dob = dob;
+        this.avatar = avatar;
+        this.uav_id = uav_id;
         this.farms = farms;
         this.address = address;
+    }
+
+    public String getFarmer_id() {
+        return farmer_id;
     }
 
     public String getAvatar() {

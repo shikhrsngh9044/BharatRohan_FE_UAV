@@ -32,7 +32,9 @@ public class VerifyFarm extends AppCompatActivity {
         verify = findViewById(R.id.verifyFarm);
         mapImage = findViewById(R.id.mapImage);
 
-        Picasso.get().load(new PrefManager(this).getFarmImage()).fit().centerCrop().into(mapImage);
+        if (!new PrefManager(this).getFarmImage().equals(""))
+
+            Picasso.get().load(new PrefManager(this).getFarmImage()).fit().centerCrop().into(mapImage);
 
         verify.setOnClickListener(v -> farmVerify());
     }

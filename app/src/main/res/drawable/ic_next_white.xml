@@ -5,14 +5,14 @@
     android:height="47.051dp">
     <path
         android:pathData="M47.052 23.526A23.526 23.526 0 0 1 0 23.526A23.526 23.526 0 0 1 47.052 23.526Z"
-        android:fillColor="#bebdbd" />
+        android:fillColor="#d9d7d7" />
     <group
         android:translateX="-378.479"
         android:translateY="-1126.485">
         <!--FF009245-->
         <path
             android:pathData="M398.5 1140l11.012 11.012L398 1162.524"
-            android:strokeColor="#222222"
+            android:strokeColor="#008577"
             android:strokeWidth="3"
             android:strokeMiterLimit="10" />
     </group>

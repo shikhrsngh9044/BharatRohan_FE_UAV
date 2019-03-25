@@ -7,6 +7,7 @@ import in.bharatrohan.br_fe_uav.Models.Farm;
 import in.bharatrohan.br_fe_uav.Models.Farmer;
 import in.bharatrohan.br_fe_uav.Models.FarmerList;
 import in.bharatrohan.br_fe_uav.Models.FeDetails;
+import in.bharatrohan.br_fe_uav.Models.FeVisitsModel;
 import in.bharatrohan.br_fe_uav.Models.LoginFE;
 import in.bharatrohan.br_fe_uav.Models.LoginUAV;
 import in.bharatrohan.br_fe_uav.Models.Responses;
@@ -148,5 +149,10 @@ public interface Api {
                                       @Field("contact") String contact,
                                       @Field("alt_contact") String alt_contact,
                                       @Field("address") String address);
+
+
+    @GET("visits/fe/{id}")
+    Call<FeVisitsModel> getUpcomingVisit(@Header("Authorization") String token,
+                                         @Path("id") String feId);
 
 }

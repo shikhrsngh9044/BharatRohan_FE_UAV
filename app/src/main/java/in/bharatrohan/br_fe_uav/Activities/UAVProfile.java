@@ -116,10 +116,8 @@ public class UAVProfile extends AppCompatActivity {
 
     private void visibilityGone() {
         findViewById(R.id.btnUpdateOp).setVisibility(View.GONE);
-        name.setVisibility(View.GONE);
         phone.setVisibility(View.GONE);
         altContact.setVisibility(View.GONE);
-        email.setVisibility(View.GONE);
         address.setVisibility(View.GONE);
 
 
@@ -132,10 +130,8 @@ public class UAVProfile extends AppCompatActivity {
 
     private void visibilityVisible() {
         findViewById(R.id.btnUpdateOp).setVisibility(View.VISIBLE);
-        name.setVisibility(View.VISIBLE);
         phone.setVisibility(View.VISIBLE);
         altContact.setVisibility(View.VISIBLE);
-        email.setVisibility(View.VISIBLE);
         address.setVisibility(View.VISIBLE);
 
         editAddress.setVisibility(View.GONE);

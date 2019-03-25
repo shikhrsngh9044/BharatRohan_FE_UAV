@@ -19,6 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -89,6 +91,21 @@ public class MainActivity extends AppCompatActivity
 
         TextView userName = navigationView.getHeaderView(0).findViewById(R.id.tvUserName);
         TextView userEmail = navigationView.getHeaderView(0).findViewById(R.id.tvUserEmail);
+        ImageView userAvatar = navigationView.getHeaderView(0).findViewById(R.id.userPic);
+
+        if (!new PrefManager(MainActivity.this).getAvatar().equals(""))
+            Picasso.get().load("br.bharatrohan.in" + new PrefManager(MainActivity.this).getAvatar()).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(userAvatar, new com.squareup.picasso.Callback() {
+                @Override
+                public void onSuccess() {
+
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    //Toast.makeText(UserProfile.this, "Didn't got Pic", Toast.LENGTH_SHORT).show();
+                    Picasso.get().load(R.drawable.profile_pic).into(userAvatar);
+                }
+            });
 
         userName.setText(new PrefManager(MainActivity.this).getName());
         userEmail.setText(new PrefManager(MainActivity.this).getEmail());
