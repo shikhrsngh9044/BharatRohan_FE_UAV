@@ -25,6 +25,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -120,6 +122,7 @@ public class UAV_FarmerInfo extends AppCompatActivity {
         mProgressBar = findViewById(R.id.progress);
         progressBar = findViewById(R.id.progressBar);
         mProgressText = findViewById(R.id.progress_text);
+        avatar = findViewById(R.id.Avatar);
         Name = findViewById(R.id.tvName);
         Phone = findViewById(R.id.tvPhone);
         Email = findViewById(R.id.tvEmail);
@@ -141,6 +144,23 @@ public class UAV_FarmerInfo extends AppCompatActivity {
         farmName.setText(new PrefManager(this).getFFarmName());
         farmLocation.setText(new PrefManager(this).getFFarmLocation());
         farmArea.setText(new PrefManager(this).getFFarmArea());
+
+        if (!new PrefManager(this).getFAvatar().equals("")) {
+            Picasso.get().load("http://br.bharatrohan.in/" + new PrefManager(this).getFAvatar()).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(avatar, new com.squareup.picasso.Callback() {
+                @Override
+                public void onSuccess() {
+
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    //Toast.makeText(UserProfile.this, "Didn't got Pic", Toast.LENGTH_SHORT).show();
+                    Picasso.get().load("http://br.bharatrohan.in/" + new PrefManager(UAV_FarmerInfo.this).getFAvatar()).fit().centerCrop().into(avatar);
+                }
+            });
+        } else {
+            Picasso.get().load(R.drawable.profile_pic).into(avatar);
+        }
     }
 
 
@@ -202,7 +222,7 @@ public class UAV_FarmerInfo extends AppCompatActivity {
                 hideProgress();
                 if (response.code() == 200) {
                     Toast.makeText(UAV_FarmerInfo.this, "Request Submitted Successfully", Toast.LENGTH_SHORT).show();
-                }else if (response.code() == 401) {
+                } else if (response.code() == 401) {
                     new PrefManager(UAV_FarmerInfo.this).saveLoginDetails("", "", "");
                     new PrefManager(UAV_FarmerInfo.this).saveToken("");
                     new PrefManager(UAV_FarmerInfo.this).saveUserDetails("", "", "", "", false, "", "", "", "", "", "");
@@ -241,7 +261,8 @@ public class UAV_FarmerInfo extends AppCompatActivity {
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 
-        @Override public void onReceive(Context context, Intent intent) {
+        @Override
+        public void onReceive(Context context, Intent intent) {
 
             if (intent.getAction().equals(MESSAGE_PROGRESS)) {
 

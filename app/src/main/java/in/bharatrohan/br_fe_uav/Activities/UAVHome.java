@@ -63,7 +63,6 @@ public class UAVHome extends AppCompatActivity {
                 UavDetails detailsResponse = response.body();
 
                 if (response.code() == 200) {
-
                     if (detailsResponse != null) {
                         generateFarmerList(detailsResponse.getCropProblem());
                     } else {
@@ -94,11 +93,16 @@ public class UAVHome extends AppCompatActivity {
 
     private void generateFarmerList(List<UavDetails.CropProblem> allFarmersArrayList) {
 
-        adapter = new UAVProblemRecyclerAdapter(this, allFarmersArrayList);
+        if (allFarmersArrayList.size() < 1) {
+            Toast.makeText(UAVHome.this, "No Farmer Crops Found", Toast.LENGTH_SHORT).show();
+        } else {
+            adapter = new UAVProblemRecyclerAdapter(this, allFarmersArrayList);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setAdapter(adapter);
+        }
+
     }
 
     @Override

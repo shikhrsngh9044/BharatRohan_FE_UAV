@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -51,6 +52,7 @@ public class UAVProfile extends AppCompatActivity {
     private EditText editContact, editAltContact, editAddress;
     private ProgressBar progressBar;
     private ImageView userAvatar;
+    private ConstraintLayout co3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,10 @@ public class UAVProfile extends AppCompatActivity {
         new CheckInternet(this).checkConnection();
 
         init();
+
+        if (!new PrefManager(UAVProfile.this).getAltContact().equals("")) {
+            co3.setVisibility(View.VISIBLE);
+        }
 
         name.setText(new PrefManager(UAVProfile.this).getName());
         phone.setText(new PrefManager(UAVProfile.this).getContact());
@@ -185,10 +191,11 @@ public class UAVProfile extends AppCompatActivity {
         block = findViewById(R.id.tvBlock);
         village = findViewById(R.id.tvVillage);
         updatePic = findViewById(R.id.tvUpdatePic);
+        co3 = findViewById(R.id.co3);
 
 
-        if (!new PrefManager(UAVProfile.this).getAvatar().equals(""))
-            Picasso.get().load(new PrefManager(UAVProfile.this).getAvatar()).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(userAvatar, new com.squareup.picasso.Callback() {
+        if (!new PrefManager(UAVProfile.this).getAvatar().equals("")) {
+            Picasso.get().load("http://br.bharatrohan.in/" + new PrefManager(UAVProfile.this).getAvatar()).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(userAvatar, new com.squareup.picasso.Callback() {
                 @Override
                 public void onSuccess() {
 
@@ -197,16 +204,40 @@ public class UAVProfile extends AppCompatActivity {
                 @Override
                 public void onError(Exception e) {
                     //Toast.makeText(UserProfile.this, "Didn't got Pic", Toast.LENGTH_SHORT).show();
-                    Picasso.get().load(R.drawable.profile_pic).into(userAvatar);
+                    Picasso.get().load("http://br.bharatrohan.in/" + new PrefManager(UAVProfile.this).getAvatar()).fit().centerCrop().into(userAvatar);
                 }
             });
 
-
+        } else {
+            Picasso.get().load(R.drawable.profile_pic).into(userAvatar);
+        }
         editContact = findViewById(R.id.editContact);
         editAddress = findViewById(R.id.editAddress);
         editAltContact = findViewById(R.id.editAltContact);
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!new PrefManager(UAVProfile.this).getAvatar().equals("")) {
+            Picasso.get().load("http://br.bharatrohan.in/" + new PrefManager(UAVProfile.this).getAvatar()).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(userAvatar, new com.squareup.picasso.Callback() {
+                @Override
+                public void onSuccess() {
+
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    //Toast.makeText(UserProfile.this, "Didn't got Pic", Toast.LENGTH_SHORT).show();
+                    Picasso.get().load("http://br.bharatrohan.in/" + new PrefManager(UAVProfile.this).getAvatar()).fit().centerCrop().into(userAvatar);
+                }
+            });
+
+        } else {
+            Picasso.get().load(R.drawable.profile_pic).into(userAvatar);
+        }
+    }
 
     private void showChooser() {
         Intent intent = new Intent();
@@ -319,19 +350,21 @@ public class UAVProfile extends AppCompatActivity {
                         new PrefManager(UAVProfile.this).saveAvatar(avatarResponse.getAvatar());
 
                         //Toast.makeText(UserProfile.this, new PrefManager(UserProfile.this).getAvatar(), Toast.LENGTH_SHORT).show();
-                        if (!new PrefManager(UAVProfile.this).getAvatar().equals(""))
-                            Picasso.get().load(new PrefManager(UAVProfile.this).getAvatar()).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(userAvatar, new com.squareup.picasso.Callback() {
+                        if (!new PrefManager(UAVProfile.this).getAvatar().equals("")) {
+                            Picasso.get().load("http://br.bharatrohan.in/" + new PrefManager(UAVProfile.this).getAvatar()).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(userAvatar, new com.squareup.picasso.Callback() {
                                 @Override
                                 public void onSuccess() {
-
                                 }
 
                                 @Override
                                 public void onError(Exception e) {
-                                    //Toast.makeText(UserProfile.this, "Didn't got Pic", Toast.LENGTH_SHORT).show();
-                                    Picasso.get().load(R.drawable.profile_pic).into(userAvatar);
+                                    Picasso.get().load("http://br.bharatrohan.in/" + new PrefManager(UAVProfile.this).getAvatar()).fit().centerCrop().into(userAvatar);
                                 }
                             });
+                        } else {
+                            Picasso.get().load(R.drawable.profile_pic).into(userAvatar);
+                        }
+
 
                         Toast.makeText(UAVProfile.this, avatarResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     }
@@ -386,18 +419,20 @@ public class UAVProfile extends AppCompatActivity {
                         new PrefManager(UAVProfile.this).saveAvatar(avatarResponse.getAvatar());
 
                         //Toast.makeText(UserProfile.this, new PrefManager(UserProfile.this).getAvatar(), Toast.LENGTH_SHORT).show();
-                        Picasso.get().load(new PrefManager(UAVProfile.this).getAvatar()).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(userAvatar, new com.squareup.picasso.Callback() {
-                            @Override
-                            public void onSuccess() {
+                        if (!new PrefManager(UAVProfile.this).getAvatar().equals("")) {
+                            Picasso.get().load("http://br.bharatrohan.in/" + new PrefManager(UAVProfile.this).getAvatar()).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(userAvatar, new com.squareup.picasso.Callback() {
+                                @Override
+                                public void onSuccess() {
+                                }
 
-                            }
-
-                            @Override
-                            public void onError(Exception e) {
-                                //Toast.makeText(UserProfile.this, "Didn't got Pic", Toast.LENGTH_SHORT).show();
-                                Picasso.get().load(R.drawable.profile_pic).into(userAvatar);
-                            }
-                        });
+                                @Override
+                                public void onError(Exception e) {
+                                    Picasso.get().load("http://br.bharatrohan.in/" + new PrefManager(UAVProfile.this).getAvatar()).fit().centerCrop().into(userAvatar);
+                                }
+                            });
+                        } else {
+                            Picasso.get().load(R.drawable.profile_pic).into(userAvatar);
+                        }
 
                         Toast.makeText(UAVProfile.this, avatarResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     }

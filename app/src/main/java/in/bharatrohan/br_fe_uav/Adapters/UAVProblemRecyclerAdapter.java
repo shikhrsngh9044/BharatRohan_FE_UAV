@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.feedingtrends.vocally.Interfaces.ItemClickListener;
 import com.feedingtrends.vocally.Interfaces.Item_ClickListener;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
@@ -21,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import in.bharatrohan.br_fe_uav.Activities.MainActivity;
 import in.bharatrohan.br_fe_uav.Activities.UAV_FarmerInfo;
 import in.bharatrohan.br_fe_uav.Models.FarmSolution;
 import in.bharatrohan.br_fe_uav.Models.UavDetails;
@@ -52,7 +54,24 @@ public class UAVProblemRecyclerAdapter extends RecyclerView.Adapter<UAVProblemRe
 
         holder.name.setText(dataList.get(position).getFarmer().getFarmerName());
         holder.address.setText(dataList.get(position).getFarmer().getFull_address());
-        Picasso.get().load(dataList.get(position).getFarmer().getAvatar()).fit().centerCrop().into(holder.farmerImg);
+
+        if (dataList.get(position).getFarmer().getAvatar() != null) {
+            Picasso.get().load("http://br.bharatrohan.in/" + dataList.get(position).getFarmer().getAvatar()).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(holder.farmerImg, new com.squareup.picasso.Callback() {
+                @Override
+                public void onSuccess() {
+
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    //Toast.makeText(UserProfile.this, "Didn't got Pic", Toast.LENGTH_SHORT).show();
+                    Picasso.get().load("http://br.bharatrohan.in/" + dataList.get(position).getFarmer().getAvatar()).fit().centerCrop().into(holder.farmerImg);
+                }
+            });
+        } else {
+            Picasso.get().load(R.drawable.profile_pic).into(holder.farmerImg);
+        }
+
 
         holder.setItemsClickListener(new ItemClickListener() {
             @Override

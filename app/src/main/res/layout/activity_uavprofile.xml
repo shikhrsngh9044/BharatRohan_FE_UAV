@@ -105,6 +105,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="30dp"
             android:layout_marginEnd="20dp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/co">
@@ -129,8 +130,8 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:text="Alternate Phone"
                 android:maxLines="2"
+                android:text="Alternate Phone"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -157,6 +158,16 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/imageView15"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView21"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="(Alt Contact)"
+                app:layout_constraintBottom_toBottomOf="@+id/tvUavAltPhone"
+                app:layout_constraintStart_toEndOf="@+id/tvUavAltPhone"
+                app:layout_constraintTop_toTopOf="@+id/tvUavAltPhone" />
 
         </android.support.constraint.ConstraintLayout>
 
@@ -500,6 +511,7 @@
             android:background="#5b000000"
             android:gravity="center"
             android:text="Update Pic"
+            android:textColor="@color/cardview_light_background"
             app:layout_constraintBottom_toBottomOf="@+id/uavAvatar"
             app:layout_constraintEnd_toEndOf="@+id/uavAvatar"
             app:layout_constraintStart_toStartOf="@+id/uavAvatar" />

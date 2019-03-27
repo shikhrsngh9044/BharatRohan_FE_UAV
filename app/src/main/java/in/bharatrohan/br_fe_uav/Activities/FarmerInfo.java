@@ -101,20 +101,6 @@ public class FarmerInfo extends AppCompatActivity {
         if (!new PrefManager(FarmerInfo.this).getFarmerStatus()) {
             btnVerify.setVisibility(View.VISIBLE);
         }
-
-        if (!new PrefManager(this).getFAvatar().equals(""))
-            Picasso.get().load("br.bharatrohan.in" + new PrefManager(FarmerInfo.this).getFAvatar()).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(profilePic, new com.squareup.picasso.Callback() {
-                @Override
-                public void onSuccess() {
-
-                }
-
-                @Override
-                public void onError(Exception e) {
-                    //Toast.makeText(UserProfile.this, "Didn't got Pic", Toast.LENGTH_SHORT).show();
-                    Picasso.get().load(R.drawable.profile_pic).into(profilePic);
-                }
-            });
     }
 
     private void getDetail() {
@@ -128,7 +114,25 @@ public class FarmerInfo extends AppCompatActivity {
                 Farmer farmer = response.body();
                 if (response.code() == 200) {
                     if (farmer != null) {
-                        Picasso.get().load(farmer.getAvatar()).into(profilePic);
+
+                        if (!farmer.getAvatar().equals("")) {
+                            Picasso.get().load("http://br.bharatrohan.in/" + farmer.getAvatar()).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(profilePic, new com.squareup.picasso.Callback() {
+                                @Override
+                                public void onSuccess() {
+
+                                }
+
+                                @Override
+                                public void onError(Exception e) {
+                                    //Toast.makeText(UserProfile.this, "Didn't got Pic", Toast.LENGTH_SHORT).show();
+                                    Picasso.get().load("http://br.bharatrohan.in/" + farmer.getAvatar()).fit().centerCrop().into(profilePic);
+                                }
+                            });
+                        } else {
+                            Picasso.get().load(R.drawable.profile_pic).into(profilePic);
+                        }
+
+
                         name.setText(farmer.getName());
                         contact.setText(farmer.getContact());
                         email.setText(farmer.getEmail());

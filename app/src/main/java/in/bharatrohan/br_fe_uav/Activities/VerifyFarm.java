@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import in.bharatrohan.br_fe_uav.Api.RetrofitClient;
@@ -34,7 +35,18 @@ public class VerifyFarm extends AppCompatActivity {
 
         if (!new PrefManager(this).getFarmImage().equals(""))
 
-            Picasso.get().load(new PrefManager(this).getFarmImage()).fit().centerCrop().into(mapImage);
+            Picasso.get().load("http://br.bharatrohan.in/" + new PrefManager(this).getFarmImage()).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(mapImage, new com.squareup.picasso.Callback() {
+                @Override
+                public void onSuccess() {
+
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    Picasso.get().load("http://br.bharatrohan.in/" + new PrefManager(VerifyFarm.this).getFarmImage()).fit().centerCrop().into(mapImage);
+                }
+            });
+
 
         verify.setOnClickListener(v -> farmVerify());
     }

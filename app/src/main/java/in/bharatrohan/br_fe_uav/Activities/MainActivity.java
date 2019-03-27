@@ -31,7 +31,7 @@ import in.bharatrohan.br_fe_uav.R;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private ImageView farmers, visits, repo, money;
+    private ImageView userAvatar, farmers, visits, repo, money;
     private MaterialSpinner navHelpSpinner;
 
     @Override
@@ -91,10 +91,10 @@ public class MainActivity extends AppCompatActivity
 
         TextView userName = navigationView.getHeaderView(0).findViewById(R.id.tvUserName);
         TextView userEmail = navigationView.getHeaderView(0).findViewById(R.id.tvUserEmail);
-        ImageView userAvatar = navigationView.getHeaderView(0).findViewById(R.id.userPic);
+        userAvatar = navigationView.getHeaderView(0).findViewById(R.id.userPic);
 
-        if (!new PrefManager(MainActivity.this).getAvatar().equals(""))
-            Picasso.get().load("br.bharatrohan.in" + new PrefManager(MainActivity.this).getAvatar()).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(userAvatar, new com.squareup.picasso.Callback() {
+        if (!new PrefManager(MainActivity.this).getAvatar().equals("")) {
+            Picasso.get().load("http://br.bharatrohan.in/" + new PrefManager(MainActivity.this).getAvatar()).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(userAvatar, new com.squareup.picasso.Callback() {
                 @Override
                 public void onSuccess() {
 
@@ -103,9 +103,12 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onError(Exception e) {
                     //Toast.makeText(UserProfile.this, "Didn't got Pic", Toast.LENGTH_SHORT).show();
-                    Picasso.get().load(R.drawable.profile_pic).into(userAvatar);
+                    Picasso.get().load("http://br.bharatrohan.in/" + new PrefManager(MainActivity.this).getAvatar()).fit().centerCrop().into(userAvatar);
                 }
             });
+        } else {
+            Picasso.get().load(R.drawable.profile_pic).into(userAvatar);
+        }
 
         userName.setText(new PrefManager(MainActivity.this).getName());
         userEmail.setText(new PrefManager(MainActivity.this).getEmail());
@@ -162,5 +165,26 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!new PrefManager(MainActivity.this).getAvatar().equals("")) {
+            Picasso.get().load("http://br.bharatrohan.in/" + new PrefManager(MainActivity.this).getAvatar()).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(userAvatar, new com.squareup.picasso.Callback() {
+                @Override
+                public void onSuccess() {
+
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    //Toast.makeText(UserProfile.this, "Didn't got Pic", Toast.LENGTH_SHORT).show();
+                    Picasso.get().load("http://br.bharatrohan.in/" + new PrefManager(MainActivity.this).getAvatar()).fit().centerCrop().into(userAvatar);
+                }
+            });
+        } else {
+            Picasso.get().load(R.drawable.profile_pic).into(userAvatar);
+        }
     }
 }
