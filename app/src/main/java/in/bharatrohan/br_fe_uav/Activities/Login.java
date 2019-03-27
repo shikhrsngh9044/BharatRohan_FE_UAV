@@ -110,8 +110,6 @@ public class Login extends AppCompatActivity {
                         if (email.contains("fe") && loginResponse.getUserType().equals("fe")) {
                             new PrefManager(Login.this).saveUserType("fe");
                             getFeDetails();
-                            startActivity(new Intent(Login.this, MainActivity.class));
-                            finish();
                         } else {
                             Toast.makeText(Login.this, "User not Authorized!!", Toast.LENGTH_SHORT).show();
                         }
@@ -159,8 +157,6 @@ public class Login extends AppCompatActivity {
                         if (email.contains("uav") && loginResponse.getUserType().equals("uav")) {
                             new PrefManager(Login.this).saveUserType("uav");
                             getUavDetails();
-                            startActivity(new Intent(Login.this, UAVHome.class));
-                            finish();
                         } else {
                             Toast.makeText(Login.this, "User not Authorized!!", Toast.LENGTH_SHORT).show();
                         }
@@ -205,6 +201,15 @@ public class Login extends AppCompatActivity {
                     new PrefManager(Login.this).saveUserDetails(detailResponse.getName(), detailResponse.getContact(), detailResponse.getEmail(), detailResponse.getAlt_contact(), detailResponse.getAccStatus(), detailResponse.getAddress(), detailResponse.getJobLocation().getState().getState_name(), detailResponse.getJobLocation().getDistrict().getDistrict_name(), detailResponse.getJobLocation().getTehsil().getTehsil_name(), detailResponse.getJobLocation().getBlock().getBlock_name(), villages);
                     new PrefManager(Login.this).saveAvatar(detailResponse.getAvatar());
 
+                    if (detailResponse.getAccStatus()) {
+                        startActivity(new Intent(Login.this, UAVHome.class));
+                        finish();
+                    } else {
+                        startActivity(new Intent(Login.this, UnSplash.class));
+                        finish();
+                    }
+
+
                 } else {
                     Toast.makeText(Login.this, "Details not Saved Successfully", Toast.LENGTH_SHORT).show();
                 }
@@ -213,6 +218,50 @@ public class Login extends AppCompatActivity {
             @Override
             public void onFailure(Call<UavDetails> call, Throwable t) {
                 Toast.makeText(Login.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void getFeDetails() {
+        Call<FeDetails> call = RetrofitClient
+                .getInstance()
+                .getApi()
+                .getFeDetail(new PrefManager(Login.this).getToken(), new PrefManager(Login.this).getUserId());
+
+        call.enqueue(new Callback<FeDetails>() {
+            @Override
+            public void onResponse(Call<FeDetails> call, Response<FeDetails> response) {
+                FeDetails detailResponse = response.body();
+
+                if (detailResponse != null) {
+
+                    StringBuilder sb = new StringBuilder();
+                    for (int i = 0; i < detailResponse.getJobLocation().getVillage().size(); i++) {
+
+                        sb.append(detailResponse.getJobLocation().getVillage().get(i).getVillage_name());
+                        sb.append("\n");
+                    }
+                    String villages = sb.toString();
+                    //Toast.makeText(Login.this, villages, Toast.LENGTH_SHORT).show();
+                    new PrefManager(Login.this).saveUserDetails(detailResponse.getName(), detailResponse.getContact(), detailResponse.getEmail(), detailResponse.getAlt_contact(), detailResponse.getAccStatus(), detailResponse.getAddress(), detailResponse.getJobLocation().getState().getState_name(), detailResponse.getJobLocation().getDistrict().getDistrict_name(), detailResponse.getJobLocation().getTehsil().getTehsil_name(), detailResponse.getJobLocation().getBlock().getBlock_name(), villages);
+                    new PrefManager(Login.this).saveAvatar(detailResponse.getAvatar());
+
+                    if (detailResponse.getAccStatus()) {
+                        startActivity(new Intent(Login.this, MainActivity.class));
+                        finish();
+                    } else {
+                        startActivity(new Intent(Login.this, UnSplash.class));
+                        finish();
+                    }
+
+                } else {
+                    Toast.makeText(Login.this, "Details not Saved Successfully", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<FeDetails> call, Throwable t) {
+                //Toast.makeText(Login.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -242,42 +291,6 @@ public class Login extends AppCompatActivity {
         }
 
         return false;
-    }
-
-    private void getFeDetails() {
-        Call<FeDetails> call = RetrofitClient
-                .getInstance()
-                .getApi()
-                .getFeDetail(new PrefManager(Login.this).getToken(), new PrefManager(Login.this).getUserId());
-
-        call.enqueue(new Callback<FeDetails>() {
-            @Override
-            public void onResponse(Call<FeDetails> call, Response<FeDetails> response) {
-                FeDetails detailResponse = response.body();
-
-                if (detailResponse != null) {
-
-                    StringBuilder sb = new StringBuilder();
-                    for (int i = 0; i < detailResponse.getJobLocation().getVillage().size(); i++) {
-
-                        sb.append(detailResponse.getJobLocation().getVillage().get(i).getVillage_name());
-                        sb.append("\n");
-                    }
-                    String villages = sb.toString();
-                    //Toast.makeText(Login.this, villages, Toast.LENGTH_SHORT).show();
-                    new PrefManager(Login.this).saveUserDetails(detailResponse.getName(), detailResponse.getContact(), detailResponse.getEmail(), detailResponse.getAlt_contact(), detailResponse.getAccStatus(), detailResponse.getAddress(), detailResponse.getJobLocation().getState().getState_name(), detailResponse.getJobLocation().getDistrict().getDistrict_name(), detailResponse.getJobLocation().getTehsil().getTehsil_name(), detailResponse.getJobLocation().getBlock().getBlock_name(), villages);
-                    new PrefManager(Login.this).saveAvatar(detailResponse.getAvatar());
-
-                } else {
-                    Toast.makeText(Login.this, "Details not Saved Successfully", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<FeDetails> call, Throwable t) {
-                //Toast.makeText(Login.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private void showProgress() {
