@@ -37,7 +37,6 @@ public class AllFarmer extends Fragment {
     private AllRecyclerAdapter adapter;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
-    private List<FarmerList.FarmersList> verifiedFarmersArrayList;
 
     public AllFarmer() {
         // Required empty public constructor
@@ -55,8 +54,6 @@ public class AllFarmer extends Fragment {
 
 
     private void init(View view) {
-
-        verifiedFarmersArrayList = new ArrayList<>();
         recyclerView = view.findViewById(R.id.recycler);
         progressBar = view.findViewById(R.id.progressBar);
     }
@@ -65,6 +62,26 @@ public class AllFarmer extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         showProgress();
+
+        getAllList();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (isVisibleToUser && isResumed()) {
+            getAllList();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //getAllList();
+    }
+
+    private void getAllList() {
         Call<FarmerList> call = RetrofitClient
                 .getInstance()
                 .getApi()
@@ -99,21 +116,33 @@ public class AllFarmer extends Fragment {
                 Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     private void generateFarmerList(List<FarmerList.FarmersList> allFarmersArrayList) {
-        for (int i = 0; i < allFarmersArrayList.size(); i++) {
-            if (allFarmersArrayList.get(i).getVerified()) {
+        List<FarmerList.FarmersList> verifiedFarmersArrayList = new ArrayList<>();
 
-                verifiedFarmersArrayList.add(allFarmersArrayList.get(i));
+        if (allFarmersArrayList.size() != 0) {
+            for (int i = 0; i < allFarmersArrayList.size(); i++) {
+                if (allFarmersArrayList.get(i).getVerified()) {
+
+                    verifiedFarmersArrayList.add(allFarmersArrayList.get(i));
+                }
             }
-        }
-        adapter = new AllRecyclerAdapter(getActivity(), verifiedFarmersArrayList);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
+            if (verifiedFarmersArrayList.size() != 0) {
+                adapter = new AllRecyclerAdapter(getActivity(), verifiedFarmersArrayList);
+
+                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+                recyclerView.setLayoutManager(layoutManager);
+                recyclerView.setAdapter(adapter);
+            } else {
+                Toast.makeText(getContext(), "No farmers verified yet!!", Toast.LENGTH_SHORT).show();
+            }
+
+        } else {
+            Toast.makeText(getContext(), "No farmers registered yet!!", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void showProgress() {

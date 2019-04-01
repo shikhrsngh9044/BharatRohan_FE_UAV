@@ -25,7 +25,6 @@ public class PrefManager {
     }
 
 
-
     public void saveLoginDetails(String email, String password, String feId) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("LoginDetails", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -376,5 +375,18 @@ public class PrefManager {
     public String getAvatar() {
         SharedPreferences sharedPreferences = context.getSharedPreferences("UserAvatar", Context.MODE_PRIVATE);
         return sharedPreferences.getString("Avatar", "");
+    }
+
+
+    public void saveIsVisit(Boolean status) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("VisitBool", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("Status", status);
+        editor.apply();
+    }
+
+    public Boolean getIsVisit() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("VisitBool", Context.MODE_PRIVATE);
+        return sharedPreferences.getBoolean("Status", false);
     }
 }

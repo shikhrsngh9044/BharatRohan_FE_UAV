@@ -111,15 +111,18 @@ public class DailyVisit extends Fragment {
 
     private void generateFarmerList(List<FeVisitsModel.Farmer> allFarmersArrayList) {
 
-        if (allFarmersArrayList.size() < 1) {
+        if (allFarmersArrayList.size() > 0) {
+
+            adapter = new DailyRecyclerAdapter(getContext(), allFarmersArrayList);
+
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setAdapter(adapter);
+        } else {
             Toast.makeText(getContext(), "There is no farmer to show", Toast.LENGTH_SHORT).show();
         }
 
-        adapter = new DailyRecyclerAdapter(getContext(), allFarmersArrayList);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
     }
 
     private void showProgress() {

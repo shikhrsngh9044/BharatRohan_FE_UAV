@@ -131,7 +131,7 @@ public class CreateVisit extends AppCompatActivity {
         et1.setHint("Enter Question " + count);
         et1.setGravity(Gravity.CENTER);
         et1.setTextColor(getResources().getColor(R.color.textColor));
-        et1.setHintTextColor(666666);
+        et1.setHintTextColor(getResources().getColor(R.color.hintColor));
         et1.setId(etId + 1);
         ll.addView(et1);
         etId++;
@@ -143,7 +143,7 @@ public class CreateVisit extends AppCompatActivity {
         et2.setHint("Enter Answer " + count);
         et2.setGravity(Gravity.CENTER);
         et2.setTextColor(getResources().getColor(R.color.textColor));
-        et2.setHintTextColor(666666);
+        et2.setHintTextColor(getResources().getColor(R.color.hintColor));
         et2.setId(etId + 1);
         ll.addView(et2);
         etId++;

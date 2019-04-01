@@ -3,6 +3,7 @@ package in.bharatrohan.br_fe_uav.Api;
 import java.util.List;
 
 import in.bharatrohan.br_fe_uav.Models.CreatesVisit;
+import in.bharatrohan.br_fe_uav.Models.CropProblem;
 import in.bharatrohan.br_fe_uav.Models.Farm;
 import in.bharatrohan.br_fe_uav.Models.Farmer;
 import in.bharatrohan.br_fe_uav.Models.FarmerList;
@@ -154,5 +155,10 @@ public interface Api {
     @GET("visits/fe/{id}")
     Call<FeVisitsModel> getUpcomingVisit(@Header("Authorization") String token,
                                          @Path("id") String feId);
+
+
+    @GET("crop-problem/{id}")
+    Call<CropProblem> getProblemDetail(@Header("Authorization") String token,
+                                       @Path("id") String feId);
 
 }

@@ -1,36 +1,32 @@
 package in.bharatrohan.br_fe_uav.Adapters;
 
 import android.content.Context;
-import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import com.feedingtrends.vocally.Interfaces.ItemClickListener;
-import com.feedingtrends.vocally.Interfaces.Item_ClickListener;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import java.util.List;
 
-import in.bharatrohan.br_fe_uav.Activities.FarmerInfo;
-import in.bharatrohan.br_fe_uav.Models.AllFarmers;
-import in.bharatrohan.br_fe_uav.Models.FarmSolution;
+import in.bharatrohan.br_fe_uav.Models.CropProblem;
 import in.bharatrohan.br_fe_uav.R;
 
 public class SolutionRecyclerAdapter extends RecyclerView.Adapter<SolutionRecyclerAdapter.SolutionViewHolder> {
 
     private Context mCtx;
     private final LayoutInflater layoutInflater;
-    private ArrayList<FarmSolution> dataList;
+    private List<CropProblem.Data.Solution.SolutionData> dataList;
 
-    public SolutionRecyclerAdapter(Context context, ArrayList<FarmSolution> dataList) {
+    public SolutionRecyclerAdapter(Context context, List<CropProblem.Data.Solution.SolutionData> dataList) {
         mCtx = context;
         layoutInflater = LayoutInflater.from(context);
         this.dataList = dataList;
@@ -47,8 +43,10 @@ public class SolutionRecyclerAdapter extends RecyclerView.Adapter<SolutionRecycl
     @Override
     public void onBindViewHolder(@NonNull SolutionViewHolder holder, int position) {
 
-        holder.solNo.setText(String.valueOf(dataList.get(position).getSolNo()));
-        holder.sol.setText(dataList.get(position).getSol());
+        holder.sol.setText(dataList.get(position).getSolText());
+        holder.solNo.setText(String.valueOf(position + 1));
+        holder.itemView.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(dataList.get(position).getSolColor())));
+
 
         holder.setItemsClickListener(new Item_ClickListener() {
             @Override
@@ -92,7 +90,7 @@ public class SolutionRecyclerAdapter extends RecyclerView.Adapter<SolutionRecycl
 
     public class SolutionViewHolder extends RecyclerView.ViewHolder {
 
-        TextView solNo, sol,option;
+        TextView solNo, sol, option;
         ImageView tick;
         private Item_ClickListener mClickListener;
 
@@ -100,7 +98,6 @@ public class SolutionRecyclerAdapter extends RecyclerView.Adapter<SolutionRecycl
             super(itemView);
 
             solNo = itemView.findViewById(R.id.solution_no);
-            sol = itemView.findViewById(R.id.tv_solution);
             sol = itemView.findViewById(R.id.tv_solution);
 
             tick = itemView.findViewById(R.id.imgTick);

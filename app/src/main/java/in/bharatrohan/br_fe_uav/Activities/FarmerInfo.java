@@ -35,6 +35,8 @@ public class FarmerInfo extends AppCompatActivity {
     private ProgressBar progressBar;
     private Button btnVerify;
     private ImageView profilePic;
+    private String imageString;
+    private boolean isVerified;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +90,7 @@ public class FarmerInfo extends AppCompatActivity {
         landInfo = findViewById(R.id.landDetails);
 
         name = findViewById(R.id.tvUavName);
-        contact = findViewById(R.id.tvContact);
+        contact = findViewById(R.id.tvText);
         email = findViewById(R.id.tvUavEmail);
         address = findViewById(R.id.tvUavAddress);
         dob = findViewById(R.id.tvDob);
@@ -98,9 +100,6 @@ public class FarmerInfo extends AppCompatActivity {
 
         getDetail();
 
-        if (!new PrefManager(FarmerInfo.this).getFarmerStatus()) {
-            btnVerify.setVisibility(View.VISIBLE);
-        }
     }
 
     private void getDetail() {
@@ -115,7 +114,9 @@ public class FarmerInfo extends AppCompatActivity {
                 if (response.code() == 200) {
                     if (farmer != null) {
 
-                        if (!farmer.getAvatar().equals("")) {
+
+                        if (farmer.getAvatar() != null) {
+
                             Picasso.get().load("http://br.bharatrohan.in/" + farmer.getAvatar()).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(profilePic, new com.squareup.picasso.Callback() {
                                 @Override
                                 public void onSuccess() {
@@ -124,10 +125,10 @@ public class FarmerInfo extends AppCompatActivity {
 
                                 @Override
                                 public void onError(Exception e) {
-                                    //Toast.makeText(UserProfile.this, "Didn't got Pic", Toast.LENGTH_SHORT).show();
                                     Picasso.get().load("http://br.bharatrohan.in/" + farmer.getAvatar()).fit().centerCrop().into(profilePic);
                                 }
                             });
+
                         } else {
                             Picasso.get().load(R.drawable.profile_pic).into(profilePic);
                         }
@@ -138,7 +139,9 @@ public class FarmerInfo extends AppCompatActivity {
                         email.setText(farmer.getEmail());
                         address.setText(farmer.getFull_address());
                         dob.setText(farmer.getDob());
-                        new PrefManager(FarmerInfo.this).saveFarmerStatus(farmer.getVerified());
+                        if (!farmer.getVerified()) {
+                            btnVerify.setVisibility(View.VISIBLE);
+                        }
                         new PrefManager(FarmerInfo.this).saveUavId(farmer.getUav_id());
                         new PrefManager(FarmerInfo.this).saveFarmCount(farmer.getFarms().size());
                     } else {

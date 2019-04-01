@@ -47,12 +47,10 @@ public class FeVisitsModel {
         private String avatar;
         @SerializedName("uav_id")
         private String uav_id;
-        /*@SerializedName("farms")
-        private ArrayList<String> farms;
-        @SerializedName("address")
-        private Address address;*/
+        @SerializedName("farms")
+        private List<Farm> farmList;
 
-        public Farmer(String farmer_id, String name, String email, String contact, String full_address, Boolean acc_status, Boolean isVerified, String dob, String avatar, String uav_id, ArrayList<String> farms) {
+        public Farmer(String farmer_id, String name, String email, String contact, String full_address, Boolean acc_status, Boolean isVerified, String dob, String avatar, String uav_id, List<Farm> farms) {
             this.farmer_id = farmer_id;
             this.name = name;
             this.email = email;
@@ -63,7 +61,7 @@ public class FeVisitsModel {
             this.dob = dob;
             this.avatar = avatar;
             this.uav_id = uav_id;
-            /*this.farms = farms;
+            this.farmList = farms;
             /*this.address = address;*/
         }
 
@@ -73,6 +71,10 @@ public class FeVisitsModel {
 
         public String getAvatar() {
             return avatar;
+        }
+
+        public List<Farm> getFarmList() {
+            return farmList;
         }
 
         public String getUav_id() {
@@ -101,6 +103,20 @@ public class FeVisitsModel {
 
         public String getDob() {
             return dob;
+        }
+
+
+        public class Farm {
+            @SerializedName("isVerified")
+            private boolean isVerified;
+
+            public Farm(boolean isVerified) {
+                this.isVerified = isVerified;
+            }
+
+            public boolean isVerified() {
+                return isVerified;
+            }
         }
 
         /*public ArrayList<String> getFarms() {

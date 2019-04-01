@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 import in.bharatrohan.br_fe_uav.Activities.FarmerInfo;
+import in.bharatrohan.br_fe_uav.Models.Farm;
 import in.bharatrohan.br_fe_uav.Models.FarmerList;
 import in.bharatrohan.br_fe_uav.PrefManager;
 import in.bharatrohan.br_fe_uav.R;
@@ -59,6 +60,8 @@ public class AllRecyclerAdapter extends RecyclerView.Adapter<AllRecyclerAdapter.
 
             @Override
             public void onSelectClick(@NotNull View view, int positions) {
+
+                new PrefManager(mCtx).saveIsVisit(false);
                 mCtx.startActivity(new Intent(mCtx, FarmerInfo.class));
                 new PrefManager(mCtx).saveFarmerId(dataList.get(position).getId());
 

@@ -23,19 +23,21 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="25dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/profile_pic" />
 
         <TextView
             android:id="@+id/tvUavName"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
+            android:layout_marginEnd="8dp"
             android:text="Name"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="@+id/farmerImg"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/farmerImg"
             app:layout_constraintTop_toTopOf="@+id/farmerImg" />
 
@@ -46,7 +48,6 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="15dp"
             android:layout_marginEnd="20dp"
-            android:background="@drawable/rounded_edittext"
             android:padding="10dp"
             android:text="Address"
             app:layout_constraintEnd_toEndOf="parent"
@@ -88,6 +89,21 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tvCall"
             app:srcCompat="@drawable/ic_next_white" />
+
+        <TextView
+            android:id="@+id/tvUnCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/rounded_textview_red"
+            android:gravity="center"
+            android:padding="2dp"
+            android:text="0"
+            android:textColor="@color/cardview_light_background"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>
 
 </android.support.v7.widget.CardView>

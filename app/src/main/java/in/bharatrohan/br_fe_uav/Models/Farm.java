@@ -3,6 +3,7 @@ package in.bharatrohan.br_fe_uav.Models;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Farm {
 
@@ -21,6 +22,8 @@ public class Farm {
 
         @SerializedName("isVerified")
         private Boolean isVerified;
+        @SerializedName("problems_id")
+        private List<String> problemId;
         @SerializedName("farm_name")
         private String farm_name;
         @SerializedName("map_image")
@@ -28,10 +31,16 @@ public class Farm {
         @SerializedName("crop_id")
         private Crop crop;
 
-        public Data(Boolean isVerified, String farm_name, Crop crop) {
+        public Data(Boolean isVerified, List<String> problemId, String farm_name, String map_image, Crop crop) {
             this.isVerified = isVerified;
+            this.problemId = problemId;
             this.farm_name = farm_name;
+            this.map_image = map_image;
             this.crop = crop;
+        }
+
+        public List<String> getProblemId() {
+            return problemId;
         }
 
         public String getMap_image() {

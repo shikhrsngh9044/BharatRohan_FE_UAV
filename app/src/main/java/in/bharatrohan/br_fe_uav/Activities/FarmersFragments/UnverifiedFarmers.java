@@ -35,7 +35,7 @@ public class UnverifiedFarmers extends Fragment {
     private UnRecyclerAdapter adapter;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
-    private List<FarmerList.FarmersList> unVerifiedFarmersArrayList;
+
 
     public UnverifiedFarmers() {
         // Required empty public constructor
@@ -54,7 +54,6 @@ public class UnverifiedFarmers extends Fragment {
     }
 
     private void init(View view) {
-        unVerifiedFarmersArrayList = new ArrayList<>();
         progressBar = view.findViewById(R.id.progressBar);
         recyclerView = view.findViewById(R.id.recycler);
     }
@@ -62,6 +61,11 @@ public class UnverifiedFarmers extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        //getUnList();
+    }
+
+
+    private void getUnList() {
         showProgress();
         Call<FarmerList> call = RetrofitClient
                 .getInstance()
@@ -72,20 +76,20 @@ public class UnverifiedFarmers extends Fragment {
             @Override
             public void onResponse(Call<FarmerList> call, Response<FarmerList> response) {
                 hideProgress();
-                if (response.code()==200) {
+                if (response.code() == 200) {
                     if (response.body() != null) {
                         generateFarmerList(response.body().getFarmersLists());
                     } else {
                         Toast.makeText(getActivity(), "Some error occurred.Please try again!!", Toast.LENGTH_SHORT).show();
                     }
-                }else if (response.code() == 401) {
+                } else if (response.code() == 401) {
                     new PrefManager(getContext()).saveLoginDetails("", "", "");
                     new PrefManager(getContext()).saveToken("");
                     new PrefManager(getContext()).saveUserDetails("", "", "", "", false, "", "", "", "", "", "");
                     new PrefManager(getContext()).saveUserType("");
                     Toast.makeText(getContext(), "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getActivity(), Login.class));
-                  getActivity().finish();
+                    getActivity().finish();
                 } else if (response.code() == 500) {
                     Toast.makeText(getContext(), "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
                 }
@@ -101,6 +105,8 @@ public class UnverifiedFarmers extends Fragment {
 
     private void generateFarmerList(List<FarmerList.FarmersList> allFarmersArrayList) {
 
+        List<FarmerList.FarmersList> unVerifiedFarmersArrayList = new ArrayList<>();
+
         for (int i = 0; i < allFarmersArrayList.size(); i++) {
             if (!allFarmersArrayList.get(i).getVerified()) {
 
@@ -113,6 +119,21 @@ public class UnverifiedFarmers extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+    }
+
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (isVisibleToUser && isResumed()) {
+            getUnList();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     private void showProgress() {

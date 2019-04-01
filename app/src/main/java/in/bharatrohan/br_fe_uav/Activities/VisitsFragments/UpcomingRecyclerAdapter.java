@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.feedingtrends.vocally.Interfaces.ItemClickListener;
 import com.squareup.picasso.NetworkPolicy;
@@ -17,6 +18,7 @@ import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import in.bharatrohan.br_fe_uav.Activities.FarmerInfo;
@@ -30,6 +32,8 @@ public class UpcomingRecyclerAdapter extends RecyclerView.Adapter<UpcomingRecycl
     private Context mCtx;
     private final LayoutInflater layoutInflater;
     private List<FeVisitsModel.Farmer> dataList;
+    private List<FeVisitsModel.Farmer.Farm> farmList;
+    private int count = 0;
 
     public UpcomingRecyclerAdapter(Context mCtx, List<FeVisitsModel.Farmer> dataList) {
         this.mCtx = mCtx;
@@ -47,11 +51,24 @@ public class UpcomingRecyclerAdapter extends RecyclerView.Adapter<UpcomingRecycl
 
     @Override
     public void onBindViewHolder(@NonNull UpcomingViewHolder holder, int position) {
+        farmList = new ArrayList<>();
+        farmList = dataList.get(position).getFarmList();
+        for (int i = 0; i < farmList.size(); i++) {
+            if (!farmList.get(i).isVerified()) {
+                count++;
+            }
+        }
         holder.name.setText(dataList.get(position).getName());
         holder.address.setText(dataList.get(position).getFull_address());
 
+        if (count > 0) {
+           // Toast.makeText(mCtx, String.valueOf(count), Toast.LENGTH_SHORT).show();
+            holder.tvUnCount.setVisibility(View.VISIBLE);
+            holder.tvUnCount.setText(String.valueOf(count));
+        }
+
         if (dataList.get(position).getAvatar() != null) {
-            Picasso.get().load("br.bharatrohan.in" + dataList.get(position).getAvatar()).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(holder.farmerImg, new com.squareup.picasso.Callback() {
+            Picasso.get().load("http://br.bharatrohan.in/" + dataList.get(position).getAvatar()).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(holder.farmerImg, new com.squareup.picasso.Callback() {
                 @Override
                 public void onSuccess() {
 
@@ -60,7 +77,7 @@ public class UpcomingRecyclerAdapter extends RecyclerView.Adapter<UpcomingRecycl
                 @Override
                 public void onError(Exception e) {
                     //Toast.makeText(UserProfile.this, "Didn't got Pic", Toast.LENGTH_SHORT).show();
-                    Picasso.get().load(R.drawable.profile_pic).fit().centerCrop().into(holder.farmerImg);
+                    Picasso.get().load("http://br.bharatrohan.in/" + dataList.get(position).getAvatar()).fit().centerCrop().into(holder.farmerImg);
                 }
             });
         } else {
@@ -77,6 +94,7 @@ public class UpcomingRecyclerAdapter extends RecyclerView.Adapter<UpcomingRecycl
 
             @Override
             public void onSelectClick(@NotNull View view, int position) {
+                new PrefManager(mCtx).saveIsVisit(true);
                 new PrefManager(mCtx).saveFarmerId(dataList.get(position).getFarmer_id());
                 mCtx.startActivity(new Intent(mCtx, FarmerInfo.class));
             }
@@ -89,7 +107,7 @@ public class UpcomingRecyclerAdapter extends RecyclerView.Adapter<UpcomingRecycl
     }
 
     public class UpcomingViewHolder extends RecyclerView.ViewHolder {
-        TextView name, address, call;
+        TextView name, address, call, tvUnCount;
         ImageView farmerImg, select;
         private ItemClickListener mClickListener;
 
@@ -101,6 +119,7 @@ public class UpcomingRecyclerAdapter extends RecyclerView.Adapter<UpcomingRecycl
             call = itemView.findViewById(R.id.tvCall);
             farmerImg = itemView.findViewById(R.id.farmerImg);
             select = itemView.findViewById(R.id.imageView5);
+            tvUnCount = itemView.findViewById(R.id.tvUnCount);
 
             select.setOnClickListener(v -> mClickListener.onSelectClick(v, getAdapterPosition()));
             call.setOnClickListener(v -> mClickListener.onPhoneClick(v, getAdapterPosition()));

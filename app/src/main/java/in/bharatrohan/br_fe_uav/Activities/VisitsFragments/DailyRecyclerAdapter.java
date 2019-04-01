@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.feedingtrends.vocally.Interfaces.ItemClickListener;
 import com.squareup.picasso.NetworkPolicy;
@@ -30,6 +31,7 @@ public class DailyRecyclerAdapter extends RecyclerView.Adapter<DailyRecyclerAdap
     private Context mCtx;
     private final LayoutInflater layoutInflater;
     private List<FeVisitsModel.Farmer> dataList;
+    private int count = 0;
 
     public DailyRecyclerAdapter(Context mCtx, List<FeVisitsModel.Farmer> dataList) {
         this.mCtx = mCtx;
@@ -47,11 +49,21 @@ public class DailyRecyclerAdapter extends RecyclerView.Adapter<DailyRecyclerAdap
 
     @Override
     public void onBindViewHolder(@NonNull DailyViewHolder holder, int position) {
+        for (int i = 0; i < dataList.get(position).getFarmList().size(); i++) {
+            if (!dataList.get(position).getFarmList().get(i).isVerified()) {
+                count++;
+            }
+        }
         holder.name.setText(dataList.get(position).getName());
         holder.address.setText(dataList.get(position).getFull_address());
+        if (count > 0) {
+            holder.tvUnCount.setVisibility(View.VISIBLE);
+            holder.tvUnCount.setText(String.valueOf(count));
+        }
+
 
         if (dataList.get(position).getAvatar() != null) {
-            Picasso.get().load("br.bharatrohan.in" + dataList.get(position).getAvatar()).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(holder.farmerImg, new com.squareup.picasso.Callback() {
+            Picasso.get().load("http://br.bharatrohan.in/" + dataList.get(position).getAvatar()).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(holder.farmerImg, new com.squareup.picasso.Callback() {
                 @Override
                 public void onSuccess() {
 
@@ -60,7 +72,7 @@ public class DailyRecyclerAdapter extends RecyclerView.Adapter<DailyRecyclerAdap
                 @Override
                 public void onError(Exception e) {
                     //Toast.makeText(UserProfile.this, "Didn't got Pic", Toast.LENGTH_SHORT).show();
-                    Picasso.get().load(R.drawable.profile_pic).fit().centerCrop().into(holder.farmerImg);
+                    Picasso.get().load("http://br.bharatrohan.in/" + dataList.get(position).getAvatar()).fit().centerCrop().into(holder.farmerImg);
                 }
             });
         } else {
@@ -78,6 +90,7 @@ public class DailyRecyclerAdapter extends RecyclerView.Adapter<DailyRecyclerAdap
 
             @Override
             public void onSelectClick(@NotNull View view, int position) {
+                new PrefManager(mCtx).saveIsVisit(true);
                 new PrefManager(mCtx).saveFarmerId(dataList.get(position).getFarmer_id());
                 mCtx.startActivity(new Intent(mCtx, FarmerInfo.class));
             }
@@ -90,7 +103,7 @@ public class DailyRecyclerAdapter extends RecyclerView.Adapter<DailyRecyclerAdap
     }
 
     public class DailyViewHolder extends RecyclerView.ViewHolder {
-        TextView name, address, call;
+        TextView name, address, call, tvUnCount;
         ImageView farmerImg, select;
         private ItemClickListener mClickListener;
 
@@ -102,6 +115,7 @@ public class DailyRecyclerAdapter extends RecyclerView.Adapter<DailyRecyclerAdap
             call = itemView.findViewById(R.id.tvCall);
             farmerImg = itemView.findViewById(R.id.farmerImg);
             select = itemView.findViewById(R.id.imageView5);
+            tvUnCount = itemView.findViewById(R.id.tvUnCount);
 
             select.setOnClickListener(v -> mClickListener.onSelectClick(v, getAdapterPosition()));
             call.setOnClickListener(v -> mClickListener.onPhoneClick(v, getAdapterPosition()));

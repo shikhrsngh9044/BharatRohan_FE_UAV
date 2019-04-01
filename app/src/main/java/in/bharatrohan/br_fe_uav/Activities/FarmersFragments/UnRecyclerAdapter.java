@@ -61,6 +61,7 @@ public class UnRecyclerAdapter extends RecyclerView.Adapter<UnRecyclerAdapter.Un
 
             @Override
             public void onSelectClick(@NotNull View view, int position) {
+                new PrefManager(mCtx).saveIsVisit(false);
                 new PrefManager(mCtx).saveFarmerId(dataList.get(position).getId());
                 mCtx.startActivity(new Intent(mCtx, FarmerInfo.class));
             }

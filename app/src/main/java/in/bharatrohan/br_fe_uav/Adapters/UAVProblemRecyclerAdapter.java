@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.feedingtrends.vocally.Interfaces.ItemClickListener;
-import com.feedingtrends.vocally.Interfaces.Item_ClickListener;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
