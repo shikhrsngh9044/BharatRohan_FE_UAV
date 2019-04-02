@@ -3,14 +3,7 @@
 
     <item
         android:id="@+id/apply"
-        android:title="Apply"/>
+        android:title="Applied" />
 
-    <item
-        android:id="@+id/comment"
-        android:title="Comment"/>
-
-    <item
-        android:id="@+id/fe_comment"
-        android:title="Fe Comment"/>
 
 </menu>

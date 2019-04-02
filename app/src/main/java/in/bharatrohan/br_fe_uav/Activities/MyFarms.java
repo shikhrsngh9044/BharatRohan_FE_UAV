@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import in.bharatrohan.br_fe_uav.Api.RetrofitClient;
 import in.bharatrohan.br_fe_uav.CheckInternet;
@@ -46,10 +47,6 @@ public class MyFarms extends AppCompatActivity {
 
 
         setDynamicFragmentToTabLayout(farmCount);
-
-        if (mFragmentAdapter != null) {
-            mFragmentAdapter.notifyDataSetChanged();
-        }
     }
 
     private void initViews() {
@@ -66,6 +63,7 @@ public class MyFarms extends AppCompatActivity {
         mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                //Objects.requireNonNull(viewPager.getAdapter()).notifyDataSetChanged();
                 new PrefManager(MyFarms.this).saveFarmNo(tab.getPosition());
                 viewPager.setCurrentItem(tab.getPosition());
             }
@@ -100,8 +98,16 @@ public class MyFarms extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mFragmentAdapter != null) {
+            mFragmentAdapter.notifyDataSetChanged();
+        }
+    }
 
-   /* private void getFarmCount() {
+
+    /* private void getFarmCount() {
         Call<Farmer> call = RetrofitClient.getInstance().getApi().getFarmerDetail(new PrefManager(MyFarms.this).getToken(), new PrefManager(this).getFarmerId());
 
         call.enqueue(new Callback<Farmer>() {

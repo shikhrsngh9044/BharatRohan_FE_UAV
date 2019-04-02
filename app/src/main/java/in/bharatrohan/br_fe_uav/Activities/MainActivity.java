@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity
         userAvatar = navigationView.getHeaderView(0).findViewById(R.id.userPic);
 
         if (!new PrefManager(MainActivity.this).getAvatar().equals("")) {
-            Picasso.get().load("http://br.bharatrohan.in/" + new PrefManager(MainActivity.this).getAvatar()).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(userAvatar, new com.squareup.picasso.Callback() {
+            Picasso.get().load("http://br.bharatrohan.in/" + new PrefManager(MainActivity.this).getAvatar()).fit().centerCrop().noFade().networkPolicy(NetworkPolicy.OFFLINE).into(userAvatar, new com.squareup.picasso.Callback() {
                 @Override
                 public void onSuccess() {
 
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onError(Exception e) {
                     //Toast.makeText(UserProfile.this, "Didn't got Pic", Toast.LENGTH_SHORT).show();
-                    Picasso.get().load("http://br.bharatrohan.in/" + new PrefManager(MainActivity.this).getAvatar()).fit().centerCrop().into(userAvatar);
+                    Picasso.get().load("http://br.bharatrohan.in/" + new PrefManager(MainActivity.this).getAvatar()).fit().centerCrop().noFade().into(userAvatar);
                 }
             });
         } else {

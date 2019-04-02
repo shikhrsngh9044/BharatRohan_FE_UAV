@@ -117,7 +117,7 @@ public class FarmerInfo extends AppCompatActivity {
 
                         if (farmer.getAvatar() != null) {
 
-                            Picasso.get().load("http://br.bharatrohan.in/" + farmer.getAvatar()).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(profilePic, new com.squareup.picasso.Callback() {
+                            Picasso.get().load("http://br.bharatrohan.in/" + farmer.getAvatar()).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).noFade().into(profilePic, new com.squareup.picasso.Callback() {
                                 @Override
                                 public void onSuccess() {
 
@@ -125,7 +125,7 @@ public class FarmerInfo extends AppCompatActivity {
 
                                 @Override
                                 public void onError(Exception e) {
-                                    Picasso.get().load("http://br.bharatrohan.in/" + farmer.getAvatar()).fit().centerCrop().into(profilePic);
+                                    Picasso.get().load("http://br.bharatrohan.in/" + farmer.getAvatar()).fit().centerCrop().noFade().into(profilePic);
                                 }
                             });
 

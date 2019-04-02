@@ -146,7 +146,7 @@ public class UAV_FarmerInfo extends AppCompatActivity {
         farmArea.setText(new PrefManager(this).getFFarmArea());
 
         if (!new PrefManager(this).getFAvatar().equals("")) {
-            Picasso.get().load("http://br.bharatrohan.in/" + new PrefManager(this).getFAvatar()).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(avatar, new com.squareup.picasso.Callback() {
+            Picasso.get().load("http://br.bharatrohan.in/" + new PrefManager(this).getFAvatar()).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).noFade().into(avatar, new com.squareup.picasso.Callback() {
                 @Override
                 public void onSuccess() {
 
@@ -155,7 +155,7 @@ public class UAV_FarmerInfo extends AppCompatActivity {
                 @Override
                 public void onError(Exception e) {
                     //Toast.makeText(UserProfile.this, "Didn't got Pic", Toast.LENGTH_SHORT).show();
-                    Picasso.get().load("http://br.bharatrohan.in/" + new PrefManager(UAV_FarmerInfo.this).getFAvatar()).fit().centerCrop().into(avatar);
+                    Picasso.get().load("http://br.bharatrohan.in/" + new PrefManager(UAV_FarmerInfo.this).getFAvatar()).fit().centerCrop().noFade().into(avatar);
                 }
             });
         } else {

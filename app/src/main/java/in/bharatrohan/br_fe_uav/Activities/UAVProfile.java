@@ -130,6 +130,7 @@ public class UAVProfile extends AppCompatActivity {
         editContact.setVisibility(View.VISIBLE);
         editAltContact.setVisibility(View.VISIBLE);
         editAddress.setVisibility(View.VISIBLE);
+        findViewById(R.id.textView21).setVisibility(View.GONE);
         findViewById(R.id.constraint).setVisibility(View.VISIBLE);
         findViewById(R.id.co3).setVisibility(View.VISIBLE);
     }
@@ -143,7 +144,7 @@ public class UAVProfile extends AppCompatActivity {
         editAddress.setVisibility(View.GONE);
         editContact.setVisibility(View.GONE);
         findViewById(R.id.constraint).setVisibility(View.GONE);
-        findViewById(R.id.co3).setVisibility(View.GONE);
+        editAltContact.setVisibility(View.GONE);
     }
 
 

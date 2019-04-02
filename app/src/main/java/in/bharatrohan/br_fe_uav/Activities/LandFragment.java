@@ -14,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -24,10 +26,13 @@ import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 import in.bharatrohan.br_fe_uav.Activities.FarmersFragments.AllRecyclerAdapter;
+import in.bharatrohan.br_fe_uav.Adapters.Item_ClickListener;
+import in.bharatrohan.br_fe_uav.Adapters.SolutionInterface;
 import in.bharatrohan.br_fe_uav.Adapters.SolutionRecyclerAdapter;
 import in.bharatrohan.br_fe_uav.Api.RetrofitClient;
 import in.bharatrohan.br_fe_uav.CheckInternet;
@@ -37,6 +42,7 @@ import in.bharatrohan.br_fe_uav.Models.FarmSolution;
 import in.bharatrohan.br_fe_uav.Models.Farmer;
 import in.bharatrohan.br_fe_uav.Models.FarmerList;
 import in.bharatrohan.br_fe_uav.Models.Image;
+import in.bharatrohan.br_fe_uav.Models.SolutionComment;
 import in.bharatrohan.br_fe_uav.PrefManager;
 import in.bharatrohan.br_fe_uav.R;
 import okhttp3.ResponseBody;
@@ -50,15 +56,22 @@ public class LandFragment extends Fragment {
     private ArrayList<String> solutionArrayList;
     private ArrayList<String> problemId;
     private RecyclerView recyclerView;
-    private TextView tvCVisit, verifyFarm, farmStatus, comment;
+    private TextView tvCVisit, verifyFarm, farmStatus, imageWarn, solWarn;
+    private EditText comment;
     private TextView landName, cropName;
     private ProgressBar progressBar;
     private ArrayList<String> farmList = new ArrayList<>();
-    private String token, farmerId;
+    private String token, farmerId, problem_id;
     private ImageView img;
     private ArrayAdapter<String> adapter1;
     private boolean isverified;
+    private boolean isFirst;
     private ImageView solImage;
+    private Button sendSolStatus;
+    public ArrayList<CropProblem.Data.Solution.SolutionData> problemList;
+
+    public LandFragment() {
+    }
 
     public static LandFragment newInstance() {
         return new LandFragment();
@@ -84,6 +97,10 @@ public class LandFragment extends Fragment {
         tvCVisit.setOnClickListener(v -> startActivity(new Intent(getActivity(), CreateVisit.class)));
 
         verifyFarm.setOnClickListener(v -> startActivity(new Intent(getActivity(), VerifyFarm.class)));
+
+        sendSolStatus.setOnClickListener(v -> {
+            sendSolutionStatus();
+        });
 
         /*RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
@@ -118,29 +135,27 @@ public class LandFragment extends Fragment {
     private void initViews(View view) {
         problemSpinner = view.findViewById(R.id.spinnerVisits);
         solImage = view.findViewById(R.id.solutionImage);
+        sendSolStatus = view.findViewById(R.id.solStatus);
 
         recyclerView = view.findViewById(R.id.recycler);
 
         tvCVisit = view.findViewById(R.id.tvCvisit);
         farmStatus = view.findViewById(R.id.tvFarmStatus);
         verifyFarm = view.findViewById(R.id.tvVerifyFarm);
-        img = view.findViewById(R.id.imageView14);
         comment = view.findViewById(R.id.comments);
-
-        ImageView img2 = view.findViewById(R.id.imageView13);
         landName = view.findViewById(R.id.tvLandName);
         cropName = view.findViewById(R.id.tvCropName);
         progressBar = view.findViewById(R.id.progressBar);
+        imageWarn = view.findViewById(R.id.textView23);
+        solWarn = view.findViewById(R.id.textView24);
 
 
         comment.setMovementMethod(new ScrollingMovementMethod());
 
         if (new PrefManager(getContext()).getIsVisit()) {
             tvCVisit.setVisibility(View.VISIBLE);
-            img2.setVisibility(View.VISIBLE);
         } else {
             tvCVisit.setVisibility(View.GONE);
-            img2.setVisibility(View.GONE);
         }
 
 
@@ -150,12 +165,10 @@ public class LandFragment extends Fragment {
         if (status) {
             farmStatus.setText("Verified");
             farmStatus.setBackgroundResource(android.R.color.holo_green_dark);
-            img.setVisibility(View.GONE);
             verifyFarm.setVisibility(View.GONE);
         } else {
             farmStatus.setText("Not Verified");
             farmStatus.setBackgroundResource(android.R.color.holo_red_dark);
-            img.setVisibility(View.VISIBLE);
             verifyFarm.setVisibility(View.VISIBLE);
 
         }
@@ -183,30 +196,13 @@ public class LandFragment extends Fragment {
                         }
                         new PrefManager(getContext()).saveFarmImage(farm.getData().getMap_image());
                         problemId = new ArrayList<>();
+                        problemId.clear();
                         problemId.addAll(farm.getData().getProblemId());
                         landName.setText(farm.getData().getFarm_name());
                         cropName.setText(farm.getData().getCrop().getCrop_name());
                         new PrefManager(getContext()).saveCropId(farm.getData().getCrop().getCrop_id());
-
+                        isFirst = true;
                         initProblemSpinner();
-
-                        /*if (problemId.size() > 0) {
-                            solutionArrayList = new ArrayList<>();
-                            initProblemSpinner();
-                            problemSpinner.setOnItemSelectedListener((view, position, id, item) -> {
-                                String problem_id = problemId.get(position);
-
-                                getSolution(problem_id);
-                            });
-                        } else {
-                            solutionArrayList = new ArrayList<>();
-                            solutionArrayList.add("N/A");
-                            initProblemSpinner();
-                            problemSpinner.setOnItemSelectedListener((view, position, id, item) -> {
-                                Toast.makeText(getContext(), "No solutions are given", Toast.LENGTH_SHORT).show();
-                            });
-                        }*/
-
 
                     } else {
                         Toast.makeText(getContext(), "Some error occurred.Please try again!!", Toast.LENGTH_SHORT).show();
@@ -283,6 +279,14 @@ public class LandFragment extends Fragment {
 
     private void initProblemSpinner() {
 
+        solImage.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.VISIBLE);
+        solWarn.setVisibility(View.GONE);
+        imageWarn.setVisibility(View.GONE);
+
+        //reversing problem Id arrayList
+        Collections.reverse(problemId);
+
         if (problemId.size() > 0) {
             solutionArrayList = new ArrayList<>();
 
@@ -290,19 +294,31 @@ public class LandFragment extends Fragment {
                 solutionArrayList.add("Solution " + (i + 1));
             }
 
+            //reversing problem tag arrayList
+            Collections.reverse(solutionArrayList);
+
             adapter1 = new ArrayAdapter<>(Objects.requireNonNull(getContext()), android.R.layout.simple_spinner_item, solutionArrayList);
             adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             problemSpinner.setAdapter(adapter1);
 
+
+            if (isFirst) {
+                getSolution(problemId.get(0));
+            }
+
             problemSpinner.setOnItemSelectedListener((view, position, id, item) -> {
-                String problem_id = problemId.get(position);
+                problem_id = problemId.get(position);
 
                 getSolution(problem_id);
             });
 
-        } else {
-            solutionArrayList = new ArrayList<>();
 
+        } else {
+            solImage.setVisibility(View.INVISIBLE);
+            recyclerView.setVisibility(View.GONE);
+            solWarn.setVisibility(View.VISIBLE);
+            imageWarn.setVisibility(View.VISIBLE);
+            solutionArrayList = new ArrayList<>();
             solutionArrayList.add("N/A");
             adapter1 = new ArrayAdapter<>(Objects.requireNonNull(getContext()), android.R.layout.simple_spinner_item, solutionArrayList);
             adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -344,12 +360,48 @@ public class LandFragment extends Fragment {
     }
 
     private void generateSolList(List<CropProblem.Data.Solution.SolutionData> allSolArrayList) {
+        problemList = new ArrayList<>();
+        problemList.addAll(allSolArrayList);
 
-        adapter = new SolutionRecyclerAdapter(getActivity(), allSolArrayList);
+        adapter = new SolutionRecyclerAdapter(getActivity(), allSolArrayList, position -> {
+
+            problemList.get(position).set_status(true);
+            sendSolStatus.setVisibility(View.VISIBLE);
+            Toast.makeText(getContext(), problemList.get(position).get_status().toString(), Toast.LENGTH_SHORT).show();
+        });
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+    }
+
+
+    private void sendSolutionStatus() {
+        showProgress();
+
+        String fe_comment = comment.getText().toString().trim();
+
+        SolutionComment solutionComment = new SolutionComment(problem_id, fe_comment, problemList);
+
+        Call<SolutionComment> call = RetrofitClient.getInstance().getApi().solutionStatus(new PrefManager(getContext()).getToken(), solutionComment);
+
+        call.enqueue(new Callback<SolutionComment>() {
+            @Override
+            public void onResponse(Call<SolutionComment> call, Response<SolutionComment> response) {
+                hideProgress();
+                if (response.code() == 200) {
+                    Toast.makeText(getContext(), "Status and Comment Updated!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SolutionComment> call, Throwable t) {
+                hideProgress();
+                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void showProgress() {
@@ -391,5 +443,6 @@ public class LandFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
     }
+
 
 }

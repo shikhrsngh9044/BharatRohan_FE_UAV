@@ -12,6 +12,7 @@ import in.bharatrohan.br_fe_uav.Models.FeVisitsModel;
 import in.bharatrohan.br_fe_uav.Models.LoginFE;
 import in.bharatrohan.br_fe_uav.Models.LoginUAV;
 import in.bharatrohan.br_fe_uav.Models.Responses;
+import in.bharatrohan.br_fe_uav.Models.SolutionComment;
 import in.bharatrohan.br_fe_uav.Models.UavDetails;
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
@@ -161,4 +162,8 @@ public interface Api {
     Call<CropProblem> getProblemDetail(@Header("Authorization") String token,
                                        @Path("id") String feId);
 
+
+    @POST("crop-problem/solution-comment")
+    Call<SolutionComment> solutionStatus(@Header("Authorization") String token,
+                                         @Body SolutionComment solutionComment);
 }
