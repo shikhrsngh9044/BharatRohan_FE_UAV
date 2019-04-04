@@ -101,25 +101,21 @@ public interface Api {
 
     @FormUrlEncoded
     @POST("uav/otp")
-    Call<ResponseBody> getOtpUav(@Header("Authorization") String token,
-                                 @Field("email") String email);
+    Call<ResponseBody> getOtpUav(@Field("email") String email);
 
     @FormUrlEncoded
     @POST("uav/change-password")
-    Call<ResponseBody> changePassUav(@Header("Authorization") String token,
-                                     @Field("email") String email,
+    Call<ResponseBody> changePassUav(@Field("email") String email,
                                      @Field("otp") String otp,
                                      @Field("Password") String password);
 
     @FormUrlEncoded
     @POST("fe/otp")
-    Call<ResponseBody> getOtpFe(@Header("Authorization") String token,
-                                @Field("email") String email);
+    Call<ResponseBody> getOtpFe(@Field("email") String email);
 
     @FormUrlEncoded
     @POST("fe/change-password")
-    Call<ResponseBody> changePassFe(@Header("Authorization") String token,
-                                    @Field("email") String email,
+    Call<ResponseBody> changePassFe(@Field("email") String email,
                                     @Field("otp") String otp,
                                     @Field("Password") String password);
 

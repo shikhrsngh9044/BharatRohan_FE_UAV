@@ -70,6 +70,9 @@ public class FarmerInfo extends AppCompatActivity {
                         Toast.makeText(FarmerInfo.this, "Token Expired", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(FarmerInfo.this, Login.class));
                         finish();
+                    } else if (response.code() == 400) {
+                        Toast.makeText(FarmerInfo.this, "Bad Request", Toast.LENGTH_SHORT).show();
+                        //Vaifation failed
                     } else if (response.code() == 500) {
                         Toast.makeText(FarmerInfo.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
                     }
@@ -155,6 +158,9 @@ public class FarmerInfo extends AppCompatActivity {
                     Toast.makeText(FarmerInfo.this, "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(FarmerInfo.this, Login.class));
                     finish();
+                } else if (response.code() == 400) {
+                    Toast.makeText(FarmerInfo.this, "Bad Request", Toast.LENGTH_SHORT).show();
+                    //Vaifation failed
                 } else if (response.code() == 500) {
                     Toast.makeText(FarmerInfo.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
                 }

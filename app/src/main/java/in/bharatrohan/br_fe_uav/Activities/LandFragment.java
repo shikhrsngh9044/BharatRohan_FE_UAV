@@ -62,7 +62,7 @@ public class LandFragment extends Fragment {
     private ProgressBar progressBar;
     private ArrayList<String> farmList = new ArrayList<>();
     private String token, farmerId, problem_id;
-    private ImageView img;
+    private String farmImg;
     private ArrayAdapter<String> adapter1;
     private boolean isverified;
     private boolean isFirst;
@@ -94,7 +94,10 @@ public class LandFragment extends Fragment {
 
         initViews(view);
 
-        tvCVisit.setOnClickListener(v -> startActivity(new Intent(getActivity(), CreateVisit.class)));
+        tvCVisit.setOnClickListener(v -> {
+            startActivity(new Intent(getActivity(), CreateVisit.class));
+            new PrefManager(getContext()).saveFarmImage(farmImg);
+        });
 
         verifyFarm.setOnClickListener(v -> startActivity(new Intent(getActivity(), VerifyFarm.class)));
 
@@ -152,13 +155,6 @@ public class LandFragment extends Fragment {
 
         comment.setMovementMethod(new ScrollingMovementMethod());
 
-        if (new PrefManager(getContext()).getIsVisit()) {
-            tvCVisit.setVisibility(View.VISIBLE);
-        } else {
-            tvCVisit.setVisibility(View.GONE);
-        }
-
-
     }
 
     private void setVerifyFarmStatus(Boolean status) {
@@ -166,19 +162,20 @@ public class LandFragment extends Fragment {
             farmStatus.setText("Verified");
             farmStatus.setBackgroundResource(android.R.color.holo_green_dark);
             verifyFarm.setVisibility(View.GONE);
+            tvCVisit.setVisibility(View.VISIBLE);
         } else {
             farmStatus.setText("Not Verified");
             farmStatus.setBackgroundResource(android.R.color.holo_red_dark);
             verifyFarm.setVisibility(View.VISIBLE);
-
+            tvCVisit.setVisibility(View.GONE);
         }
     }
 
 
     private void showFarmInfo(String farmId) {
         //showProgress();
-
-        new PrefManager(getContext()).saveFarmId(farmId);
+        if (getContext() != null)
+            new PrefManager(getContext()).saveFarmId(farmId);
         Call<Farm> call = RetrofitClient.getInstance().getApi().getFarmDetail(token, farmId);
 
         call.enqueue(new Callback<Farm>() {
@@ -191,10 +188,10 @@ public class LandFragment extends Fragment {
 
                     if (farm != null) {
                         if (farm.getData().getVerified() != null) {
-                            isverified = farm.getData().getVerified();
+                            //isverified = farm.getData().getVerified();
                             setVerifyFarmStatus(farm.getData().getVerified());
                         }
-                        new PrefManager(getContext()).saveFarmImage(farm.getData().getMap_image());
+                        farmImg = farm.getData().getMap_image();
                         problemId = new ArrayList<>();
                         problemId.clear();
                         problemId.addAll(farm.getData().getProblemId());
@@ -215,6 +212,9 @@ public class LandFragment extends Fragment {
                     Toast.makeText(getContext(), "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getActivity(), Login.class));
                     getActivity().finish();
+                } else if (response.code() == 400) {
+                    Toast.makeText(getContext(), "Bad Request", Toast.LENGTH_SHORT).show();
+                    //Vaifation failed
                 } else if (response.code() == 500) {
                     Toast.makeText(getContext(), "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
                 }
@@ -243,7 +243,7 @@ public class LandFragment extends Fragment {
                 if (response.code() == 200) {
 
                     if (farmer != null) {
-                        new PrefManager(getContext()).saveFarmerAvatar(farmer.getAvatar());
+                        //new PrefManager(getContext()).saveFarmerAvatar(farmer.getAvatar());
                         farmList = farmer.getFarms();
                         if (farmList.size() != 0) {
                             showFarmInfo(farmList.get(farmNo));
@@ -263,6 +263,9 @@ public class LandFragment extends Fragment {
                     Toast.makeText(getContext(), "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getActivity(), Login.class));
                     getActivity().finish();
+                } else if (response.code() == 400) {
+                    Toast.makeText(getContext(), "Bad Request", Toast.LENGTH_SHORT).show();
+                    //Vaifation failed
                 } else if (response.code() == 500) {
                     Toast.makeText(getContext(), "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
                 }
@@ -281,13 +284,15 @@ public class LandFragment extends Fragment {
 
         solImage.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.VISIBLE);
+        comment.setVisibility(View.VISIBLE);
         solWarn.setVisibility(View.GONE);
         imageWarn.setVisibility(View.GONE);
-
         //reversing problem Id arrayList
         Collections.reverse(problemId);
 
         if (problemId.size() > 0) {
+
+
             solutionArrayList = new ArrayList<>();
 
             for (int i = 0; i < problemId.size(); i++) {
@@ -308,7 +313,6 @@ public class LandFragment extends Fragment {
 
             problemSpinner.setOnItemSelectedListener((view, position, id, item) -> {
                 problem_id = problemId.get(position);
-
                 getSolution(problem_id);
             });
 
@@ -316,8 +320,10 @@ public class LandFragment extends Fragment {
         } else {
             solImage.setVisibility(View.INVISIBLE);
             recyclerView.setVisibility(View.GONE);
+            comment.setVisibility(View.GONE);
             solWarn.setVisibility(View.VISIBLE);
             imageWarn.setVisibility(View.VISIBLE);
+
             solutionArrayList = new ArrayList<>();
             solutionArrayList.add("N/A");
             adapter1 = new ArrayAdapter<>(Objects.requireNonNull(getContext()), android.R.layout.simple_spinner_item, solutionArrayList);
@@ -344,11 +350,25 @@ public class LandFragment extends Fragment {
                 if (response.code() == 200) {
                     if (solutionList != null) {
                         generateSolList(solutionList.getData().getSolution().getSolutionDataList());
+                        comment.setText(solutionList.getData().getSolution().getFe_comment());
                         //Toast.makeText(getContext(), solutionList.getData().getSolution().getSolutionDataList().toString(), Toast.LENGTH_SHORT).show();
                         Picasso.get().load("http://br.bharatrohan.in/" + solutionList.getData().getSolution().getSolutionImage()).into(solImage);
                     }
-                } else {
-                    Toast.makeText(getContext(), "Some error occurred", Toast.LENGTH_SHORT).show();
+                } else if (response.code() == 400) {
+                    Toast.makeText(getContext(), "Bad Request", Toast.LENGTH_SHORT).show();
+                    //Vaifation failed
+                } else if (response.code() == 500) {
+                    Toast.makeText(getContext(), "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
+                }else if (response.code()==404){
+                    Toast.makeText(getContext(),"Record not found!",Toast.LENGTH_SHORT).show();
+                }else if (response.code()==401){
+                    new PrefManager(getContext()).saveLoginDetails("", "", "");
+                    new PrefManager(getContext()).saveToken("");
+                    new PrefManager(getContext()).saveUserDetails("", "", "", "", false, "", "", "", "", "", "");
+                    new PrefManager(getContext()).saveUserType("");
+                    Toast.makeText(getContext(), "Token Expired", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getActivity(), Login.class));
+                    getActivity().finish();
                 }
             }
 
@@ -367,7 +387,7 @@ public class LandFragment extends Fragment {
 
             problemList.get(position).set_status(true);
             sendSolStatus.setVisibility(View.VISIBLE);
-            Toast.makeText(getContext(), problemList.get(position).get_status().toString(), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(), problemList.get(position).get_status().toString(), Toast.LENGTH_SHORT).show();
         });
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -379,7 +399,8 @@ public class LandFragment extends Fragment {
     private void sendSolutionStatus() {
         showProgress();
 
-        String fe_comment = comment.getText().toString().trim();
+        String fe_comment = " ";
+        fe_comment = comment.getText().toString().trim();
 
         SolutionComment solutionComment = new SolutionComment(problem_id, fe_comment, problemList);
 
@@ -391,8 +412,13 @@ public class LandFragment extends Fragment {
                 hideProgress();
                 if (response.code() == 200) {
                     Toast.makeText(getContext(), "Status and Comment Updated!", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+                } else if (response.code() == 400) {
+                    Toast.makeText(getContext(), "Bad Request", Toast.LENGTH_SHORT).show();
+                    //Vaifation failed
+                } else if (response.code() == 500) {
+                    Toast.makeText(getContext(), "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
+                }else if (response.code()==404){
+                    Toast.makeText(getContext(),"Record not found!",Toast.LENGTH_SHORT).show();
                 }
             }
 

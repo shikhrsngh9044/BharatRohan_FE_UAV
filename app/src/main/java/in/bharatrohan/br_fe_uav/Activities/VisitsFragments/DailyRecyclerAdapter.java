@@ -31,7 +31,6 @@ public class DailyRecyclerAdapter extends RecyclerView.Adapter<DailyRecyclerAdap
     private Context mCtx;
     private final LayoutInflater layoutInflater;
     private List<FeVisitsModel.Farmer> dataList;
-    private int count = 0;
 
     public DailyRecyclerAdapter(Context mCtx, List<FeVisitsModel.Farmer> dataList) {
         this.mCtx = mCtx;
@@ -49,6 +48,7 @@ public class DailyRecyclerAdapter extends RecyclerView.Adapter<DailyRecyclerAdap
 
     @Override
     public void onBindViewHolder(@NonNull DailyViewHolder holder, int position) {
+        int count = 0;
         for (int i = 0; i < dataList.get(position).getFarmList().size(); i++) {
             if (!dataList.get(position).getFarmList().get(i).isVerified()) {
                 count++;

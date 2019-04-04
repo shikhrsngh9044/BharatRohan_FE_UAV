@@ -5,9 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
-    android:focusableInTouchMode="true"
-    tools:context=".Activities.ChangePassword">
-
+    tools:context=".Activities.PreChangePass">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraintLayout"
@@ -51,74 +49,53 @@
 
 
     <EditText
-        android:id="@+id/editPass"
+        android:id="@+id/editUsername"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="120dp"
-        android:layout_marginEnd="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="8dp"
         android:background="@drawable/rounded_edittext"
         android:ems="10"
-        android:hint="New Password"
-        android:inputType="textPassword"
-        android:padding="5dp"
-        android:textColorHint="#666666"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/editConfPass"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="40dp"
-        android:background="@drawable/rounded_edittext"
-        android:ems="10"
-        android:hint="Confirm New Password"
-        android:inputType="textPassword"
-        android:padding="5dp"
-        android:textColorHint="#666666"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editPass" />
-
-    <EditText
-        android:id="@+id/editOtp"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="40dp"
-        android:background="@drawable/rounded_edittext"
-        android:ems="10"
-        android:hint="Otp"
+        android:hint="Enter Username"
         android:inputType="textPersonName"
         android:padding="5dp"
         android:textColorHint="#666666"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/editConfPass"
-        app:layout_constraintTop_toBottomOf="@+id/editConfPass" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
+    <EditText
+        android:id="@+id/editEmail"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/rounded_edittext"
+        android:ems="10"
+        android:hint="Enter email"
+        android:inputType="textPersonName"
+        android:padding="5dp"
+        android:textColorHint="#666666"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editUsername" />
 
     <Button
-        android:id="@+id/btnChangePass"
+        android:id="@+id/btnNext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="50dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="20dp"
         android:background="@drawable/rounded_button_dark"
-        android:padding="10dp"
-        android:text="Change Password"
-        android:textAllCaps="false"
+        android:text="Next"
         android:textColor="@color/cardview_light_background"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editOtp" />
+        app:layout_constraintTop_toBottomOf="@+id/editEmail" />
+
 
     <ProgressBar
         android:id="@+id/progressBar"

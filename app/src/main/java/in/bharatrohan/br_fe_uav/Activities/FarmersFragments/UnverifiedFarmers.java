@@ -90,6 +90,9 @@ public class UnverifiedFarmers extends Fragment {
                     Toast.makeText(getContext(), "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getActivity(), Login.class));
                     getActivity().finish();
+                } else if (response.code() == 400) {
+                    Toast.makeText(getContext(), "Bad Request", Toast.LENGTH_SHORT).show();
+                    //Vaifation failed
                 } else if (response.code() == 500) {
                     Toast.makeText(getContext(), "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
                 }

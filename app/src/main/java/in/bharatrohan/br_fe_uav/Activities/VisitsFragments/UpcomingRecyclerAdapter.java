@@ -33,7 +33,6 @@ public class UpcomingRecyclerAdapter extends RecyclerView.Adapter<UpcomingRecycl
     private final LayoutInflater layoutInflater;
     private List<FeVisitsModel.Farmer> dataList;
     private List<FeVisitsModel.Farmer.Farm> farmList;
-    private int count = 0;
 
     public UpcomingRecyclerAdapter(Context mCtx, List<FeVisitsModel.Farmer> dataList) {
         this.mCtx = mCtx;
@@ -51,6 +50,7 @@ public class UpcomingRecyclerAdapter extends RecyclerView.Adapter<UpcomingRecycl
 
     @Override
     public void onBindViewHolder(@NonNull UpcomingViewHolder holder, int position) {
+        int count = 0;
         farmList = new ArrayList<>();
         farmList = dataList.get(position).getFarmList();
         for (int i = 0; i < farmList.size(); i++) {
@@ -62,7 +62,7 @@ public class UpcomingRecyclerAdapter extends RecyclerView.Adapter<UpcomingRecycl
         holder.address.setText(dataList.get(position).getFull_address());
 
         if (count > 0) {
-           // Toast.makeText(mCtx, String.valueOf(count), Toast.LENGTH_SHORT).show();
+            // Toast.makeText(mCtx, String.valueOf(count), Toast.LENGTH_SHORT).show();
             holder.tvUnCount.setVisibility(View.VISIBLE);
             holder.tvUnCount.setText(String.valueOf(count));
         }

@@ -269,8 +269,13 @@ public class UAVProfile extends AppCompatActivity {
                     Toast.makeText(UAVProfile.this, "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(UAVProfile.this, Login.class));
                     finish();
+                } else if (response.code() == 400) {
+                    Toast.makeText(UAVProfile.this, "Bad Request", Toast.LENGTH_SHORT).show();
+                    //Vaifation failed
                 } else if (response.code() == 500) {
                     Toast.makeText(UAVProfile.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
+                }else if (response.code()==404){
+                    Toast.makeText(UAVProfile.this,"Record not found!",Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -301,8 +306,13 @@ public class UAVProfile extends AppCompatActivity {
                     Toast.makeText(UAVProfile.this, "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(UAVProfile.this, Login.class));
                     finish();
+                } else if (response.code() == 400) {
+                    Toast.makeText(UAVProfile.this, "Bad Request", Toast.LENGTH_SHORT).show();
+                    //Vaifation failed
                 } else if (response.code() == 500) {
                     Toast.makeText(UAVProfile.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
+                }else if (response.code()==404){
+                    Toast.makeText(UAVProfile.this,"Record not found!",Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -378,8 +388,13 @@ public class UAVProfile extends AppCompatActivity {
                     Toast.makeText(UAVProfile.this, "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(UAVProfile.this, Login.class));
                     finish();
+                } else if (response.code() == 400) {
+                    Toast.makeText(UAVProfile.this, "Bad Request", Toast.LENGTH_SHORT).show();
+                    //Vaifation failed
                 } else if (response.code() == 500) {
                     Toast.makeText(UAVProfile.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
+                }else if (response.code()==404){
+                    Toast.makeText(UAVProfile.this,"Record not found!",Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -446,8 +461,13 @@ public class UAVProfile extends AppCompatActivity {
                     Toast.makeText(UAVProfile.this, "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(UAVProfile.this, Login.class));
                     finish();
+                } else if (response.code() == 400) {
+                    Toast.makeText(UAVProfile.this, "Bad Request", Toast.LENGTH_SHORT).show();
+                    //Vaifation failed
                 } else if (response.code() == 500) {
                     Toast.makeText(UAVProfile.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
+                }else if (response.code()==404){
+                    Toast.makeText(UAVProfile.this,"Record not found!",Toast.LENGTH_SHORT).show();
                 }
             }
 

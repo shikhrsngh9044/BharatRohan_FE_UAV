@@ -222,6 +222,7 @@ public class UAV_FarmerInfo extends AppCompatActivity {
                 hideProgress();
                 if (response.code() == 200) {
                     Toast.makeText(UAV_FarmerInfo.this, "Request Submitted Successfully", Toast.LENGTH_SHORT).show();
+                    UAV_FarmerInfo.this.finish();
                 } else if (response.code() == 401) {
                     new PrefManager(UAV_FarmerInfo.this).saveLoginDetails("", "", "");
                     new PrefManager(UAV_FarmerInfo.this).saveToken("");
@@ -230,8 +231,13 @@ public class UAV_FarmerInfo extends AppCompatActivity {
                     Toast.makeText(UAV_FarmerInfo.this, "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(UAV_FarmerInfo.this, Login.class));
                     finish();
+                } else if (response.code() == 400) {
+                    Toast.makeText(UAV_FarmerInfo.this, "Bad Request", Toast.LENGTH_SHORT).show();
+                    //Vaifation failed
                 } else if (response.code() == 500) {
                     Toast.makeText(UAV_FarmerInfo.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
+                }else if (response.code()==404){
+                    Toast.makeText(UAV_FarmerInfo.this,"Record not found!",Toast.LENGTH_SHORT).show();
                 }
             }
 

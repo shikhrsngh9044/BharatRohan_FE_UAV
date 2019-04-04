@@ -102,6 +102,9 @@ public class CreateVisit extends AppCompatActivity {
                         Toast.makeText(CreateVisit.this, "Token Expired", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(CreateVisit.this, Login.class));
                         finish();
+                    } else if (response.code() == 400) {
+                        Toast.makeText(CreateVisit.this, "Bad Request", Toast.LENGTH_SHORT).show();
+                        //Vaifation failed
                     } else if (response.code() == 500) {
                         Toast.makeText(CreateVisit.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
                     }

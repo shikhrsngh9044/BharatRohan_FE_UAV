@@ -77,6 +77,9 @@ public class UAVHome extends AppCompatActivity {
                     Toast.makeText(UAVHome.this, "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(UAVHome.this, Login.class));
                     finish();
+                } else if (response.code() == 400) {
+                    Toast.makeText(UAVHome.this, "Bad Request", Toast.LENGTH_SHORT).show();
+                    //Vaifation failed
                 } else if (response.code() == 500) {
                     Toast.makeText(UAVHome.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
                 }
@@ -105,6 +108,13 @@ public class UAVHome extends AppCompatActivity {
 
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getFarmers();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -124,7 +134,7 @@ public class UAVHome extends AppCompatActivity {
             startActivity(new Intent(UAVHome.this, UAVProfile.class));
             return true;
         } else if (id == R.id.action_pass) {
-            startActivity(new Intent(UAVHome.this, ChangePassword.class));
+            startActivity(new Intent(UAVHome.this, PreChangePass.class));
             return true;
         } else if (id == R.id.action_drone_issue) {
             showDialogDrone();

@@ -389,4 +389,17 @@ public class PrefManager {
         SharedPreferences sharedPreferences = context.getSharedPreferences("VisitBool", Context.MODE_PRIVATE);
         return sharedPreferences.getBoolean("Status", false);
     }
+
+
+    public void saveTempEmail(String id) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("TempEmail", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("email", id);
+        editor.apply();
+    }
+
+    public String getTempEmail() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("TempEmail", Context.MODE_PRIVATE);
+        return sharedPreferences.getString("email", "");
+    }
 }

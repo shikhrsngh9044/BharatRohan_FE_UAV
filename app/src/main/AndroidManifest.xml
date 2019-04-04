@@ -50,7 +50,8 @@
         <service android:name=".Services.DownloadService" />
 
         <activity android:name=".Activities.VerifyFarm" />
-        <activity android:name=".Activities.FeedbackComplaints"></activity>
+        <activity android:name=".Activities.FeedbackComplaints" />
+        <activity android:name=".Activities.PreChangePass"></activity>
     </application>
 
 </manifest>

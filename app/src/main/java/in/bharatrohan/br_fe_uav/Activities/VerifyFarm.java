@@ -69,8 +69,13 @@ public class VerifyFarm extends AppCompatActivity {
                     Toast.makeText(VerifyFarm.this, "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(VerifyFarm.this, Login.class));
                     finish();
+                } else if (response.code() == 400) {
+                    Toast.makeText(VerifyFarm.this, "Bad Request", Toast.LENGTH_SHORT).show();
+                    //Vaifation failed
                 } else if (response.code() == 500) {
                     Toast.makeText(VerifyFarm.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
+                }else if (response.code()==404){
+                    Toast.makeText(VerifyFarm.this,"Record not found!",Toast.LENGTH_SHORT).show();
                 }
             }
 

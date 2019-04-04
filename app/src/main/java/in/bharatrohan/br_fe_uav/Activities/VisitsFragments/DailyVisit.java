@@ -96,15 +96,21 @@ public class DailyVisit extends Fragment {
                     Toast.makeText(getContext(), "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getActivity(), Login.class));
                     getActivity().finish();
+                } else if (response.code() == 400) {
+                    Toast.makeText(getContext(), "Bad Request", Toast.LENGTH_SHORT).show();
+                    //Vaifation failed
                 } else if (response.code() == 500) {
                     Toast.makeText(getContext(), "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
+                }else if (response.code()==404){
+                    Toast.makeText(getContext(),"Record not found!",Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<FeVisitsModel> call, Throwable t) {
                 hideProgress();
-                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                if (getContext() != null)
+                    Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

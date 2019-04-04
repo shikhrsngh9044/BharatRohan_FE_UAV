@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_profile) {
             startActivity(new Intent(this, UAVProfile.class));
         } else if (id == R.id.nav_pass) {
-            startActivity(new Intent(this, ChangePassword.class));
+            startActivity(new Intent(this, PreChangePass.class));
         } else if (id == R.id.nav_help) {
 
         } else if (id == R.id.nav_privacy) {

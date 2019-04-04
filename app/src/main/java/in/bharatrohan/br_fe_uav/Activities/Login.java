@@ -75,7 +75,7 @@ public class Login extends AppCompatActivity {
         });
 
         tvForget.setOnClickListener(v -> {
-            Intent intent = new Intent(this, ChangePassword.class);
+            Intent intent = new Intent(this, PreChangePass.class);
             intent.putExtra("activity", "login");
             startActivity(intent);
         });
@@ -187,34 +187,40 @@ public class Login extends AppCompatActivity {
             @Override
             public void onResponse(Call<UavDetails> call, Response<UavDetails> response) {
                 UavDetails detailResponse = response.body();
+                if (response.code() == 200) {
+                    if (detailResponse != null) {
 
-                if (detailResponse != null) {
+                        StringBuilder sb = new StringBuilder();
+                        for (int i = 0; i < detailResponse.getJobLocation().getVillage().size(); i++) {
 
-                    StringBuilder sb = new StringBuilder();
-                    for (int i = 0; i < detailResponse.getJobLocation().getVillage().size(); i++) {
-
-                        sb.append(detailResponse.getJobLocation().getVillage().get(i).getVillage_name());
-                        sb.append("\n");
-                    }
-                    String villages = sb.toString();
-                    //Toast.makeText(Login.this, villages, Toast.LENGTH_SHORT).show();
+                            sb.append(detailResponse.getJobLocation().getVillage().get(i).getVillage_name());
+                            sb.append("\n");
+                        }
+                        String villages = sb.toString();
+                        //Toast.makeText(Login.this, villages, Toast.LENGTH_SHORT).show();
 
 
-                    if (detailResponse.getAccStatus()) {
-                        new PrefManager(Login.this).saveUserDetails(detailResponse.getName(), detailResponse.getContact(), detailResponse.getEmail(), detailResponse.getAlt_contact(), detailResponse.getAccStatus(), detailResponse.getAddress(), detailResponse.getJobLocation().getState().getState_name(), detailResponse.getJobLocation().getDistrict().getDistrict_name(), detailResponse.getJobLocation().getTehsil().getTehsil_name(), detailResponse.getJobLocation().getBlock().getBlock_name(), villages);
-                        new PrefManager(Login.this).saveAvatar(detailResponse.getAvatar());
-                        startActivity(new Intent(Login.this, UAVHome.class));
-                        finish();
+                        if (detailResponse.getAccStatus()) {
+                            new PrefManager(Login.this).saveUserDetails(detailResponse.getName(), detailResponse.getContact(), detailResponse.getEmail(), detailResponse.getAlt_contact(), detailResponse.getAccStatus(), detailResponse.getAddress(), detailResponse.getJobLocation().getState().getState_name(), detailResponse.getJobLocation().getDistrict().getDistrict_name(), detailResponse.getJobLocation().getTehsil().getTehsil_name(), detailResponse.getJobLocation().getBlock().getBlock_name(), villages);
+                            new PrefManager(Login.this).saveAvatar(detailResponse.getAvatar());
+                            startActivity(new Intent(Login.this, UAVHome.class));
+                            finish();
+                        } else {
+                            new PrefManager(Login.this).saveLoginDetails("", "", "");
+                            new PrefManager(Login.this).saveToken("");
+                            startActivity(new Intent(Login.this, UnSplash.class));
+                            finish();
+                        }
+
+
                     } else {
-                        new PrefManager(Login.this).saveLoginDetails("", "", "");
-                        new PrefManager(Login.this).saveToken("");
-                        startActivity(new Intent(Login.this, UnSplash.class));
-                        finish();
+                        Toast.makeText(Login.this, "Details not Saved Successfully", Toast.LENGTH_SHORT).show();
                     }
-
-
-                } else {
-                    Toast.makeText(Login.this, "Details not Saved Successfully", Toast.LENGTH_SHORT).show();
+                } else if (response.code() == 400) {
+                    Toast.makeText(Login.this, "Bad Request", Toast.LENGTH_SHORT).show();
+                    //Vaifation failed
+                } else if (response.code() == 500) {
+                    Toast.makeText(Login.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -235,31 +241,38 @@ public class Login extends AppCompatActivity {
             @Override
             public void onResponse(Call<FeDetails> call, Response<FeDetails> response) {
                 FeDetails detailResponse = response.body();
+                if (response.code() == 200) {
 
-                if (detailResponse != null) {
+                    if (detailResponse != null) {
 
-                    StringBuilder sb = new StringBuilder();
-                    for (int i = 0; i < detailResponse.getJobLocation().getVillage().size(); i++) {
+                        StringBuilder sb = new StringBuilder();
+                        for (int i = 0; i < detailResponse.getJobLocation().getVillage().size(); i++) {
 
-                        sb.append(detailResponse.getJobLocation().getVillage().get(i).getVillage_name());
-                        sb.append("\n");
-                    }
-                    String villages = sb.toString();
+                            sb.append(detailResponse.getJobLocation().getVillage().get(i).getVillage_name());
+                            sb.append("\n");
+                        }
+                        String villages = sb.toString();
 
-                    if (detailResponse.getAccStatus()) {
-                        new PrefManager(Login.this).saveUserDetails(detailResponse.getName(), detailResponse.getContact(), detailResponse.getEmail(), detailResponse.getAlt_contact(), detailResponse.getAccStatus(), detailResponse.getAddress(), detailResponse.getJobLocation().getState().getState_name(), detailResponse.getJobLocation().getDistrict().getDistrict_name(), detailResponse.getJobLocation().getTehsil().getTehsil_name(), detailResponse.getJobLocation().getBlock().getBlock_name(), villages);
-                        new PrefManager(Login.this).saveAvatar(detailResponse.getAvatar());
-                        startActivity(new Intent(Login.this, MainActivity.class));
-                        finish();
+                        if (detailResponse.getAccStatus()) {
+                            new PrefManager(Login.this).saveUserDetails(detailResponse.getName(), detailResponse.getContact(), detailResponse.getEmail(), detailResponse.getAlt_contact(), detailResponse.getAccStatus(), detailResponse.getAddress(), detailResponse.getJobLocation().getState().getState_name(), detailResponse.getJobLocation().getDistrict().getDistrict_name(), detailResponse.getJobLocation().getTehsil().getTehsil_name(), detailResponse.getJobLocation().getBlock().getBlock_name(), villages);
+                            new PrefManager(Login.this).saveAvatar(detailResponse.getAvatar());
+                            startActivity(new Intent(Login.this, MainActivity.class));
+                            finish();
+                        } else {
+                            new PrefManager(Login.this).saveLoginDetails("", "", "");
+                            new PrefManager(Login.this).saveToken("");
+                            startActivity(new Intent(Login.this, UnSplash.class));
+                            finish();
+                        }
+
                     } else {
-                        new PrefManager(Login.this).saveLoginDetails("", "", "");
-                        new PrefManager(Login.this).saveToken("");
-                        startActivity(new Intent(Login.this, UnSplash.class));
-                        finish();
+                        Toast.makeText(Login.this, "Details not Saved Successfully", Toast.LENGTH_SHORT).show();
                     }
-
-                } else {
-                    Toast.makeText(Login.this, "Details not Saved Successfully", Toast.LENGTH_SHORT).show();
+                } else if (response.code() == 400) {
+                    Toast.makeText(Login.this, "Bad Request", Toast.LENGTH_SHORT).show();
+                    //Vaifation failed
+                } else if (response.code() == 500) {
+                    Toast.makeText(Login.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
                 }
             }
 
