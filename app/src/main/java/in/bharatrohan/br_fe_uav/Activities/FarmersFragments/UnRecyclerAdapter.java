@@ -1,5 +1,6 @@
 package in.bharatrohan.br_fe_uav.Activities.FarmersFragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -63,7 +64,10 @@ public class UnRecyclerAdapter extends RecyclerView.Adapter<UnRecyclerAdapter.Un
             public void onSelectClick(@NotNull View view, int position) {
                 new PrefManager(mCtx).saveIsVisit(false);
                 new PrefManager(mCtx).saveFarmerId(dataList.get(position).getId());
-                mCtx.startActivity(new Intent(mCtx, FarmerInfo.class));
+                Intent intent = new Intent(mCtx, FarmerInfo.class);
+                intent.putExtra("activity", "Farmers");
+                mCtx.startActivity(intent);
+                ((Activity) mCtx).finish();
             }
         });
     }

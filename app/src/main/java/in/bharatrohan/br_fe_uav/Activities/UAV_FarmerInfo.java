@@ -322,6 +322,13 @@ public class UAV_FarmerInfo extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        startActivity(new Intent(UAV_FarmerInfo.this, UAVHome.class));
+        finish();
+    }
 
     private void showMessageOKCancel(DialogInterface.OnClickListener okListener) {
 

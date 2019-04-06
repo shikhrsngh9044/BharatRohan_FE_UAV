@@ -1,5 +1,6 @@
 package in.bharatrohan.br_fe_uav.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -84,6 +85,7 @@ public class UAVProblemRecyclerAdapter extends RecyclerView.Adapter<UAVProblemRe
             public void onSelectClick(@NotNull View view, int position) {
                 new PrefManager(mCtx).saveFarmerDetails(dataList.get(position).getProblemId(), dataList.get(position).getFarmer().getEmail(), dataList.get(position).getFarmer().getFarmerName(), dataList.get(position).getFarmer().getContact(), dataList.get(position).getFarmer().getFull_address(), dataList.get(position).getFarmer().getAvatar(), dataList.get(position).getFarm().getFarmName(), dataList.get(position).getFarm().getLocation(), dataList.get(position).getFarm().getFarmArea(), dataList.get(position).getFarm().getKml(), dataList.get(position).getFe().getName(), dataList.get(position).getFe().getContact(), dataList.get(position).getFe().getEmail());
                 mCtx.startActivity(new Intent(mCtx, UAV_FarmerInfo.class));
+                ((Activity) mCtx).finish();
 
             }
         });

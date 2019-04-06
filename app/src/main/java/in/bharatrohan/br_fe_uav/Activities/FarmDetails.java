@@ -188,11 +188,6 @@ public class FarmDetails extends AppCompatActivity {
 
         if (problemId.size() > 0) {
 
-            solImage.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.VISIBLE);
-            solWarn.setVisibility(View.GONE);
-            imageWarn.setVisibility(View.GONE);
-
             solutionArrayList = new ArrayList<>();
 
             for (int i = 0; i < problemId.size(); i++) {
@@ -250,6 +245,10 @@ public class FarmDetails extends AppCompatActivity {
 
                         if (solutionList.getData().getSolution().getSolutionDataList().size() > 0) {
                             comment.setVisibility(View.VISIBLE);
+                            solImage.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.VISIBLE);
+                            solWarn.setVisibility(View.GONE);
+                            imageWarn.setVisibility(View.GONE);
                             problemList = new ArrayList<>();
                             problemList.addAll(solutionList.getData().getSolution().getSolutionDataList());
 
@@ -263,6 +262,12 @@ public class FarmDetails extends AppCompatActivity {
                             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(FarmDetails.this);
                             recyclerView.setLayoutManager(layoutManager);
                             recyclerView.setAdapter(adapter);
+                        } else {
+                            comment.setVisibility(View.GONE);
+                            solImage.setVisibility(View.INVISIBLE);
+                            recyclerView.setVisibility(View.GONE);
+                            solWarn.setVisibility(View.VISIBLE);
+                            imageWarn.setVisibility(View.VISIBLE);
                         }
                     }
                 } else if (response.code() == 400) {

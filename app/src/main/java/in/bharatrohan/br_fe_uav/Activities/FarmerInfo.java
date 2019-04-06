@@ -105,6 +105,21 @@ public class FarmerInfo extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        if (getIntent().getStringExtra("activity") != null) {
+            if (getIntent().getStringExtra("activity").equals("Visits")) {
+                startActivity(new Intent(FarmerInfo.this, MyVisits.class));
+                finish();
+            } else if (getIntent().getStringExtra("activity").equals("Farmers")) {
+                startActivity(new Intent(FarmerInfo.this, Farmers.class));
+                finish();
+            }
+        }
+    }
+
     private void getDetail() {
         showProgress();
         Call<Farmer> call = RetrofitClient.getInstance().getApi().getFarmerDetail(new PrefManager(this).getToken(), new PrefManager(this).getFarmerId());
