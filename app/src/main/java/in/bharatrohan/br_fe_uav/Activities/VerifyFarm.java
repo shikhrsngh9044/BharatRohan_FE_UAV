@@ -60,7 +60,8 @@ public class VerifyFarm extends AppCompatActivity {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.code() == 200) {
                     Toast.makeText(VerifyFarm.this, "Farm Verified!", Toast.LENGTH_SHORT).show();
-                    VerifyFarm.this.finish();
+                    startActivity(new Intent(VerifyFarm.this, FarmDetails.class));
+                    finish();
                 } else if (response.code() == 401) {
                     new PrefManager(VerifyFarm.this).saveLoginDetails("", "", "");
                     new PrefManager(VerifyFarm.this).saveToken("");
@@ -74,8 +75,8 @@ public class VerifyFarm extends AppCompatActivity {
                     //Vaifation failed
                 } else if (response.code() == 500) {
                     Toast.makeText(VerifyFarm.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
-                }else if (response.code()==404){
-                    Toast.makeText(VerifyFarm.this,"Record not found!",Toast.LENGTH_SHORT).show();
+                } else if (response.code() == 404) {
+                    Toast.makeText(VerifyFarm.this, "Record not found!", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -84,5 +85,12 @@ public class VerifyFarm extends AppCompatActivity {
                 Toast.makeText(VerifyFarm.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(VerifyFarm.this, FarmDetails.class));
+        finish();
     }
 }

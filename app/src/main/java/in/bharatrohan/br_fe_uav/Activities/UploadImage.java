@@ -63,16 +63,16 @@ public class UploadImage extends AppCompatActivity {
         setContentView(R.layout.activity_upload_image);
         new CheckInternet(this).checkConnection();
 
-        arrayList = new ArrayList<>();
-        pathList = new ArrayList<>();
-
         listView = findViewById(R.id.listView);
         mProgressBar = findViewById(R.id.progressBar);
         btnChoose = findViewById(R.id.btnChoose);
         btnUpload = findViewById(R.id.btnUpload);
         btnSkip = findViewById(R.id.skip);
 
-        btnSkip.setOnClickListener(v -> this.finish());
+        btnSkip.setOnClickListener(v -> {
+            startActivity(new Intent(this, FarmDetails.class));
+            finish();
+        });
 
         btnChoose.setOnClickListener(v -> {
             if (askForPermission())
@@ -83,18 +83,6 @@ public class UploadImage extends AppCompatActivity {
     }
 
     private void showChooser() {
-        // Use the GET_CONTENT intent from the utility class
-        /*Intent target = FileUtils.createGetContentIntent();
-        // Create the chooser Intent
-        Intent intent = Intent.createChooser(
-                target, getString(R.string.chooser_title));
-        try {
-            startActivityForResult(intent, REQUEST_CODE);
-        } catch (ActivityNotFoundException e) {
-            // The reason for the existence of aFileChooser
-        }*/
-
-
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -106,6 +94,10 @@ public class UploadImage extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        arrayList = new ArrayList<>();
+        pathList = new ArrayList<>();
+
+
         switch (requestCode) {
             case REQUEST_CODE:
                 // If the file selection was successful
@@ -116,9 +108,10 @@ public class UploadImage extends AppCompatActivity {
                         ClipData clipData = data.getClipData();
                         while (currentItem < count) {
 
-                            ClipData.Item item = clipData.getItemAt(currentItem);
+                           /* ClipData.Item item = clipData.getItemAt(currentItem);
 
-                            Uri imageUri = item.getUri();
+                            Uri imageUri = item.getUri();*/
+                            Uri imageUri = data.getClipData().getItemAt(currentItem).getUri();
                             //do something with the image (save it to some directory or whatever you need to do with it here)
                             currentItem = currentItem + 1;
                             Log.d("Uri Selected", imageUri.toString());
@@ -134,8 +127,7 @@ public class UploadImage extends AppCompatActivity {
                                 Log.e(TAG, "File select error", e);
                             }
                         }
-                    }
-                    /* else if (data.getData() != null) {
+                    } else if (data.getData() != null) {
                         //do something with the image (save it to some directory or whatever you need to do with it here)
                         final Uri uri = data.getData();
                         Log.i(TAG, "Uri = " + uri.toString());
@@ -149,7 +141,7 @@ public class UploadImage extends AppCompatActivity {
                         } catch (Exception e) {
                             Log.e(TAG, "File select error", e);
                         }
-                    }*/
+                    }
                 }
                 break;
         }
@@ -199,8 +191,8 @@ public class UploadImage extends AppCompatActivity {
                         //Vaifation failed
                     } else if (response.code() == 500) {
                         Toast.makeText(UploadImage.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
-                    }else if (response.code()==404){
-                        Toast.makeText(UploadImage.this,"Record not found!",Toast.LENGTH_SHORT).show();
+                    } else if (response.code() == 404) {
+                        Toast.makeText(UploadImage.this, "Record not found!", Toast.LENGTH_SHORT).show();
                     }
                 }
 

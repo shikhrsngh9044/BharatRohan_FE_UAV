@@ -63,7 +63,8 @@ public class CreateVisit extends AppCompatActivity {
         });
 
         skip.setOnClickListener(v -> {
-            this.finish();
+            startActivity(new Intent(this, FarmDetails.class));
+            finish();
         });
 
     }
@@ -75,6 +76,7 @@ public class CreateVisit extends AppCompatActivity {
             for (int i = 0; i < quesEds.size(); i++) {
                 questionsList.add(i, new CreatesVisit.Questions(quesEds.get(i).getText().toString(), ansEds.get(i).getText().toString()));
             }
+
 
             CreatesVisit createsVisit = new CreatesVisit(new PrefManager(this).getFarmerId(), new PrefManager(this).getFarmId(), new PrefManager(this).getUavId(), new PrefManager(this).getCropId(), new PrefManager(this).getUserId(), questionsList);
 
@@ -121,6 +123,15 @@ public class CreateVisit extends AppCompatActivity {
         }
 
     }
+
+    /*private boolean checkValues() {
+        for (int i = 0; i < quesEds.size(); i++) {
+            if (quesEds.get(i).getText().toString().equals("") || ansEds.get(i).getText().toString().equals("")) {
+
+            }
+        }
+        return false;
+    }*/
 
     private void addEdits() {
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);

@@ -58,28 +58,31 @@ public class SolutionRecyclerAdapter extends RecyclerView.Adapter<SolutionRecycl
         holder.setItemsClickListener(new Item_ClickListener() {
             @Override
             public void onOptionClick(@NotNull View view, int position) {
+                if (!dataList.get(position).get_status()) {
+                    PopupMenu popupMenu = new PopupMenu(mCtx, holder.option);
+                    popupMenu.inflate(R.menu.solution_option_menu);
+                    popupMenu.setOnMenuItemClickListener(item -> {
+                        switch (item.getItemId()) {
+                            case R.id.apply: {
+                                if (holder.tick.getVisibility() == View.INVISIBLE) {
+                                    holder.tick.setVisibility(View.VISIBLE);
+                                    solutionListener.onOptionClick(position);
+                                } else {
+                                    Toast.makeText(mCtx, "Already Applied", Toast.LENGTH_SHORT).show();
+                                }
 
-                PopupMenu popupMenu = new PopupMenu(mCtx, holder.option);
-                popupMenu.inflate(R.menu.solution_option_menu);
-                popupMenu.setOnMenuItemClickListener(item -> {
-                    switch (item.getItemId()) {
-                        case R.id.apply: {
-                            if (holder.tick.getVisibility() == View.INVISIBLE) {
-                                holder.tick.setVisibility(View.VISIBLE);
-                                solutionListener.onOptionClick(position);
-                            } else {
-                                Toast.makeText(mCtx, "Already Applied", Toast.LENGTH_SHORT).show();
+                                return true;
                             }
 
-                            return true;
+                            default:
+                                return false;
                         }
 
-                        default:
-                            return false;
-                    }
-
-                });
-                popupMenu.show();
+                    });
+                    popupMenu.show();
+                } else {
+                    Toast.makeText(mCtx, "Solution already applied!", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -87,6 +90,7 @@ public class SolutionRecyclerAdapter extends RecyclerView.Adapter<SolutionRecycl
 
             }
         });
+
     }
 
     @Override

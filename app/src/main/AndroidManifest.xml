@@ -52,6 +52,8 @@
         <activity android:name=".Activities.VerifyFarm" />
         <activity android:name=".Activities.FeedbackComplaints" />
         <activity android:name=".Activities.PreChangePass"></activity>
+        <activity android:name=".Activities.FarmDetails" />
+        <activity android:name=".Activities.FarmerFarms" />
     </application>
 
 </manifest>

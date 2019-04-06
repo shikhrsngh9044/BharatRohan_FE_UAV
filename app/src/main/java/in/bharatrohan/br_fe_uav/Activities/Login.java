@@ -116,7 +116,7 @@ public class Login extends AppCompatActivity {
                     }
 
                 } else if (response.code() == 400) {
-                    Toast.makeText(Login.this, "Required values missing", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Login.this, "Invalid Username & Password!", Toast.LENGTH_SHORT).show();
                     //Vaifation failed
                 } else if (response.code() == 500) {
                     Toast.makeText(Login.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
@@ -163,7 +163,7 @@ public class Login extends AppCompatActivity {
                     }
 
                 } else if (response.code() == 400) {
-                    Toast.makeText(Login.this, "Validation Failed. Invalid Credentials", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Login.this, "Invalid Credentials", Toast.LENGTH_SHORT).show();
                     //Vaifation failed
                 } else if (response.code() == 500) {
                     Toast.makeText(Login.this, "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();

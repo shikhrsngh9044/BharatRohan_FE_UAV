@@ -49,7 +49,7 @@ public class FarmerInfo extends AppCompatActivity {
         init();
 
         landInfo.setOnClickListener(v -> {
-            startActivity(new Intent(FarmerInfo.this, MyFarms.class));
+            startActivity(new Intent(FarmerInfo.this, FarmerFarms.class));
         });
 
         btnVerify.setOnClickListener(v -> {

@@ -173,9 +173,8 @@ public class LandFragment extends Fragment {
 
 
     private void showFarmInfo(String farmId) {
-        //showProgress();
-        if (getContext() != null)
-            new PrefManager(getContext()).saveFarmId(farmId);
+        showProgress();
+        new PrefManager(getContext()).saveFarmId(farmId);
         Call<Farm> call = RetrofitClient.getInstance().getApi().getFarmDetail(token, farmId);
 
         call.enqueue(new Callback<Farm>() {
@@ -244,13 +243,13 @@ public class LandFragment extends Fragment {
 
                     if (farmer != null) {
                         //new PrefManager(getContext()).saveFarmerAvatar(farmer.getAvatar());
-                        farmList = farmer.getFarms();
+                        /*farmList = farmer.getFarms();
                         if (farmList.size() != 0) {
                             showFarmInfo(farmList.get(farmNo));
                         } else {
                             new PrefManager(getContext()).saveFarmNo(0);
                             Toast.makeText(getContext(), "No Farm is Registered yet!!", Toast.LENGTH_SHORT).show();
-                        }
+                        }*/
                     } else {
                         Toast.makeText(getContext(), "Some error occurred.Please try again!!", Toast.LENGTH_SHORT).show();
 
@@ -359,9 +358,9 @@ public class LandFragment extends Fragment {
                     //Vaifation failed
                 } else if (response.code() == 500) {
                     Toast.makeText(getContext(), "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
-                }else if (response.code()==404){
-                    Toast.makeText(getContext(),"Record not found!",Toast.LENGTH_SHORT).show();
-                }else if (response.code()==401){
+                } else if (response.code() == 404) {
+                    Toast.makeText(getContext(), "Record not found!", Toast.LENGTH_SHORT).show();
+                } else if (response.code() == 401) {
                     new PrefManager(getContext()).saveLoginDetails("", "", "");
                     new PrefManager(getContext()).saveToken("");
                     new PrefManager(getContext()).saveUserDetails("", "", "", "", false, "", "", "", "", "", "");
@@ -417,8 +416,8 @@ public class LandFragment extends Fragment {
                     //Vaifation failed
                 } else if (response.code() == 500) {
                     Toast.makeText(getContext(), "Server Error: Please try after some time", Toast.LENGTH_SHORT).show();
-                }else if (response.code()==404){
-                    Toast.makeText(getContext(),"Record not found!",Toast.LENGTH_SHORT).show();
+                } else if (response.code() == 404) {
+                    Toast.makeText(getContext(), "Record not found!", Toast.LENGTH_SHORT).show();
                 }
             }
 
